@@ -2,7 +2,7 @@
 public class Main {
 
 	public static void main(String[] args) {
-		System.out.println("Repositório local.");
+		System.out.println("RepositÃ³rio local.");
 
 	}
 
