@@ -15,6 +15,7 @@ import javax.swing.JList;
 import javax.swing.JTextArea;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import javax.swing.JComboBox;
 
 public class GUI {
 
@@ -51,7 +52,7 @@ public class GUI {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(640, 480);
+		frame.setSize(800, 600);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel = new JPanel();
@@ -65,22 +66,29 @@ public class GUI {
 		
 		JCheckBox chckbxFacebook = new JCheckBox();
 		panel_2.add(chckbxFacebook);
-		JLabel labelFacebook = new JLabel(new ImageIcon("src/facebook.png"));
+		JLabel labelFacebook = new JLabel(new ImageIcon("src/resources/facebook.png"));
 		panel_2.add(labelFacebook);
 		
 		JCheckBox chckbxTwitter = new JCheckBox();
 		panel_2.add(chckbxTwitter);
-		JLabel labelTwitter = new JLabel(new ImageIcon("src/twitter.png"));
+		JLabel labelTwitter = new JLabel(new ImageIcon("src/resources/twitter.png"));
 		panel_2.add(labelTwitter);
 		
 		JCheckBox chckbxEmail = new JCheckBox();
 		panel_2.add(chckbxEmail);
-		JLabel labelEmail = new JLabel(new ImageIcon("src/email.png"));
+		JLabel labelEmail = new JLabel(new ImageIcon("src/resources/email.png"));
 		panel_2.add(labelEmail);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setLayout(new FlowLayout(FlowLayout.TRAILING));
 		panel.add(panel_3);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.addItem("Defina um período");
+		comboBox.addItem("Últimas 24h");
+		comboBox.addItem("Última semana");
+		comboBox.addItem("Último mês");
+		panel_3.add(comboBox);
 		
 		textField = new JTextField();
 		panel_3.add(textField);
@@ -89,7 +97,7 @@ public class GUI {
 		
 		JButton btnNewButton = new JButton();
 		panel_3.add(btnNewButton);
-		btnNewButton.setIcon(new ImageIcon("C:\\Users\\Bruno Colaço\\git\\ES1-2018-IC2-61\\src\\magnifier-tool.png"));
+		btnNewButton.setIcon(new ImageIcon("src/resources/magnifier-tool.png"));
 		
 		JPanel panel_1 = new JPanel();
 		frame.getContentPane().add(panel_1, BorderLayout.CENTER);
