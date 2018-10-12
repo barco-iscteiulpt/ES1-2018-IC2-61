@@ -4,11 +4,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import java.awt.GridLayout;
+import java.awt.Insets;
+
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import javax.swing.JSplitPane;
+import java.awt.Dimension;
+
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -20,7 +24,7 @@ import javax.swing.JComboBox;
 public class GUI {
 
 	private JFrame frame;
-	private JTextField textField;
+	private JTextField keywords;
 
 	/**
 	 * Launch the application.
@@ -49,65 +53,77 @@ public class GUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
+		// Create the frame. Specify the title, placement, size, closing operation and layout of the frame.
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setTitle("Bom Dia Academia!");
+		frame.setBounds(100, 100, 800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(800, 600);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel, BorderLayout.NORTH);
-		panel.setSize(frame.getWidth(), 20);
-		panel.setLayout(new GridLayout(1, 2, 0, 0));
+		// Create the top panel. Specify height and layout of the panel.  Add it to the frame.
+		JPanel top = new JPanel();
+		top.setLayout(new GridLayout(1, 2, 0, 0));
+		frame.getContentPane().add(top, BorderLayout.NORTH);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setLayout(new FlowLayout(FlowLayout.LEADING));
-		panel.add(panel_2);
+		// Create the left side of the top panel. Specify layout and orientation. Add to top panel.
+		JPanel top_left = new JPanel();
+		top_left.setLayout(new FlowLayout(FlowLayout.LEADING));
+		top.add(top_left);
 		
-		JCheckBox chckbxFacebook = new JCheckBox();
-		panel_2.add(chckbxFacebook);
-		JLabel labelFacebook = new JLabel(new ImageIcon("src/resources/facebook.png"));
-		panel_2.add(labelFacebook);
+		// Get social icons from "resources" folder. Create 3 checkboxes (selected by default). Add them to top-left panel.
+		JLabel fb_icon = new JLabel(new ImageIcon("src/resources/facebook.png"));
+		JLabel twitter_icon = new JLabel(new ImageIcon("src/resources/twitter.png"));
+		JLabel email_icon = new JLabel(new ImageIcon("src/resources/email.png"));
 		
-		JCheckBox chckbxTwitter = new JCheckBox();
-		panel_2.add(chckbxTwitter);
-		JLabel labelTwitter = new JLabel(new ImageIcon("src/resources/twitter.png"));
-		panel_2.add(labelTwitter);
+		JCheckBox fb_checkbox = new JCheckBox();
+		fb_checkbox.setSelected(true);
+		JCheckBox twitter_checkbox = new JCheckBox();
+		twitter_checkbox.setSelected(true);
+		JCheckBox email_checkbox = new JCheckBox();
+		email_checkbox.setSelected(true);
 		
-		JCheckBox chckbxEmail = new JCheckBox();
-		panel_2.add(chckbxEmail);
-		JLabel labelEmail = new JLabel(new ImageIcon("src/resources/email.png"));
-		panel_2.add(labelEmail);
+		top_left.add(fb_checkbox);
+		top_left.add(fb_icon);
+		top_left.add(twitter_checkbox);
+		top_left.add(twitter_icon);
+		top_left.add(email_checkbox);
+		top_left.add(email_icon);
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setLayout(new FlowLayout(FlowLayout.TRAILING));
-		panel.add(panel_3);
+		// Create the right side of the top panel. Specify layout and orientation. Add to top panel.
+		JPanel top_right = new JPanel();
+		top_right.setLayout(new FlowLayout(FlowLayout.TRAILING));
+		top.add(top_right);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.addItem("Defina um período");
-		comboBox.addItem("Últimas 24h");
-		comboBox.addItem("Última semana");
-		comboBox.addItem("Último mês");
-		panel_3.add(comboBox);
+		// Create period filter and add different options. Add to top-right panel.
+		String[] options = {"última hora","últimas 24h","último dia","última semana", "último mês"};
+		JComboBox comboBox = new JComboBox(options);
+		comboBox.setRenderer(new MyComboBoxRenderer("Defina um período..."));
+		comboBox.setSelectedIndex(-1);
+		top_right.add(comboBox);
 		
-		textField = new JTextField();
-		panel_3.add(textField);
-		textField.setColumns(10);
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		// Define keyword search and create "Search" button. Specify dimensions, margins and icon. Add to top-right panel.
+		keywords = new JTextField();
+		JButton button = new JButton();
 		
-		JButton btnNewButton = new JButton();
-		panel_3.add(btnNewButton);
-		btnNewButton.setIcon(new ImageIcon("src/resources/magnifier-tool.png"));
+		keywords.setPreferredSize(new Dimension(120,24));
+		button.setMargin(new Insets(2,8,2,8));
+		button.setIcon(new ImageIcon("src/resources/magnifier-tool.png"));
 		
-		JPanel panel_1 = new JPanel();
-		frame.getContentPane().add(panel_1, BorderLayout.CENTER);
-		panel_1.setLayout(new GridLayout(1, 2, 0, 0));
+		top_right.add(keywords);
+		top_right.add(button);
+
+		// Create the center panel. Specify layout. Add to frame.
+		JPanel center = new JPanel();
+		center.setLayout(new GridLayout(1, 2, 0, 0));
+		frame.getContentPane().add(center, BorderLayout.CENTER);
+
+		// Create timeline and article boxes. Add to center panel.
+		JList<?> timeline = new JList<Object>();
+		JTextArea article = new JTextArea();
 		
-		JList list = new JList();
-		panel_1.add(list);
-		
-		JTextArea textArea = new JTextArea();
-		panel_1.add(textArea);
+		center.add(timeline);
+		center.add(article);
 	}
 
 }
