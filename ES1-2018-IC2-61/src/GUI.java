@@ -5,26 +5,48 @@ import javax.swing.JLabel;
 
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import com.restfb.Connection;
+import com.restfb.DefaultFacebookClient;
+import com.restfb.FacebookClient;
+import com.restfb.types.Page;
+import com.restfb.types.Post;
+import com.restfb.types.User;
+
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JTextArea;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import javax.swing.JComboBox;
 
-public class GUI {
+public class GUI extends Thread{
 
 	private JFrame frame;
 	private JTextField keywords;
+	protected String accessToken = "EAAEprSZC8PBABAJyQpTxdEQaXh9dkvPOopFsDUmjJIB3m7n3IT6rxiWOXSwPpYzCJtUm0CH3D6pjzCPoH9ZAYgplLKeRwkQ2ZCcEsZCc4lU9olFarz3Pcz5JJb6zZCzUH94DSidZAbw85xyV3JpsQSx5RZCaWICuel33cJH4TIufR4BPDti62z5NVhaSAM2s54ZD";
+	private DefaultListModel listModel;
+	private ArrayList<Post> postList;
 
 	/**
 	 * Launch the application.
@@ -60,6 +82,17 @@ public class GUI {
 		frame.setBounds(100, 100, 800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu1 = new JMenu ("File");
+		JMenu menu2 = new JMenu ("Edit");
+		JMenu menu3 = new JMenu ("About");
+	
+		menuBar.add(menu1);
+		menuBar.add(menu2);
+		menuBar.add(menu3);
+		
+		frame.setJMenuBar(menuBar);
 		
 		// Create the top panel. Specify height and layout of the panel.  Add it to the frame.
 		JPanel top = new JPanel();
@@ -104,14 +137,14 @@ public class GUI {
 		
 		// Define keyword search and create "Search" button. Specify dimensions, margins and icon. Add to top-right panel.
 		keywords = new JTextField();
-		JButton button = new JButton();
+		JButton searchButton = new JButton();
 		
 		keywords.setPreferredSize(new Dimension(120,24));
-		button.setMargin(new Insets(2,8,2,8));
-		button.setIcon(new ImageIcon("src/resources/magnifier-tool.png"));
+		searchButton.setMargin(new Insets(2,8,2,8));
+		searchButton.setIcon(new ImageIcon("src/resources/magnifier-tool.png"));
 		
 		top_right.add(keywords);
-		top_right.add(button);
+		top_right.add(searchButton);
 
 		// Create the center panel. Specify layout. Add to frame.
 		JPanel center = new JPanel();
@@ -119,11 +152,57 @@ public class GUI {
 		frame.getContentPane().add(center, BorderLayout.CENTER);
 
 		// Create timeline and article boxes. Add to center panel.
-		JList<?> timeline = new JList<Object>();
-		JTextArea article = new JTextArea();
+		listModel = new DefaultListModel();
+		postList = new ArrayList<>();
 		
-		center.add(timeline);
+		JScrollPane scrollPaneTimeline = new JScrollPane();
+		JScrollPane scrollPaneArticle = new JScrollPane();
+		JList<?> timeline = new JList(listModel);
+		scrollPaneTimeline.setViewportView(timeline);
+		
+		JTextArea article = new JTextArea();
+		scrollPaneArticle.setViewportView(article);
+		
+		timeline.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				Post show = postList.get(timeline.getSelectedIndex());
+				article.setText(show.getMessage());
+			}
+		});
+		
+		center.add(scrollPaneTimeline);
 		center.add(article);
+		
+		searchButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				getFacebookData(keywords.getText());
+		}
+	});
+
+	}
+	
+	public void getFacebookData(String info) {
+		
+		FacebookClient fbClient = new DefaultFacebookClient(accessToken);
+		
+		Page page = fbClient.fetchObject("listajespeniche", Page.class);
+		
+		Connection<Post> postFeed = fbClient.fetchConnection(page.getId() + "/feed", Post.class);
+		
+		for(List<Post> postPage : postFeed) {
+			for(Post aPost : postPage) {
+				if(aPost.getMessage()!=null && aPost.getMessage().contains(info)) {
+					postList.add(aPost);
+					System.out.println("-->"+aPost.getMessage());
+					
+				}
+			}
+		}
+		for(Post post : postList) {
+			String header = "Facebook: "+ post.getCreatedTime().toString() + "   " + post.getMessage().substring(0, 30)+"...";
+			listModel.addElement(header);	
+		}
 	}
 
 }
