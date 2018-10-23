@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -28,6 +29,14 @@ import com.restfb.FacebookClient;
 import com.restfb.types.Page;
 import com.restfb.types.Post;
 import com.restfb.types.User;
+
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -176,7 +185,10 @@ public class GUI extends Thread{
 		
 		searchButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				getFacebookData(keywords.getText());
+				if (twitter_checkbox.isSelected())
+					searchTwitter(keywords.getText());
+				if (fb_checkbox.isSelected())
+					getFacebookData(keywords.getText());
 		}
 	});
 
@@ -205,4 +217,41 @@ public class GUI extends Thread{
 		}
 	}
 
+	public void searchTwitter(String info) {
+		
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setDebugEnabled(true)
+		.setOAuthConsumerKey("0I3XKOkznUjpuwdDOSkLvcSpg")
+		.setOAuthConsumerSecret("zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G")
+		.setOAuthAccessToken("325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg")
+		.setOAuthAccessTokenSecret("Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT");
+		
+		TwitterFactory twitterFactory = new TwitterFactory(cb.build());
+		Twitter twitter = twitterFactory.getInstance();
+		
+		Query query = new Query("ISCTEIUL");
+		query.setCount(10);
+		QueryResult searchResult = null;
+			
+			try {
+				
+				searchResult = twitter.search(query);
+				
+				List<Status> tweetsList = searchResult.getTweets();
+				Iterator<Status> listIterator = tweetsList.iterator();
+				
+				while (listIterator.hasNext()) {
+					Status tweet = (Status)listIterator.next();
+					if(tweet.getText().contains(info)) {
+						System.out.println(tweet.getUser().getName() + ": " + tweet.getText());
+					}	
+				}
+				
+			} catch (TwitterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+	}
+	
 }
