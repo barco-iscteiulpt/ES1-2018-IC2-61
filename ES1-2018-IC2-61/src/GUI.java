@@ -44,6 +44,7 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JTextArea;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -97,10 +98,29 @@ public class GUI extends Thread{
 		JMenu menu2 = new JMenu ("Edit");
 		JMenu menu3 = new JMenu ("About");
 	
+		JMenuItem item1 = new JMenuItem("Close");
+		JMenuItem item2 = new JMenuItem("New");
+		menu1.add(item2);
+		menu1.add(item1);
 		menuBar.add(menu1);
 		menuBar.add(menu2);
 		menuBar.add(menu3);
 		
+		item1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();	
+			}
+		});
+		
+		item2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				main(null);	
+			}
+		});
 		frame.setJMenuBar(menuBar);
 		
 		// Create the top panel. Specify height and layout of the panel.  Add it to the frame.
@@ -152,6 +172,14 @@ public class GUI extends Thread{
 		searchButton.setMargin(new Insets(2,8,2,8));
 		searchButton.setIcon(new ImageIcon("src/resources/magnifier-tool.png"));
 		
+		keywords.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				searchButton.doClick();
+				
+			}
+		});
 		top_right.add(keywords);
 		top_right.add(searchButton);
 
@@ -171,6 +199,8 @@ public class GUI extends Thread{
 		
 		JTextArea article = new JTextArea();
 		scrollPaneArticle.setViewportView(article);
+		article.setLineWrap(true);
+		article.setWrapStyleWord(true);
 		
 		timeline.addListSelectionListener(new ListSelectionListener() {
 			@Override
