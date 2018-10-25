@@ -63,22 +63,6 @@ public class GUI extends Thread {
 	private ArrayList<Status> finalTweetsList;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GUI window = new GUI();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the application.
 	 */
 	public GUI() {
@@ -92,11 +76,11 @@ public class GUI extends Thread {
 
 		// Create the frame. Specify the title, placement, size, closing operation and
 		// layout of the frame.
-		frame = new JFrame();
-		frame.setTitle("Bom Dia Academia!");
-		frame.setBounds(100, 100, 800, 600);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		setFrame(new JFrame());
+		getFrame().setTitle("Bom Dia Academia!");
+		getFrame().setBounds(100, 100, 800, 600);
+		getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getFrame().getContentPane().setLayout(new BorderLayout(0, 0));
 
 		// Create the menu bar. Create and add 3 menus.
 		JMenuBar menuBar = new JMenuBar();
@@ -117,24 +101,24 @@ public class GUI extends Thread {
 		item1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
+				getFrame().dispose();
 			}
 		});
 
 		item2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				main(null);
+
 			}
 		});
 
-		frame.setJMenuBar(menuBar);
+		getFrame().setJMenuBar(menuBar);
 
 		// Create the top panel. Specify height and layout of the panel. Add it to the
 		// frame.
 		JPanel top = new JPanel();
 		top.setLayout(new GridLayout(1, 2, 0, 0));
-		frame.getContentPane().add(top, BorderLayout.NORTH);
+		getFrame().getContentPane().add(top, BorderLayout.NORTH);
 
 		// Create the left side of the top panel. Specify layout and orientation. Add to
 		// top panel.
@@ -196,7 +180,7 @@ public class GUI extends Thread {
 		// Create the center panel. Specify layout. Add to frame.
 		JPanel center = new JPanel();
 		center.setLayout(new GridLayout(1, 2, 0, 0));
-		frame.getContentPane().add(center, BorderLayout.CENTER);
+		getFrame().getContentPane().add(center, BorderLayout.CENTER);
 
 		// Create scrolling panes. Create timeline and article boxes. Add them to the
 		// respective panes.
@@ -238,6 +222,14 @@ public class GUI extends Thread {
 
 	}
 
+	/**
+	 * Accesses a specific Facebook page, gets its feed and saves every post on a
+	 * list. Organizes the list from the most recent posts to the oldest. Chooses
+	 * which posts are displayed depending on the JComboBox chosen item.
+	 * 
+	 * @param info   The keywords used on the JTextField
+	 * @param period The time period chosen on the JComboBox
+	 */
 	public void getFacebookData(String info, String period) {
 
 		FacebookClient fbClient = new DefaultFacebookClient(accessToken);
@@ -253,59 +245,72 @@ public class GUI extends Thread {
 				}
 			}
 		}
-		
+
 		Collections.sort(postList, new Comparator<Post>() {
-			  public int compare(Post o1, Post o2) {
-			      return o2.getCreatedTime().compareTo(o1.getCreatedTime());
-			  }
-			});
-		
-		for(Post p : postList) {
-			
+			public int compare(Post o1, Post o2) {
+				return o2.getCreatedTime().compareTo(o1.getCreatedTime());
+			}
+		});
+
+		for (Post p : postList) {
+
 			Calendar calendar = Calendar.getInstance();
-			
+
 			if (period.equals("Choose time...")) {
-				String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   " + p.getMessage().substring(0,  30) + "...";
+				String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   "
+						+ p.getMessage().substring(0, 30) + "...";
 				listModel.addElement(headerPost);
 			}
-			
+
 			if (period.equals("Last hour")) {
 				calendar.add(Calendar.HOUR_OF_DAY, -1);
-				if(p.getCreatedTime().after(calendar.getTime())) {
-					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   " + p.getMessage().substring(0,  30) + "...";
+				if (p.getCreatedTime().after(calendar.getTime())) {
+					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   "
+							+ p.getMessage().substring(0, 30) + "...";
 					listModel.addElement(headerPost);
 				}
 			}
-			
+
 			if (period.equals("Last day")) {
 				calendar.add(Calendar.DAY_OF_MONTH, -1);
-				if(p.getCreatedTime().after(calendar.getTime())) {
-					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   " + p.getMessage().substring(0,  30) + "...";
+				if (p.getCreatedTime().after(calendar.getTime())) {
+					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   "
+							+ p.getMessage().substring(0, 30) + "...";
 					listModel.addElement(headerPost);
 				}
 			}
-			
+
 			if (period.equals("Last week")) {
 				calendar.add(Calendar.DAY_OF_MONTH, -7);
-				if(p.getCreatedTime().after(calendar.getTime())) {
-					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   " + p.getMessage().substring(0,  30) + "...";
+				if (p.getCreatedTime().after(calendar.getTime())) {
+					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   "
+							+ p.getMessage().substring(0, 30) + "...";
 					listModel.addElement(headerPost);
 				}
 			}
-			
+
 			if (period.equals("Last month")) {
 				calendar.add(Calendar.MONTH, -1);
-				if(p.getCreatedTime().after(calendar.getTime())) {
-					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   " + p.getMessage().substring(0,  30) + "...";
+				if (p.getCreatedTime().after(calendar.getTime())) {
+					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   "
+							+ p.getMessage().substring(0, 30) + "...";
 					listModel.addElement(headerPost);
 				}
 			}
-			
+
 		}
 	}
-
+	
+	/**
+	 * Accesses a specific Twitter page, gets its tweets and saves each one on a
+	 * list. Organizes the list from the most recent tweets to the oldest. Chooses
+	 * which tweets are displayed depending on the JComboBox chosen item.
+	 *
+	 * @param info   The keywords used on the JTextField
+	 * @param period The time period chosen on the JComboBox
+	 */
 	public void searchTwitter(String info, String period) {
-		
+
 		info = keywords.getText();
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -331,61 +336,66 @@ public class GUI extends Thread {
 			while (listIterator.hasNext()) {
 				Status tweet = (Status) listIterator.next();
 				if (tweet.getUser().getScreenName().equals("ISCTEIUL")) {
-					if(tweet.getText().contains(info)) {
-						//System.out.println(tweet.getUser().getName() + ": " + tweet.getText());
+					if (tweet.getText().contains(info)) {
+						// System.out.println(tweet.getUser().getName() + ": " + tweet.getText());
 						finalTweetsList.add(tweet);
 					}
 				}
 			}
-			
+
 			Collections.sort(finalTweetsList, new Comparator<Status>() {
 				public int compare(Status o1, Status o2) {
 					return o2.getCreatedAt().compareTo(o1.getCreatedAt());
 				}
 			});
-			
-			for(Status s : finalTweetsList) {
-				
+
+			for (Status s : finalTweetsList) {
+
 				Calendar calendar = Calendar.getInstance();
-				
+
 				if (period.equals("Choose time...")) {
-					String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   " + s.getText().substring(0,  30) + "...";
+					String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   "
+							+ s.getText().substring(0, 30) + "...";
 					listModel.addElement(headerTweet);
 					System.out.println(s.getUser().getName() + ": " + s.getText());
 				}
-				
+
 				if (period.equals("Last hour")) {
 					calendar.add(Calendar.HOUR_OF_DAY, -1);
-					if(s.getCreatedAt().after(calendar.getTime())) {
-						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   " + s.getText().substring(0,  30) + "...";
+					if (s.getCreatedAt().after(calendar.getTime())) {
+						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   "
+								+ s.getText().substring(0, 30) + "...";
 						listModel.addElement(headerTweet);
 					}
 				}
-				
+
 				if (period.equals("Last day")) {
 					calendar.add(Calendar.DAY_OF_MONTH, -1);
-					if(s.getCreatedAt().after(calendar.getTime())) {
-						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   " + s.getText().substring(0,  30) + "...";
+					if (s.getCreatedAt().after(calendar.getTime())) {
+						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   "
+								+ s.getText().substring(0, 30) + "...";
 						listModel.addElement(headerTweet);
 					}
 				}
-				
+
 				if (period.equals("Last week")) {
 					calendar.add(Calendar.DAY_OF_MONTH, -7);
-					if(s.getCreatedAt().after(calendar.getTime())) {
-						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   " + s.getText().substring(0,  30) + "...";
+					if (s.getCreatedAt().after(calendar.getTime())) {
+						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   "
+								+ s.getText().substring(0, 30) + "...";
 						listModel.addElement(headerTweet);
 					}
 				}
-				
+
 				if (period.equals("Last month")) {
 					calendar.add(Calendar.MONTH, -1);
-					if(s.getCreatedAt().after(calendar.getTime())) {
-						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   " + s.getText().substring(0,  30) + "...";
+					if (s.getCreatedAt().after(calendar.getTime())) {
+						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   "
+								+ s.getText().substring(0, 30) + "...";
 						listModel.addElement(headerTweet);
 					}
 				}
-				
+
 			}
 
 		} catch (TwitterException e) {
@@ -393,6 +403,22 @@ public class GUI extends Thread {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * Returns the current frame.
+	 * @return frame
+	 */
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	/**
+	 * Sets the specified frame to the GUI object.
+	 * @param frame
+	 */
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
 	}
 
 }

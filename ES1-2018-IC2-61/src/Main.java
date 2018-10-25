@@ -1,9 +1,23 @@
+import java.awt.EventQueue;
 
 public class Main {
 
+	/** 
+	 * Creates the GUI and sets it visible 
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		
-		System.out.println("Alteração para testar conflitos");
+
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					GUI window = new GUI();
+					window.getFrame().setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
 	}
 
