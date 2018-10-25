@@ -256,7 +256,7 @@ public class GUI extends Thread {
 		
 		Collections.sort(postList, new Comparator<Post>() {
 			  public int compare(Post o1, Post o2) {
-			      return o1.getCreatedTime().compareTo(o2.getCreatedTime());
+			      return o2.getCreatedTime().compareTo(o1.getCreatedTime());
 			  }
 			});
 		
@@ -340,7 +340,7 @@ public class GUI extends Thread {
 			
 			Collections.sort(finalTweetsList, new Comparator<Status>() {
 				public int compare(Status o1, Status o2) {
-					return o1.getCreatedAt().compareTo(o2.getCreatedAt());
+					return o2.getCreatedAt().compareTo(o1.getCreatedAt());
 				}
 			});
 			
