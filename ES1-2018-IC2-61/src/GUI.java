@@ -8,6 +8,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -57,6 +60,7 @@ public class GUI extends Thread {
 	protected String accessToken = "EAAEprSZC8PBABAJyQpTxdEQaXh9dkvPOopFsDUmjJIB3m7n3IT6rxiWOXSwPpYzCJtUm0CH3D6pjzCPoH9ZAYgplLKeRwkQ2ZCcEsZCc4lU9olFarz3Pcz5JJb6zZCzUH94DSidZAbw85xyV3JpsQSx5RZCaWICuel33cJH4TIufR4BPDti62z5NVhaSAM2s54ZD";
 	private DefaultListModel listModel;
 	private ArrayList<Post> postList;
+	private ArrayList<Status> finalTweetsList;
 
 	/**
 	 * Launch the application.
@@ -165,10 +169,9 @@ public class GUI extends Thread {
 		top.add(top_right);
 
 		// Create period filter and add different options. Add to top-right panel.
-		String[] options = { "última hora", "últimas 24h", "último dia", "última semana", "último mês" };
+		String[] options = { "Choose time...", "Last hour", "Last day", "Last week", "Last month" };
 		JComboBox comboBox = new JComboBox(options);
-		comboBox.setRenderer(new MyComboBoxRenderer("Defina um período..."));
-		comboBox.setSelectedIndex(-1);
+		comboBox.setSelectedIndex(0);
 		top_right.add(comboBox);
 
 		// Define keyword search and create "Search" button. Specify dimensions, margins
@@ -199,6 +202,7 @@ public class GUI extends Thread {
 		// respective panes.
 		listModel = new DefaultListModel();
 		postList = new ArrayList<>();
+		finalTweetsList = new ArrayList<>();
 
 		JScrollPane scrollPaneTimeline = new JScrollPane();
 		JScrollPane scrollPaneArticle = new JScrollPane();
@@ -226,7 +230,7 @@ public class GUI extends Thread {
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (twitter_checkbox.isSelected())
-					searchTwitter(keywords.getText());
+					searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 				if (fb_checkbox.isSelected())
 					getFacebookData(keywords.getText());
 			}
@@ -257,7 +261,9 @@ public class GUI extends Thread {
 		}
 	}
 
-	public void searchTwitter(String info) {
+	public void searchTwitter(String info, String period) {
+		
+		info = keywords.getText();
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true).setOAuthConsumerKey("0I3XKOkznUjpuwdDOSkLvcSpg")
@@ -269,7 +275,7 @@ public class GUI extends Thread {
 		Twitter twitter = twitterFactory.getInstance();
 
 		Query query = new Query("ISCTEIUL");
-		query.setCount(10);
+		query.setCount(1000);
 		QueryResult searchResult = null;
 
 		try {
@@ -281,9 +287,62 @@ public class GUI extends Thread {
 
 			while (listIterator.hasNext()) {
 				Status tweet = (Status) listIterator.next();
-				if (tweet.getText().contains(info)) {
-					System.out.println(tweet.getUser().getName() + ": " + tweet.getText());
+				if (tweet.getUser().getScreenName().equals("ISCTEIUL")) {
+					if(tweet.getText().contains(info)) {
+						//System.out.println(tweet.getUser().getName() + ": " + tweet.getText());
+						finalTweetsList.add(tweet);
+					}
 				}
+			}
+			
+			Collections.sort(finalTweetsList, new Comparator<Status>() {
+				public int compare(Status o1, Status o2) {
+					return o1.getCreatedAt().compareTo(o2.getCreatedAt());
+				}
+			});
+			
+			for(Status s : finalTweetsList) {
+				
+				Calendar calendar = Calendar.getInstance();
+				
+				if (period.equals("Choose time...")) {
+					String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   " + s.getText().substring(0,  30) + "...";
+					listModel.addElement(headerTweet);
+					System.out.println(s.getUser().getName() + ": " + s.getText());
+				}
+				
+				if (period.equals("Last hour")) {
+					calendar.add(Calendar.HOUR_OF_DAY, -1);
+					if(s.getCreatedAt().after(calendar.getTime())) {
+						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   " + s.getText().substring(0,  30) + "...";
+						listModel.addElement(headerTweet);
+					}
+				}
+				
+				if (period.equals("Last day")) {
+					calendar.add(Calendar.DAY_OF_MONTH, -1);
+					if(s.getCreatedAt().after(calendar.getTime())) {
+						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   " + s.getText().substring(0,  30) + "...";
+						listModel.addElement(headerTweet);
+					}
+				}
+				
+				if (period.equals("Last week")) {
+					calendar.add(Calendar.DAY_OF_MONTH, -7);
+					if(s.getCreatedAt().after(calendar.getTime())) {
+						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   " + s.getText().substring(0,  30) + "...";
+						listModel.addElement(headerTweet);
+					}
+				}
+				
+				if (period.equals("Last month")) {
+					calendar.add(Calendar.MONTH, -1);
+					if(s.getCreatedAt().after(calendar.getTime())) {
+						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   " + s.getText().substring(0,  30) + "...";
+						listModel.addElement(headerTweet);
+					}
+				}
+				
 			}
 
 		} catch (TwitterException e) {
