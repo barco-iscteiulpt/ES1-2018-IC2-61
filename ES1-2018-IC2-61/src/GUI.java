@@ -232,13 +232,13 @@ public class GUI extends Thread {
 				if (twitter_checkbox.isSelected())
 					searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 				if (fb_checkbox.isSelected())
-					getFacebookData(keywords.getText());
+					getFacebookData(keywords.getText(), comboBox.getSelectedItem().toString());
 			}
 		});
 
 	}
 
-	public void getFacebookData(String info) {
+	public void getFacebookData(String info, String period) {
 
 		FacebookClient fbClient = new DefaultFacebookClient(accessToken);
 
@@ -250,14 +250,57 @@ public class GUI extends Thread {
 			for (Post aPost : postPage) {
 				if (aPost.getMessage() != null && aPost.getMessage().contains(info)) {
 					postList.add(aPost);
-					System.out.println("-->" + aPost.getMessage());
 				}
 			}
 		}
-		for (Post post : postList) {
-			String header = "Facebook: " + post.getCreatedTime().toString() + "   " + post.getMessage().substring(0, 30)
-					+ "...";
-			listModel.addElement(header);
+		
+		Collections.sort(postList, new Comparator<Post>() {
+			  public int compare(Post o1, Post o2) {
+			      return o1.getCreatedTime().compareTo(o2.getCreatedTime());
+			  }
+			});
+		
+		for(Post p : postList) {
+			
+			Calendar calendar = Calendar.getInstance();
+			
+			if (period.equals("Choose time...")) {
+				String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   " + p.getMessage().substring(0,  30) + "...";
+				listModel.addElement(headerPost);
+			}
+			
+			if (period.equals("Last hour")) {
+				calendar.add(Calendar.HOUR_OF_DAY, -1);
+				if(p.getCreatedTime().after(calendar.getTime())) {
+					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   " + p.getMessage().substring(0,  30) + "...";
+					listModel.addElement(headerPost);
+				}
+			}
+			
+			if (period.equals("Last day")) {
+				calendar.add(Calendar.DAY_OF_MONTH, -1);
+				if(p.getCreatedTime().after(calendar.getTime())) {
+					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   " + p.getMessage().substring(0,  30) + "...";
+					listModel.addElement(headerPost);
+				}
+			}
+			
+			if (period.equals("Last week")) {
+				calendar.add(Calendar.DAY_OF_MONTH, -7);
+				if(p.getCreatedTime().after(calendar.getTime())) {
+					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   " + p.getMessage().substring(0,  30) + "...";
+					listModel.addElement(headerPost);
+				}
+			}
+			
+			if (period.equals("Last month")) {
+				calendar.add(Calendar.MONTH, -1);
+				if(p.getCreatedTime().after(calendar.getTime())) {
+					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   " + p.getMessage().substring(0,  30) + "...";
+					listModel.addElement(headerPost);
+				}
+			}
+			
 		}
 	}
 
