@@ -219,14 +219,12 @@ public class GUI extends Thread {
 			public void actionPerformed(ActionEvent e) {
 				if (twitter_checkbox.isSelected()) {
 					searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
-					if (finalTweetsList.isEmpty()) {
-						JOptionPane.showMessageDialog(null, "No search results!");
-					}
 				}
 				if (fb_checkbox.isSelected()) {
 					getFacebookData(keywords.getText(), comboBox.getSelectedItem().toString());
-					if (postList.isEmpty()) 
-						JOptionPane.showMessageDialog(null, "No search results!");
+				}
+				if (timeline.getModel().getSize()==0) {
+					JOptionPane.showMessageDialog(null, "No search results!");
 				}
 			}
 		});
