@@ -61,8 +61,9 @@ public class GUI extends Thread {
 	private JTextField keywords;
 	protected String accessToken = "EAAEprSZC8PBABAJyQpTxdEQaXh9dkvPOopFsDUmjJIB3m7n3IT6rxiWOXSwPpYzCJtUm0CH3D6pjzCPoH9ZAYgplLKeRwkQ2ZCcEsZCc4lU9olFarz3Pcz5JJb6zZCzUH94DSidZAbw85xyV3JpsQSx5RZCaWICuel33cJH4TIufR4BPDti62z5NVhaSAM2s54ZD";
 	private DefaultListModel listModel;
-	private ArrayList<Post> postList;
+	private ArrayList<Post> finalPostsList;
 	private ArrayList<Status> finalTweetsList;
+	private JList<?> timeline;
 
 	/**
 	 * Create the application.
@@ -157,7 +158,7 @@ public class GUI extends Thread {
 		top.add(top_right);
 
 		// Create period filter and add different options. Add to top-right panel.
-		String[] options = { "Choose time...", "Last hour", "Last day", "Last week", "Last month" };
+		String[] options = { "Anytime", "Last hour", "Last day", "Last week", "Last month" };
 		JComboBox comboBox = new JComboBox(options);
 		comboBox.setSelectedIndex(0);
 		top_right.add(comboBox);
@@ -189,12 +190,12 @@ public class GUI extends Thread {
 		// Create scrolling panes. Create timeline and article boxes. Add them to the
 		// respective panes.
 		listModel = new DefaultListModel();
-		postList = new ArrayList<>();
+		finalPostsList = new ArrayList<>();
 		finalTweetsList = new ArrayList<>();
 
 		JScrollPane scrollPaneTimeline = new JScrollPane();
 		JScrollPane scrollPaneArticle = new JScrollPane();
-		JList<?> timeline = new JList(listModel);
+		timeline = new JList(listModel);
 		scrollPaneTimeline.setViewportView(timeline);
 
 		JTextArea article = new JTextArea();
@@ -207,7 +208,7 @@ public class GUI extends Thread {
 		timeline.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				Post show = postList.get(timeline.getSelectedIndex());
+				Post show = finalPostsList.get(timeline.getSelectedIndex());
 				article.setText(show.getMessage());
 			}
 		});
@@ -221,7 +222,7 @@ public class GUI extends Thread {
 					searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 				}
 				if (fb_checkbox.isSelected()) {
-					getFacebookData(keywords.getText(), comboBox.getSelectedItem().toString());
+					searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
 				}
 				if (timeline.getModel().getSize()==0) {
 					JOptionPane.showMessageDialog(null, "No search results!");
@@ -229,6 +230,10 @@ public class GUI extends Thread {
 			}
 		});
 
+	}
+
+	public JList<?> getTimeline() {
+		return timeline;
 	}
 
 	/**
@@ -239,7 +244,7 @@ public class GUI extends Thread {
 	 * @param info   The keywords used on the JTextField
 	 * @param period The time period chosen on the JComboBox
 	 */
-	public void getFacebookData(String info, String period) {
+	public void searchFacebook(String info, String period) {
 
 		FacebookClient fbClient = new DefaultFacebookClient(accessToken);
 
@@ -250,22 +255,22 @@ public class GUI extends Thread {
 		for (List<Post> postPage : postFeed) {
 			for (Post aPost : postPage) {
 				if (aPost.getMessage() != null && aPost.getMessage().contains(info)) {
-					postList.add(aPost);
+					finalPostsList.add(aPost);
 				}
 			}
 		}
 
-		Collections.sort(postList, new Comparator<Post>() {
+		Collections.sort(finalPostsList, new Comparator<Post>() {
 			public int compare(Post o1, Post o2) {
 				return o2.getCreatedTime().compareTo(o1.getCreatedTime());
 			}
 		});
 
-		for (Post p : postList) {
+		for (Post p : finalPostsList) {
 
 			Calendar calendar = Calendar.getInstance();
 
-			if (period.equals("Choose time...")) {
+			if (period.equals("Anytime")) {
 				String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   "
 						+ p.getMessage().substring(0, 30) + "...";
 				listModel.addElement(headerPost);
@@ -344,11 +349,11 @@ public class GUI extends Thread {
 
 			while (listIterator.hasNext()) {
 				Status tweet = (Status) listIterator.next();
-				if (tweet.getUser().getScreenName().equals("ISCTEIUL")) {
-					if (tweet.getText().contains(info)) {
+				if (tweet.getUser().getScreenName().equals("ISCTEIUL") && tweet.getText().contains(info)) {
+//					if (tweet.getText().contains(info)) {
 						// System.out.println(tweet.getUser().getName() + ": " + tweet.getText());
 						finalTweetsList.add(tweet);
-					}
+//					}
 				}
 			}
 
@@ -362,7 +367,7 @@ public class GUI extends Thread {
 
 				Calendar calendar = Calendar.getInstance();
 
-				if (period.equals("Choose time...")) {
+				if (period.equals("Anytime")) {
 					String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   "
 							+ s.getText().substring(0, 30) + "...";
 					listModel.addElement(headerTweet);
@@ -429,5 +434,15 @@ public class GUI extends Thread {
 	public void setFrame(JFrame frame) {
 		this.frame = frame;
 	}
+
+	public ArrayList<Post> getFinalPostsList() {
+		return finalPostsList;
+	}
+
+	public ArrayList<Status> getFinalTweetsList() {
+		return finalTweetsList;
+	}
+	
+	
 
 }
