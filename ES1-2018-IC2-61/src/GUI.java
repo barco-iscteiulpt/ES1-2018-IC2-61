@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -78,10 +79,12 @@ public class GUI extends Thread {
 		// Create the frame. Specify the title, placement, size, closing operation and
 		// layout of the frame.
 		setFrame(new JFrame());
-		getFrame().setTitle("Bom Dia Academia!");
-		getFrame().setBounds(100, 100, 800, 600);
-		getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		getFrame().getContentPane().setLayout(new BorderLayout(0, 0));
+		frame.setTitle("Bom Dia Academia!");
+		frame.setBounds(100, 100, 800, 600);
+		ImageIcon appIcon = new ImageIcon("src/resources/app-icon.png");
+		frame.setIconImage(appIcon.getImage());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		// Create the menu bar. Create and add 3 menus.
 		JMenuBar menuBar = new JMenuBar();
@@ -113,13 +116,13 @@ public class GUI extends Thread {
 			}
 		});
 
-		getFrame().setJMenuBar(menuBar);
+		frame.setJMenuBar(menuBar);
 
 		// Create the top panel. Specify height and layout of the panel. Add it to the
 		// frame.
 		JPanel top = new JPanel();
 		top.setLayout(new GridLayout(1, 2, 0, 0));
-		getFrame().getContentPane().add(top, BorderLayout.NORTH);
+		frame.getContentPane().add(top, BorderLayout.NORTH);
 
 		// Create the left side of the top panel. Specify layout and orientation. Add to
 		// top panel.
@@ -181,7 +184,7 @@ public class GUI extends Thread {
 		// Create the center panel. Specify layout. Add to frame.
 		JPanel center = new JPanel();
 		center.setLayout(new GridLayout(1, 2, 0, 0));
-		getFrame().getContentPane().add(center, BorderLayout.CENTER);
+		frame.getContentPane().add(center, BorderLayout.CENTER);
 
 		// Create scrolling panes. Create timeline and article boxes. Add them to the
 		// respective panes.
