@@ -48,6 +48,7 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -213,10 +214,17 @@ public class GUI extends Thread {
 
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (twitter_checkbox.isSelected())
+				if (twitter_checkbox.isSelected()) {
 					searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
-				if (fb_checkbox.isSelected())
+					if (finalTweetsList.isEmpty()) {
+						JOptionPane.showMessageDialog(null, "No search results!");
+					}
+				}
+				if (fb_checkbox.isSelected()) {
 					getFacebookData(keywords.getText(), comboBox.getSelectedItem().toString());
+					if (postList.isEmpty()) 
+						JOptionPane.showMessageDialog(null, "No search results!");
+				}
 			}
 		});
 
