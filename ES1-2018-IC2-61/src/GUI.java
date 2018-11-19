@@ -406,34 +406,23 @@ public class GUI extends Thread {
 
 		if (postsList != null) {
 			for (Post p : postsList) {
-<<<<<<< HEAD
-				tableModel.addRow(new Object[] { "Facebook", p.getCreatedTime().toString(), p.getMessage() });
-=======
 				tableModel.addRow(new Object[]{"Facebook", p.getCreatedTime(), p.getMessage()});
->>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
+
 			}
 		}
 
 		if (tweetsList != null) {
 			for (Status t : tweetsList) {
-<<<<<<< HEAD
-				tableModel.addRow(new Object[] { "Twitter", t.getCreatedAt().toString(), t.getText() });
-=======
 				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText()});
->>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
 			}
 		}
 		sortTable();
 	}
 
 	private void sortTable() {
-<<<<<<< HEAD
-		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(tableModel);
-=======
 		
 		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel> (tableModel);
 		sorter.setComparator(1, Comparator.naturalOrder());
->>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
 		timeline.setRowSorter(sorter);
 
 //		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
