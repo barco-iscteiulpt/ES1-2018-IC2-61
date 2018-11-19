@@ -56,7 +56,6 @@ public class TwitterHandler {
 				if (tweet.getUser().getScreenName().equals("marianasilvamss") && tweet.getText().contains(info)) {
 					if (period.equals("Anytime")) {
 						finalTweetsList.add(tweet);
-						System.out.println("tweet adicionado à lista");
 					}
 					if (period.equals("Last hour")) {
 						calendar.add(Calendar.HOUR_OF_DAY, -1);

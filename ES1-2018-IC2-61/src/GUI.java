@@ -234,8 +234,10 @@ public class GUI extends Thread {
 		timeline.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
-				article.setText(text);
+				if(timeline.getSelectedRow()>=0) {
+					String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
+					article.setText(text);
+				}
 			}
 		});
 
@@ -245,6 +247,8 @@ public class GUI extends Thread {
 
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				timeline.clearSelection();
+				article.setText(null);
 				if (twitter_checkbox.isSelected()) {
 					twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 					manageTimeline();
@@ -266,6 +270,7 @@ public class GUI extends Thread {
 		ArrayList<Post> postsList = facebook.getFinalPostsList();
 		ArrayList<Status> tweetsList = twitter.getFinalTweetsList();
 		tableModel.setRowCount(0);
+		timeline.clearSelection();
 
 		if (postsList!=null) {
 			for (Post p : postsList) {
@@ -274,9 +279,8 @@ public class GUI extends Thread {
 		}
 
 		if (tweetsList!=null) {
-			System.out.println(tweetsList.size());
 			for (Status t : tweetsList) {
-				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt().toString(), t.getText().substring(0, 2)+"..."});
+				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt().toString(), t.getText()});
 			}
 		}
 
