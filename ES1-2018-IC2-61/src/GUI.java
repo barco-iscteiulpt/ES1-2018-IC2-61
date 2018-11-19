@@ -274,24 +274,26 @@ public class GUI extends Thread {
 
 		if (postsList!=null) {
 			for (Post p : postsList) {
-				tableModel.addRow(new Object[]{"Facebook", p.getCreatedTime().toString(), p.getMessage()});
+				tableModel.addRow(new Object[]{"Facebook", p.getCreatedTime(), p.getMessage()});
 			}
 		}
 
 		if (tweetsList!=null) {
 			for (Status t : tweetsList) {
-				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt().toString(), t.getText()});
+				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText()});
 			}
 		}
-
+		sortTable();
 	}
 
 	private void sortTable() {
+		
 		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel> (tableModel);
+		sorter.setComparator(1, Comparator.naturalOrder());
 		timeline.setRowSorter(sorter);
 
-		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-		sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
+//		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+//		sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
 	}
 
 	public JTable getTimeline() {
