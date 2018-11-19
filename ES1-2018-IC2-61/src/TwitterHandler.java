@@ -14,7 +14,6 @@ import twitter4j.TwitterFactory;
 import twitter4j.api.SearchResource;
 import twitter4j.conf.ConfigurationBuilder;
 
-
 public class TwitterHandler {
 
 	public ArrayList<Status> finalTweetsList;
@@ -33,9 +32,9 @@ public class TwitterHandler {
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true).setOAuthConsumerKey("0I3XKOkznUjpuwdDOSkLvcSpg")
-		.setOAuthConsumerSecret("zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G")
-		.setOAuthAccessToken("325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg")
-		.setOAuthAccessTokenSecret("Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT");
+				.setOAuthConsumerSecret("zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G")
+				.setOAuthAccessToken("325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg")
+				.setOAuthAccessTokenSecret("Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT");
 
 		TwitterFactory twitterFactory = new TwitterFactory(cb.build());
 		Twitter twitter = twitterFactory.getInstance();
