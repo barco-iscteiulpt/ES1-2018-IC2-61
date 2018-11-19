@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -24,8 +25,12 @@ import java.awt.Dimension;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
@@ -54,32 +59,39 @@ import javax.swing.JTextArea;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import javax.swing.JComboBox;
+import java.awt.Color;
+import javax.swing.UIManager;
 
 public class GUI extends Thread {
 
 	private JFrame frame;
 	private JTextField keywords;
-	protected String accessToken = "EAAEprSZC8PBABAJyQpTxdEQaXh9dkvPOopFsDUmjJIB3m7n3IT6rxiWOXSwPpYzCJtUm0CH3D6pjzCPoH9ZAYgplLKeRwkQ2ZCcEsZCc4lU9olFarz3Pcz5JJb6zZCzUH94DSidZAbw85xyV3JpsQSx5RZCaWICuel33cJH4TIufR4BPDti62z5NVhaSAM2s54ZD";
-	private DefaultListModel listModel;
-	private ArrayList<Post> finalPostsList;
-	private ArrayList<Status> finalTweetsList;
-	private JList<?> timeline;
+	public DefaultTableModel tableModel;
+	protected JTable timeline;
+	public FacebookHandler facebook;
+	public TwitterHandler twitter;
 
 	/**
 	 * Create the application.
 	 */
 	public GUI() {
-		initialize();
+		addFrameContent();
+	}
+
+	@Override
+	public void run() {
+		addFrameContent();
+		frame.setVisible(true);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void addFrameContent() {
 
 		// Create the frame. Specify the title, placement, size, closing operation and
 		// layout of the frame.
-		setFrame(new JFrame());
+		frame = new JFrame();
 		frame.setTitle("Bom Dia Academia!");
 		frame.setBounds(100, 100, 800, 600);
 		ImageIcon appIcon = new ImageIcon("src/resources/app-icon.png");
@@ -87,15 +99,23 @@ public class GUI extends Thread {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
+		facebook = new FacebookHandler();
+		twitter = new TwitterHandler();
+
 		// Create the menu bar. Create and add 3 menus.
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu1 = new JMenu("File");
+		menu1.setFont(new Font("Arial", Font.PLAIN, 14));
 		JMenu menu2 = new JMenu("Edit");
+		menu2.setFont(new Font("Arial", Font.PLAIN, 14));
 		JMenu menu3 = new JMenu("About");
+		menu3.setFont(new Font("Arial", Font.PLAIN, 14));
 
 		// Create menu items and add them to their respective menu.
 		JMenuItem item1 = new JMenuItem("Close");
+		item1.setFont(new Font("Arial", Font.PLAIN, 14));
 		JMenuItem item2 = new JMenuItem("New");
+		item2.setFont(new Font("Arial", Font.PLAIN, 14));
 		menu1.add(item2);
 		menu1.add(item1);
 		menuBar.add(menu1);
@@ -128,6 +148,7 @@ public class GUI extends Thread {
 		// Create the left side of the top panel. Specify layout and orientation. Add to
 		// top panel.
 		JPanel top_left = new JPanel();
+		top_left.setBackground(UIManager.getColor("CheckBox.background"));
 		top_left.setLayout(new FlowLayout(FlowLayout.LEADING));
 		top.add(top_left);
 
@@ -135,14 +156,14 @@ public class GUI extends Thread {
 		// default). Add them to top-left panel.
 		JLabel fb_icon = new JLabel(new ImageIcon("src/resources/facebook.png"));
 		JLabel twitter_icon = new JLabel(new ImageIcon("src/resources/twitter.png"));
-		JLabel email_icon = new JLabel(new ImageIcon("src/resources/email.png"));
+		JLabel email_icon = new JLabel(new ImageIcon("src/resources/gmail.png"));
 
 		JCheckBox fb_checkbox = new JCheckBox();
-		fb_checkbox.setSelected(true);
+		fb_checkbox.setSelected(false);
 		JCheckBox twitter_checkbox = new JCheckBox();
-		twitter_checkbox.setSelected(true);
+		twitter_checkbox.setSelected(false);
 		JCheckBox email_checkbox = new JCheckBox();
-		email_checkbox.setSelected(true);
+		email_checkbox.setSelected(false);
 
 		top_left.add(fb_checkbox);
 		top_left.add(fb_icon);
@@ -160,6 +181,7 @@ public class GUI extends Thread {
 		// Create period filter and add different options. Add to top-right panel.
 		String[] options = { "Anytime", "Last hour", "Last day", "Last week", "Last month" };
 		JComboBox comboBox = new JComboBox(options);
+		comboBox.setFont(new Font("Arial", Font.PLAIN, 13));
 		comboBox.setSelectedIndex(0);
 		top_right.add(comboBox);
 
@@ -189,42 +211,49 @@ public class GUI extends Thread {
 
 		// Create scrolling panes. Create timeline and article boxes. Add them to the
 		// respective panes.
-		listModel = new DefaultListModel();
-		finalPostsList = new ArrayList<>();
-		finalTweetsList = new ArrayList<>();
+		tableModel = new DefaultTableModel();
+		timeline = new JTable(tableModel);
+		JTextArea article = new JTextArea();
 
 		JScrollPane scrollPaneTimeline = new JScrollPane();
 		JScrollPane scrollPaneArticle = new JScrollPane();
-		timeline = new JList(listModel);
 		scrollPaneTimeline.setViewportView(timeline);
-
-		JTextArea article = new JTextArea();
 		scrollPaneArticle.setViewportView(article);
 		article.setLineWrap(true);
 		article.setWrapStyleWord(true);
 
+		//Create table columns.
+		tableModel.addColumn("Source");
+		tableModel.addColumn("Date");
+		tableModel.addColumn("Content");
+		timeline.setFont(new Font("Arial", Font.PLAIN, 12));
+		timeline.getTableHeader().setFont(new Font("Arial", Font.ITALIC, 13));
+
 		// Add ListSelectionListener to timeline and ActionListener to the search
 		// button.
-		timeline.addListSelectionListener(new ListSelectionListener() {
+		timeline.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				Post show = finalPostsList.get(timeline.getSelectedIndex());
-				article.setText(show.getMessage());
+				String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
+				article.setText(text);
 			}
 		});
 
 		center.add(scrollPaneTimeline);
-		center.add(article);
+		center.add(scrollPaneArticle);
+
 
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (twitter_checkbox.isSelected()) {
-					searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
+					twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
+					manageTimeline();
 				}
 				if (fb_checkbox.isSelected()) {
-					searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
+					facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
+					manageTimeline();
 				}
-				if (timeline.getModel().getSize()==0) {
+				if (timeline.getModel().getRowCount()==0) {
 					JOptionPane.showMessageDialog(null, "No search results!");
 				}
 			}
@@ -232,191 +261,37 @@ public class GUI extends Thread {
 
 	}
 
-	public JList<?> getTimeline() {
+	private void manageTimeline() {
+
+		ArrayList<Post> postsList = facebook.getFinalPostsList();
+		ArrayList<Status> tweetsList = twitter.getFinalTweetsList();
+		tableModel.setRowCount(0);
+
+		if (postsList!=null) {
+			for (Post p : postsList) {
+				tableModel.addRow(new Object[]{"Facebook", p.getCreatedTime().toString(), p.getMessage()});
+			}
+		}
+
+		if (tweetsList!=null) {
+			System.out.println(tweetsList.size());
+			for (Status t : tweetsList) {
+				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt().toString(), t.getText().substring(0, 2)+"..."});
+			}
+		}
+
+	}
+
+	private void sortTable() {
+		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel> (tableModel);
+		timeline.setRowSorter(sorter);
+
+		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+		sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
+	}
+
+	public JTable getTimeline() {
 		return timeline;
-	}
-
-	/**
-	 * Accesses a specific Facebook page, gets its feed and saves every post on a
-	 * list. Organizes the list from the most recent posts to the oldest. Chooses
-	 * which posts are displayed depending on the JComboBox chosen item.
-	 * 
-	 * @param info   The keywords used on the JTextField
-	 * @param period The time period chosen on the JComboBox
-	 */
-	public void searchFacebook(String info, String period) {
-
-		FacebookClient fbClient = new DefaultFacebookClient(accessToken);
-
-		Page page = fbClient.fetchObject("listajespeniche", Page.class);
-
-		Connection<Post> postFeed = fbClient.fetchConnection(page.getId() + "/feed", Post.class);
-
-		for (List<Post> postPage : postFeed) {
-			for (Post aPost : postPage) {
-				if (aPost.getMessage() != null && aPost.getMessage().contains(info)) {
-					finalPostsList.add(aPost);
-				}
-			}
-		}
-
-		Collections.sort(finalPostsList, new Comparator<Post>() {
-			public int compare(Post o1, Post o2) {
-				return o2.getCreatedTime().compareTo(o1.getCreatedTime());
-			}
-		});
-
-		for (Post p : finalPostsList) {
-
-			Calendar calendar = Calendar.getInstance();
-
-			if (period.equals("Anytime")) {
-				String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   "
-						+ p.getMessage().substring(0, 30) + "...";
-				listModel.addElement(headerPost);
-			}
-
-			if (period.equals("Last hour")) {
-				calendar.add(Calendar.HOUR_OF_DAY, -1);
-				if (p.getCreatedTime().after(calendar.getTime())) {
-					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   "
-							+ p.getMessage().substring(0, 30) + "...";
-					listModel.addElement(headerPost);
-				}
-			}
-
-			if (period.equals("Last day")) {
-				calendar.add(Calendar.DAY_OF_MONTH, -1);
-				if (p.getCreatedTime().after(calendar.getTime())) {
-					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   "
-							+ p.getMessage().substring(0, 30) + "...";
-					listModel.addElement(headerPost);
-				}
-			}
-
-			if (period.equals("Last week")) {
-				calendar.add(Calendar.DAY_OF_MONTH, -7);
-				if (p.getCreatedTime().after(calendar.getTime())) {
-					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   "
-							+ p.getMessage().substring(0, 30) + "...";
-					listModel.addElement(headerPost);
-				}
-			}
-
-			if (period.equals("Last month")) {
-				calendar.add(Calendar.MONTH, -1);
-				if (p.getCreatedTime().after(calendar.getTime())) {
-					String headerPost = "Facebook: " + p.getCreatedTime().toString() + "   "
-							+ p.getMessage().substring(0, 30) + "...";
-					listModel.addElement(headerPost);
-				}
-			}
-
-		}
-	}
-	
-	/**
-	 * Accesses a specific Twitter page, gets its tweets and saves each one on a
-	 * list. Organizes the list from the most recent tweets to the oldest. Chooses
-	 * which tweets are displayed depending on the JComboBox chosen item.
-	 *
-	 * @param info   The keywords used on the JTextField
-	 * @param period The time period chosen on the JComboBox
-	 */
-	public void searchTwitter(String info, String period) {
-
-		info = keywords.getText();
-
-		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true).setOAuthConsumerKey("0I3XKOkznUjpuwdDOSkLvcSpg")
-				.setOAuthConsumerSecret("zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G")
-				.setOAuthAccessToken("325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg")
-				.setOAuthAccessTokenSecret("Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT");
-
-		TwitterFactory twitterFactory = new TwitterFactory(cb.build());
-		Twitter twitter = twitterFactory.getInstance();
-
-		Query query = new Query("ISCTEIUL");
-		query.setCount(1000);
-		QueryResult searchResult = null;
-
-		try {
-
-			searchResult = twitter.search(query);
-
-			List<Status> tweetsList = searchResult.getTweets();
-			Iterator<Status> listIterator = tweetsList.iterator();
-
-			while (listIterator.hasNext()) {
-				Status tweet = (Status) listIterator.next();
-				if (tweet.getUser().getScreenName().equals("ISCTEIUL") && tweet.getText().contains(info)) {
-//					if (tweet.getText().contains(info)) {
-						// System.out.println(tweet.getUser().getName() + ": " + tweet.getText());
-						finalTweetsList.add(tweet);
-//					}
-				}
-			}
-
-			Collections.sort(finalTweetsList, new Comparator<Status>() {
-				public int compare(Status o1, Status o2) {
-					return o2.getCreatedAt().compareTo(o1.getCreatedAt());
-				}
-			});
-
-			for (Status s : finalTweetsList) {
-
-				Calendar calendar = Calendar.getInstance();
-
-				if (period.equals("Anytime")) {
-					String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   "
-							+ s.getText().substring(0, 30) + "...";
-					listModel.addElement(headerTweet);
-					System.out.println(s.getUser().getName() + ": " + s.getText());
-				}
-
-				if (period.equals("Last hour")) {
-					calendar.add(Calendar.HOUR_OF_DAY, -1);
-					if (s.getCreatedAt().after(calendar.getTime())) {
-						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   "
-								+ s.getText().substring(0, 30) + "...";
-						listModel.addElement(headerTweet);
-					}
-				}
-
-				if (period.equals("Last day")) {
-					calendar.add(Calendar.DAY_OF_MONTH, -1);
-					if (s.getCreatedAt().after(calendar.getTime())) {
-						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   "
-								+ s.getText().substring(0, 30) + "...";
-						listModel.addElement(headerTweet);
-					}
-				}
-
-				if (period.equals("Last week")) {
-					calendar.add(Calendar.DAY_OF_MONTH, -7);
-					if (s.getCreatedAt().after(calendar.getTime())) {
-						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   "
-								+ s.getText().substring(0, 30) + "...";
-						listModel.addElement(headerTweet);
-					}
-				}
-
-				if (period.equals("Last month")) {
-					calendar.add(Calendar.MONTH, -1);
-					if (s.getCreatedAt().after(calendar.getTime())) {
-						String headerTweet = "Twitter: " + s.getCreatedAt().toString() + "   "
-								+ s.getText().substring(0, 30) + "...";
-						listModel.addElement(headerTweet);
-					}
-				}
-
-			}
-
-		} catch (TwitterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
 	/**
@@ -427,22 +302,23 @@ public class GUI extends Thread {
 		return frame;
 	}
 
+	public String getKeywords() {
+		return keywords.getText();
+	}
+
+	public DefaultTableModel getTableModel() {
+		return this.tableModel;
+	}
+
 	/**
 	 * Sets the specified frame to the GUI object.
 	 * @param frame
 	 */
 	public void setFrame(JFrame frame) {
 		this.frame = frame;
+		frame.setBackground(Color.LIGHT_GRAY);
+		frame.setFont(new Font("Arial", Font.PLAIN, 12));
 	}
 
-	public ArrayList<Post> getFinalPostsList() {
-		return finalPostsList;
-	}
-
-	public ArrayList<Status> getFinalTweetsList() {
-		return finalTweetsList;
-	}
-	
-	
 
 }

@@ -12,7 +12,7 @@ public class Main {
 			public void run() {
 				try {
 					GUI window = new GUI();
-					window.getFrame().setVisible(true);
+					window.start();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
