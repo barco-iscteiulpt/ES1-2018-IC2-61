@@ -220,29 +220,51 @@ public class GUI extends Thread {
 		// Define keyword search and create "Search" button. Specify dimensions, margins
 		// and icon. Add ActionListener. Add to top-right panel.
 		keywords = new JTextField();
+		JTextField reply = new JTextField();
+		reply.setPreferredSize(new Dimension(120, 24));
+		reply.setToolTipText("Insert your reply");
+		
+		JTextField comment = new JTextField();
+		comment.setPreferredSize(new Dimension(120, 24));
+		comment.setToolTipText("Insert your comment");
+
 		JButton searchButton = new JButton();
+
 		JButton retweetButton = new JButton();
+		retweetButton.setMargin(new Insets(8, 8, 8, 8));
+		retweetButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/retweet.png")));
+
 		JButton favoriteButton = new JButton();
-		JButton commentButton = new JButton();
+		favoriteButton.setMargin(new Insets(8, 8, 8, 8));
+		favoriteButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/heart.png")));
+
+		JButton replyButton = new JButton();
+		replyButton.setMargin(new Insets(8, 8, 8, 8));
+		replyButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/reply.png")));
+
 		JButton shareButton = new JButton();
 		shareButton.setMargin(new Insets(8, 8, 8, 8));
 		shareButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/share.png")));
+
 		JButton likeButton = new JButton();
 		likeButton.setMargin(new Insets(8, 8, 8, 8));
-		likeButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/like.png")));
+		likeButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/like.png")));	
+
+		JButton commentButton = new JButton();
 		commentButton.setMargin(new Insets(8, 8, 8, 8));
 		commentButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/comment.png")));
-		retweetButton.setMargin(new Insets(8, 8, 8, 8));
-		retweetButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/retweet.png")));
-		favoriteButton.setMargin(new Insets(8, 8, 8, 8));
-		favoriteButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/heart.png")));
+
+		reply.setVisible(false);
 		retweetButton.setVisible(false);
 		favoriteButton.setVisible(false);
+		replyButton.setVisible(false);
 		commentButton.setVisible(false);
 		shareButton.setVisible(false);
 		likeButton.setVisible(false);
+		comment.setVisible(false);
 
 		keywords.setPreferredSize(new Dimension(120, 24));
+		keywords.setToolTipText("Insert keywords");
 		searchButton.setMargin(new Insets(2, 8, 2, 8));
 		searchButton.setIcon(new ImageIcon("src/resources/magnifier-tool.png"));
 
@@ -269,10 +291,14 @@ public class GUI extends Thread {
 		content.setSize(content.getWidth(), 100);
 		contentSouth = new JPanel();
 		content.setLayout(new BorderLayout());
+		contentSouth.add(reply);
+		contentSouth.add(replyButton);
 		contentSouth.add(retweetButton);
 		contentSouth.add(favoriteButton);
-		contentSouth.add(likeButton);
+
+		contentSouth.add(comment);
 		contentSouth.add(commentButton);
+		contentSouth.add(likeButton);
 		contentSouth.add(shareButton);
 
 		article = new JTextArea();
@@ -286,8 +312,8 @@ public class GUI extends Thread {
 		article.setWrapStyleWord(true);
 		content.add(scrollPaneArticle, BorderLayout.NORTH);
 		content.add(contentSouth, BorderLayout.SOUTH);
-		
-		
+
+
 		// Create table columns.
 		tableModel.addColumn("Source");
 		tableModel.addColumn("Date");
@@ -305,23 +331,29 @@ public class GUI extends Thread {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (timeline.getSelectedRow() >= 0) {
-					
+
 					String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
 					article.setText(text);
-					
+
 					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Status) {
+						comment.setVisible(false);
 						likeButton.setVisible(false);
 						commentButton.setVisible(false);
 						shareButton.setVisible(false);
+						reply.setVisible(true);
+						replyButton.setVisible(true);
 						retweetButton.setVisible(true);
 						favoriteButton.setVisible(true);		
 						Status tweet = (Status) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
 						tweetId = tweet.getId();
 					}
-					
+
 					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Post) {
 						retweetButton.setVisible(false);
 						favoriteButton.setVisible(false);
+						reply.setVisible(false);
+						replyButton.setVisible(false);
+						comment.setVisible(true);
 						likeButton.setVisible(true);
 						commentButton.setVisible(true);
 						shareButton.setVisible(true);
@@ -329,22 +361,32 @@ public class GUI extends Thread {
 				}
 			}
 		});
-		
+
 		retweetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				twitter.retweet(tweetId);
 			}
 		});
-		
+
 		favoriteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				twitter.favorite(tweetId);
 			}
 		});
-		
-		likeButton.addActionListener(new ActionListener() {
+
+		replyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				facebook.share();
+				if (reply.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Please insert a reply.");
+				}else
+					twitter.reply(tweetId, reply.getText());
+			}
+		});
+
+
+		shareButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//				facebook.share();
 			}
 		});
 

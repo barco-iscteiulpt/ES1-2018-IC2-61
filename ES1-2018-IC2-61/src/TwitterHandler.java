@@ -131,23 +131,22 @@ public class TwitterHandler {
 
 	}
 	
-//	public void reply() {
-//		try {
-//			long tweetId = 1064579907219525632L;
-//			TwitterFactory factory = new TwitterFactory();
-//			Twitter twitter = factory.getInstance();
-//			twitter.setOAuthConsumer("0I3XKOkznUjpuwdDOSkLvcSpg", "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G");
-//			AccessToken accessToken = new AccessToken("325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg", "Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT");
-//			twitter.setOAuthAccessToken(accessToken);
-//			StatusUpdate statusUpdate = new StatusUpdate("bu");
-//			statusUpdate.setInReplyToStatusId(tweetId);
-//			Status status = twitter.updateStatus(statusUpdate);
-//		} catch (TwitterException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//    
-//}
+	public void reply(long tweetId, String reply) {
+		try {
+			TwitterFactory factory = new TwitterFactory();
+			Twitter twitter = factory.getInstance();
+			twitter.setOAuthConsumer("0I3XKOkznUjpuwdDOSkLvcSpg", "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G");
+			AccessToken accessToken = new AccessToken("325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg", "Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT");
+			twitter.setOAuthAccessToken(accessToken);
+			StatusUpdate statusUpdate = new StatusUpdate(reply);
+			statusUpdate.setInReplyToStatusId(tweetId);
+			Status status = twitter.updateStatus(statusUpdate);
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    
+}
 
 
 	public ArrayList<Status> getFinalTweetsList() {
