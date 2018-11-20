@@ -2,8 +2,9 @@ import java.awt.EventQueue;
 
 public class Main {
 
-	/** 
-	 * Creates the GUI and sets it visible 
+	/**
+	 * Creates the GUI and sets it visible
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
