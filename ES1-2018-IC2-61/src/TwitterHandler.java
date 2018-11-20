@@ -8,13 +8,20 @@ import java.util.List;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.api.SearchResource;
+import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterHandler {
+	
+	private String authConsumerKey = "0I3XKOkznUjpuwdDOSkLvcSpg";
+	private String authConsumerSecret = "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G";
+	private String authAccessToken = "325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg";
+	private String authAccessTokenSecret = "Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT";
 
 	public ArrayList<Status> finalTweetsList;
 
@@ -31,15 +38,15 @@ public class TwitterHandler {
 		finalTweetsList = new ArrayList<>();
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true).setOAuthConsumerKey("0I3XKOkznUjpuwdDOSkLvcSpg")
-				.setOAuthConsumerSecret("zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G")
-				.setOAuthAccessToken("325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg")
-				.setOAuthAccessTokenSecret("Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT");
+		cb.setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
+				.setOAuthConsumerSecret(authConsumerSecret)
+				.setOAuthAccessToken(authAccessToken)
+				.setOAuthAccessTokenSecret(authAccessTokenSecret);
 
 		TwitterFactory twitterFactory = new TwitterFactory(cb.build());
 		Twitter twitter = twitterFactory.getInstance();
 
-		Query query = new Query("marianasilvamss");
+		Query query = new Query("Andreecarvalh0");
 		query.setCount(100);
 		QueryResult searchResult = null;
 
@@ -52,7 +59,7 @@ public class TwitterHandler {
 
 			while (listIterator.hasNext()) {
 				Status tweet = (Status) listIterator.next();
-				if (tweet.getUser().getScreenName().equals("marianasilvamss") && tweet.getText().contains(info)) {
+				if (tweet.getUser().getScreenName().equals("Andreecarvalh0") && tweet.getText().contains(info)) {
 					if (period.equals("Anytime")) {
 						finalTweetsList.add(tweet);
 					}
@@ -91,6 +98,59 @@ public class TwitterHandler {
 			e.printStackTrace();
 		}
 	}
+	
+	public void retweet() {
+	
+		try {
+			long tweetId = 1064579907219525632L;
+			TwitterFactory factory = new TwitterFactory();
+			Twitter twitter = factory.getInstance();
+			twitter.setOAuthConsumer(authConsumerKey, authConsumerSecret);
+			AccessToken accessToken = new AccessToken(authAccessToken, authAccessTokenSecret);
+			twitter.setOAuthAccessToken(accessToken);
+			twitter.retweetStatus(tweetId);
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public void favorite() {
+
+		try {
+			long tweetId = 1064579907219525632L;
+			TwitterFactory factory = new TwitterFactory();
+			Twitter twitter = factory.getInstance();
+			twitter.setOAuthConsumer(authConsumerKey, authConsumerSecret);
+			AccessToken accessToken = new AccessToken(authAccessToken, authAccessTokenSecret);
+			twitter.setOAuthAccessToken(accessToken);
+			Status status = twitter.createFavorite(tweetId);
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+//	public void reply() {
+//		try {
+//			long tweetId = 1064579907219525632L;
+//			TwitterFactory factory = new TwitterFactory();
+//			Twitter twitter = factory.getInstance();
+//			twitter.setOAuthConsumer("0I3XKOkznUjpuwdDOSkLvcSpg", "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G");
+//			AccessToken accessToken = new AccessToken("325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg", "Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT");
+//			twitter.setOAuthAccessToken(accessToken);
+//			StatusUpdate statusUpdate = new StatusUpdate("bu");
+//			statusUpdate.setInReplyToStatusId(tweetId);
+//			Status status = twitter.updateStatus(statusUpdate);
+//		} catch (TwitterException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//    
+//}
+
 
 	public ArrayList<Status> getFinalTweetsList() {
 		return this.finalTweetsList;

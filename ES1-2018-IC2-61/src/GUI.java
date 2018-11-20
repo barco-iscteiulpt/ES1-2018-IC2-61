@@ -265,6 +265,9 @@ public class GUI extends Thread {
 				if (twitter_checkbox.isSelected()) {
 					twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 					manageTimeline();
+					twitter.retweet();
+					twitter.favorite();
+//					twitter.reply();
 				}
 				if (fb_checkbox.isSelected()) {
 					facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
@@ -484,7 +487,7 @@ public class GUI extends Thread {
 
 		if (tweetsList != null) {
 			for (Status t : tweetsList) {
-				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText()});
+				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText()+"\n"+"\n"+"ID: "+t.getId()});
 			}
 		}
 		sortTable();
