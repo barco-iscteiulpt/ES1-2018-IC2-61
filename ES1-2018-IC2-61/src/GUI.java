@@ -328,15 +328,11 @@ public class GUI extends Thread {
 				if (twitter_checkbox.isSelected()) {
 					twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 					manageTimeline();
-<<<<<<< HEAD
 					//					twitter.retweet();
 					//					twitter.favorite();
 					//					twitter.reply();
-=======
-//					twitter.retweet();
-//					twitter.favorite();
-//					twitter.reply();
->>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
+
+
 				}
 				if (fb_checkbox.isSelected()) {
 					facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
