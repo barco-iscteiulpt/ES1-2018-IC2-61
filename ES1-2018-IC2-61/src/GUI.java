@@ -271,6 +271,9 @@ public class GUI extends Thread {
 				if (twitter_checkbox.isSelected()) {
 					twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 					manageTimeline();
+					twitter.retweet();
+					twitter.favorite();
+//					twitter.reply();
 				}
 				if (fb_checkbox.isSelected()) {
 					facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
@@ -286,7 +289,7 @@ public class GUI extends Thread {
 
 	protected void configFrame() {
 		JFrame config = new JFrame();
-		config.setLayout(new GridLayout(3, 1));
+		config.setLayout(new GridLayout(5, 1));
 		JLabel fb_icon = new JLabel(new ImageIcon("src/resources/facebook_big.png"));
 		JLabel twitter_icon = new JLabel(new ImageIcon("src/resources/twitter_big.png"));
 		JLabel email_icon = new JLabel(new ImageIcon("src/resources/gmail_big.png"));
@@ -300,7 +303,7 @@ public class GUI extends Thread {
 		if (configAccounts.getFacebookAccount() == null) {
 			panel1 = new JPanel();
 			panel1.setLayout(new BorderLayout());
-			panel1.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+			panel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelFb = new JLabel("Facebook");
 			labelFb.setHorizontalAlignment(JLabel.CENTER);
 			actionFb = new JButton("Login");
@@ -322,14 +325,17 @@ public class GUI extends Thread {
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
 						configAccounts.write("Facebook", conta.getText(), token.getText());
+						configAccounts.read("Facebook");
+						config.dispose();
+						configFrame();
 					}
 				}
 			});
 
 		} else {
 			panel1 = new JPanel();
-			panel1.setLayout(new BorderLayout(20,20));
-			panel1.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+			panel1.setLayout(new BorderLayout());
+			panel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelFb = new JLabel("Facebook");
 			labelFb.setHorizontalAlignment(JLabel.CENTER);
 			fbAccount = new JLabel(configAccounts.getFacebookAccount());
@@ -339,6 +345,10 @@ public class GUI extends Thread {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					configAccounts.delete("Facebook");
+					configAccounts.read("Facebook");
+					System.out.println(configAccounts.getFacebookAccount());
+					config.dispose();
+					configFrame();
 				}
 			});
 		}
@@ -351,8 +361,8 @@ public class GUI extends Thread {
 
 		if (configAccounts.getTwitterAccount() == null) {
 			panel2 = new JPanel();
-			panel2.setLayout(new BorderLayout(20,20));
-			panel2.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+			panel2.setLayout(new BorderLayout());
+			panel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelTw = new JLabel("Twitter");
 			labelTw.setHorizontalAlignment(JLabel.CENTER);
 			actionTw = new JButton("Login");
@@ -374,14 +384,17 @@ public class GUI extends Thread {
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
 						configAccounts.write("Twitter", conta.getText(), token.getText());
+						configAccounts.read("Twitter");
+						config.dispose();
+						configFrame();
 					}
 				}
 			});
 
 		} else {
 			panel2 = new JPanel();
-			panel2.setLayout(new BorderLayout(20,20));
-			panel2.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+			panel2.setLayout(new BorderLayout());
+			panel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelTw = new JLabel("Twitter");
 			labelTw.setHorizontalAlignment(JLabel.CENTER);
 			twAccount = new JLabel(configAccounts.getTwitterAccount());
@@ -391,6 +404,9 @@ public class GUI extends Thread {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					configAccounts.delete("Twitter");
+					configAccounts.read("Twitter");
+					config.dispose();
+					configFrame();
 				}
 			});
 		}
@@ -405,7 +421,7 @@ public class GUI extends Thread {
 		if (configAccounts.getEmailAccount() == null) {
 			panel3 = new JPanel();
 			panel3.setLayout(new BorderLayout());
-			panel3.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+			panel3.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelEm = new JLabel("Email");
 			labelEm.setHorizontalAlignment(JLabel.CENTER);
 			actionEm = new JButton("Login");
@@ -427,6 +443,9 @@ public class GUI extends Thread {
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
 						configAccounts.write("Email", conta.getText(), token.getText());
+						configAccounts.read("Email");
+						config.dispose();
+						configFrame();
 					}
 				}
 			});
@@ -434,7 +453,7 @@ public class GUI extends Thread {
 		} else {
 			panel3 = new JPanel();
 			panel3.setLayout(new BorderLayout());
-			panel3.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+			panel3.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelEm = new JLabel("Email");
 			labelEm.setHorizontalAlignment(JLabel.CENTER);
 			emAccount = new JLabel(configAccounts.getEmailAccount());
@@ -444,6 +463,9 @@ public class GUI extends Thread {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					configAccounts.delete("Email");
+					configAccounts.read("Email");
+					config.dispose();
+					configFrame();
 				}
 			});
 		}
@@ -465,7 +487,9 @@ public class GUI extends Thread {
 		
 
 		config.add(panel1);
+		config.add(new JSeparator(JSeparator.HORIZONTAL));
 		config.add(panel2);
+		config.add(new JSeparator(JSeparator.HORIZONTAL));
 		config.add(panel3);
 
 		config.setBounds(100,100, 400, 300);
@@ -489,7 +513,11 @@ public class GUI extends Thread {
 
 		if (tweetsList != null) {
 			for (Status t : tweetsList) {
+<<<<<<< HEAD
 				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText()+"\n"+"\n"+"ID: "+t.getId(),t});
+=======
+				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText()+"\n"+"\n"+"ID: "+t.getId()});
+>>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
 			}
 		}
 //		sortTable();

@@ -95,7 +95,6 @@ public class Config {
 	}
 
 	public void delete(String s) {
-		System.out.println("olaolaoalaoalaoaolaoa");
 		try {
 			File inputFile = new File("src/resources/config.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -113,10 +112,30 @@ public class Config {
 			StreamResult result = new StreamResult(new FileOutputStream(inputFile));
 			DOMSource source = new DOMSource(doc);
 			transformer.transform(source, result);
+			
+			if(s.equals("Facebook"))
+				setFacebookAccount(null);
+			else if(s.equals("Twitter"))
+				setTwitterAccount(null);
+			else if(s.equals("Email"))
+				setEmailAccount(null);
+	
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void setFacebookAccount(String facebookAccount) {
+		this.facebookAccount = facebookAccount;
+	}
+
+	public void setTwitterAccount(String twitterAccount) {
+		this.twitterAccount = twitterAccount;
+	}
+
+	public void setEmailAccount(String emailAccount) {
+		this.emailAccount = emailAccount;
 	}
 
 	public String getFacebookAccount() {
