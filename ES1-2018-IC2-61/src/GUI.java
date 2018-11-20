@@ -72,6 +72,7 @@ public class GUI extends Thread {
 	private JTextField keywords;
 	public DefaultTableModel tableModel;
 	protected JTable timeline;
+	protected JTextArea article ;
 	public FacebookHandler facebook;
 	public TwitterHandler twitter;
 	private Config configAccounts = new Config();
@@ -227,7 +228,7 @@ public class GUI extends Thread {
 		// respective panes.
 		tableModel = new DefaultTableModel();
 		timeline = new JTable(tableModel);
-		JTextArea article = new JTextArea();
+		article = new JTextArea();
 
 		JScrollPane scrollPaneTimeline = new JScrollPane();
 		JScrollPane scrollPaneArticle = new JScrollPane();
@@ -240,6 +241,10 @@ public class GUI extends Thread {
 		tableModel.addColumn("Source");
 		tableModel.addColumn("Date");
 		tableModel.addColumn("Content");
+		tableModel.addColumn("Object");
+		timeline.getColumnModel().getColumn(3).setWidth(0);
+		timeline.getColumnModel().getColumn(3).setMinWidth(0);
+		timeline.getColumnModel().getColumn(3).setMaxWidth(0);
 		timeline.setFont(new Font("Arial", Font.PLAIN, 12));
 		timeline.getTableHeader().setFont(new Font("Arial", Font.ITALIC, 13));
 
@@ -250,6 +255,7 @@ public class GUI extends Thread {
 			public void valueChanged(ListSelectionEvent e) {
 				if (timeline.getSelectedRow() >= 0) {
 					String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
+					System.out.println(tableModel.getValueAt(timeline.getSelectedRow(), 3).toString());
 					article.setText(text);
 				}
 			}
@@ -474,30 +480,29 @@ public class GUI extends Thread {
 		ArrayList<Status> tweetsList = twitter.getFinalTweetsList();
 		tableModel.setRowCount(0);
 		timeline.clearSelection();
-
+		
 		if (postsList != null) {
 			for (Post p : postsList) {
 				tableModel.addRow(new Object[]{"Facebook", p.getCreatedTime(), p.getMessage()});
-
 			}
 		}
 
 		if (tweetsList != null) {
 			for (Status t : tweetsList) {
-				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText()});
+				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText()+"\n"+"\n"+"ID: "+t.getId(),t});
 			}
 		}
-		sortTable();
+//		sortTable();
 	}
 
 	private void sortTable() {
 		
 		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel> (tableModel);
 		sorter.setComparator(1, Comparator.naturalOrder());
-		timeline.setRowSorter(sorter);
-
-//		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-//		sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
+		timeline.setRowSorter(sorter);		
+		
+		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+		sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
 	}
 
 	public JTable getTimeline() {
