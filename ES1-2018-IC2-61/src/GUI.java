@@ -513,11 +513,7 @@ public class GUI extends Thread {
 
 		if (tweetsList != null) {
 			for (Status t : tweetsList) {
-<<<<<<< HEAD
 				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText()+"\n"+"\n"+"ID: "+t.getId(),t});
-=======
-				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText()+"\n"+"\n"+"ID: "+t.getId()});
->>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
 			}
 		}
 //		sortTable();
