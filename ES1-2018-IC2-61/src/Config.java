@@ -25,6 +25,10 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.restfb.types.Post;
+
+import twitter4j.Status;
+
 public class Config {
 
 	private String facebookAccount;
@@ -68,16 +72,33 @@ public class Config {
 
 	}
 
-	public void write(String s, String email, String token) {
+	public void write(Object o) {
 		try {
 			File inputFile = new File("src/resources/config.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
 			doc.getDocumentElement().normalize();
-			Element element = doc.createElement(s);
-			element.setAttribute("Conta", email);
-			element.setAttribute("Token", token);
+			Element element = null;
+			if (o instanceof LoginRequest) {
+				LoginRequest lr = (LoginRequest) o;
+				element = doc.createElement(lr.getService());
+				element.setAttribute("Conta", lr.getConta());
+				element.setAttribute("Token", lr.getToken());
+			} else if (o instanceof Post){
+				Post p = (Post) o;
+				element = doc.createElement("Post");
+				element.setAttribute("Date", p.getCreatedTime().toString());
+				element.setAttribute("Content", p.getMessage());
+				element.setAttribute("ID", p.getId());
+			} else if (o instanceof Status) {
+				Status st = (Status) o;
+				element = doc.createElement("Status");
+				element.setAttribute("Date", st.getCreatedAt().toString());
+				element.setAttribute("Content", st.getText());
+				element.setAttribute("ID", st.getSource());
+			}
+
 
 			Node node = doc.getDocumentElement();
 			node.appendChild(element);
@@ -93,7 +114,33 @@ public class Config {
 		}
 
 	}
-
+//	
+//	public void write(String s, String email, String token) {
+//		try {
+//			File inputFile = new File("src/resources/config.xml");
+//			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+//			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+//			Document doc = dBuilder.parse(inputFile);
+//			doc.getDocumentElement().normalize();
+//			Element element = doc.createElement(s);
+//			element.setAttribute("Conta", email);
+//			element.setAttribute("Token", token);
+//
+//			Node node = doc.getDocumentElement();
+//			node.appendChild(element);
+//
+//			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+//			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+//			StreamResult result = new StreamResult(new FileOutputStream(inputFile));
+//			DOMSource source = new DOMSource(doc);
+//			transformer.transform(source, result);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
+	
 	public void delete(String s) {
 		try {
 			File inputFile = new File("src/resources/config.xml");

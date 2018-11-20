@@ -8,6 +8,8 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -102,7 +104,19 @@ public class GUI extends Thread {
 		frame.setBounds(100, 100, 800, 600);
 		ImageIcon appIcon = new ImageIcon("src/resources/app-icon.png");
 		frame.setIconImage(appIcon.getImage());
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+		frame.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				tableToXML();
+				frame.dispose();
+			}
+
+		});
+
+
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		facebook = new FacebookHandler();
@@ -271,9 +285,9 @@ public class GUI extends Thread {
 				if (twitter_checkbox.isSelected()) {
 					twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 					manageTimeline();
-					twitter.retweet();
-					twitter.favorite();
-//					twitter.reply();
+					//					twitter.retweet();
+					//					twitter.favorite();
+					//					twitter.reply();
 				}
 				if (fb_checkbox.isSelected()) {
 					facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
@@ -285,6 +299,16 @@ public class GUI extends Thread {
 			}
 		});
 
+	}
+
+	protected void tableToXML() {
+		if(facebook.getFinalPostsList()!=null && twitter.getFinalTweetsList()!=null) {
+			for(int i =0; i<facebook.getFinalPostsList().size();i++) {
+				configAccounts.write(facebook.getFinalPostsList().get(i));
+			}
+			for(int i = 0; i<twitter.getFinalTweetsList().size();i++)
+				configAccounts.write(twitter.getFinalTweetsList().get(i));
+		}
 	}
 
 	protected void configFrame() {
@@ -324,7 +348,7 @@ public class GUI extends Thread {
 					int result = JOptionPane.showConfirmDialog(null, dialog, "Please enter account info",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
-						configAccounts.write("Facebook", conta.getText(), token.getText());
+						configAccounts.write(new LoginRequest("Facebook", conta.getText(), token.getText()));
 						configAccounts.read("Facebook");
 						config.dispose();
 						configFrame();
@@ -383,7 +407,7 @@ public class GUI extends Thread {
 					int result = JOptionPane.showConfirmDialog(null, dialog, "Please enter account info",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
-						configAccounts.write("Twitter", conta.getText(), token.getText());
+						configAccounts.write(new LoginRequest("Twitter", conta.getText(), token.getText()));
 						configAccounts.read("Twitter");
 						config.dispose();
 						configFrame();
@@ -410,7 +434,7 @@ public class GUI extends Thread {
 				}
 			});
 		}
-		
+
 
 		// Line 3
 		JPanel panel3;
@@ -442,7 +466,7 @@ public class GUI extends Thread {
 					int result = JOptionPane.showConfirmDialog(null, dialog, "Please enter account info",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
-						configAccounts.write("Email", conta.getText(), token.getText());
+						configAccounts.write(new LoginRequest("Email", conta.getText(), token.getText()));
 						configAccounts.read("Email");
 						config.dispose();
 						configFrame();
@@ -469,7 +493,7 @@ public class GUI extends Thread {
 				}
 			});
 		}
-		
+
 
 		panel1.add(labelFb, BorderLayout.WEST);
 		panel1.add(fbAccount, BorderLayout.CENTER);
@@ -483,8 +507,8 @@ public class GUI extends Thread {
 		panel3.add(emAccount, BorderLayout.CENTER);
 		panel3.add(actionEm, BorderLayout.EAST);
 		panel3.add(email_icon, BorderLayout.WEST);
-		
-		
+
+
 
 		config.add(panel1);
 		config.add(new JSeparator(JSeparator.HORIZONTAL));
@@ -504,7 +528,7 @@ public class GUI extends Thread {
 		ArrayList<Status> tweetsList = twitter.getFinalTweetsList();
 		tableModel.setRowCount(0);
 		timeline.clearSelection();
-		
+
 		if (postsList != null) {
 			for (Post p : postsList) {
 				tableModel.addRow(new Object[]{"Facebook", p.getCreatedTime(), p.getMessage()});
@@ -516,15 +540,15 @@ public class GUI extends Thread {
 				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText()+"\n"+"\n"+"ID: "+t.getId(),t});
 			}
 		}
-//		sortTable();
+		//		sortTable();
 	}
 
 	private void sortTable() {
-		
+
 		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel> (tableModel);
 		sorter.setComparator(1, Comparator.naturalOrder());
 		timeline.setRowSorter(sorter);		
-		
+
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 		sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
 	}

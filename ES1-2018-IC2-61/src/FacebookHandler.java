@@ -72,7 +72,7 @@ public class FacebookHandler {
 	}
 
 	public ArrayList<Post> getFinalPostsList() {
-		return this.finalPostsList;
+		return finalPostsList;
 	}
 
 }
