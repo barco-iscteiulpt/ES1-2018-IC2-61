@@ -78,6 +78,9 @@ public class GUI extends Thread {
 	public FacebookHandler facebook;
 	public TwitterHandler twitter;
 	private Config configAccounts = new Config();
+	private JPanel content;
+	private JPanel contentSouth;
+	private long tweetId;
 
 	/**
 	 * Create the application.
@@ -218,6 +221,14 @@ public class GUI extends Thread {
 		// and icon. Add ActionListener. Add to top-right panel.
 		keywords = new JTextField();
 		JButton searchButton = new JButton();
+		JButton retweetButton = new JButton();
+		JButton favoriteButton = new JButton();
+		retweetButton.setMargin(new Insets(8, 8, 8, 8));
+		retweetButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/retweet.png")));
+		favoriteButton.setMargin(new Insets(8, 8, 8, 8));
+		favoriteButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/heart.png")));
+		retweetButton.setVisible(false);
+		favoriteButton.setVisible(false);
 
 		keywords.setPreferredSize(new Dimension(120, 24));
 		searchButton.setMargin(new Insets(2, 8, 2, 8));
@@ -242,15 +253,26 @@ public class GUI extends Thread {
 		// respective panes.
 		tableModel = new DefaultTableModel();
 		timeline = new JTable(tableModel);
+		content = new JPanel();
+		content.setSize(content.getWidth(), 100);
+		contentSouth = new JPanel();
+		content.setLayout(new BorderLayout());
+		contentSouth.add(retweetButton);
+		contentSouth.add(favoriteButton);
+		
 		article = new JTextArea();
 
 		JScrollPane scrollPaneTimeline = new JScrollPane();
 		JScrollPane scrollPaneArticle = new JScrollPane();
 		scrollPaneTimeline.setViewportView(timeline);
 		scrollPaneArticle.setViewportView(article);
+		scrollPaneArticle.setPreferredSize(new Dimension(content.getWidth(),460));
 		article.setLineWrap(true);
 		article.setWrapStyleWord(true);
-
+		content.add(scrollPaneArticle, BorderLayout.NORTH);
+		content.add(contentSouth, BorderLayout.SOUTH);
+		
+		
 		// Create table columns.
 		tableModel.addColumn("Source");
 		tableModel.addColumn("Date");
@@ -268,15 +290,36 @@ public class GUI extends Thread {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (timeline.getSelectedRow() >= 0) {
+					
 					String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
 					System.out.println(tableModel.getValueAt(timeline.getSelectedRow(), 3).toString());
 					article.setText(text);
+					
+					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Status) {
+						System.out.println("nice");
+						retweetButton.setVisible(true);
+						favoriteButton.setVisible(true);		
+						Status tweet = (Status) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
+						tweetId = tweet.getId();
+					}
 				}
+			}
+		});
+		
+		retweetButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				twitter.retweet(tweetId);
+			}
+		});
+		
+		favoriteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				twitter.favorite(tweetId);
 			}
 		});
 
 		center.add(scrollPaneTimeline);
-		center.add(scrollPaneArticle);
+		center.add(content);
 
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -285,9 +328,15 @@ public class GUI extends Thread {
 				if (twitter_checkbox.isSelected()) {
 					twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 					manageTimeline();
+<<<<<<< HEAD
 					//					twitter.retweet();
 					//					twitter.favorite();
 					//					twitter.reply();
+=======
+//					twitter.retweet();
+//					twitter.favorite();
+//					twitter.reply();
+>>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
 				}
 				if (fb_checkbox.isSelected()) {
 					facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
@@ -313,7 +362,7 @@ public class GUI extends Thread {
 
 	protected void configFrame() {
 		JFrame config = new JFrame();
-		config.setLayout(new GridLayout(5, 1));
+		config.getContentPane().setLayout(new GridLayout(5, 1));
 		JLabel fb_icon = new JLabel(new ImageIcon("src/resources/facebook_big.png"));
 		JLabel twitter_icon = new JLabel(new ImageIcon("src/resources/twitter_big.png"));
 		JLabel email_icon = new JLabel(new ImageIcon("src/resources/gmail_big.png"));
@@ -510,11 +559,11 @@ public class GUI extends Thread {
 
 
 
-		config.add(panel1);
-		config.add(new JSeparator(JSeparator.HORIZONTAL));
-		config.add(panel2);
-		config.add(new JSeparator(JSeparator.HORIZONTAL));
-		config.add(panel3);
+		config.getContentPane().add(panel1);
+		config.getContentPane().add(new JSeparator(JSeparator.HORIZONTAL));
+		config.getContentPane().add(panel2);
+		config.getContentPane().add(new JSeparator(JSeparator.HORIZONTAL));
+		config.getContentPane().add(panel3);
 
 		config.setBounds(100,100, 400, 300);
 		config.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -531,13 +580,13 @@ public class GUI extends Thread {
 
 		if (postsList != null) {
 			for (Post p : postsList) {
-				tableModel.addRow(new Object[]{"Facebook", p.getCreatedTime(), p.getMessage()});
+				tableModel.addRow(new Object[]{"Facebook", p.getCreatedTime(), p.getMessage(),p});
 			}
 		}
 
 		if (tweetsList != null) {
 			for (Status t : tweetsList) {
-				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText()+"\n"+"\n"+"ID: "+t.getId(),t});
+				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText(), t});
 			}
 		}
 		//		sortTable();
