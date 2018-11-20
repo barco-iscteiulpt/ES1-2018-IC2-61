@@ -5,6 +5,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -99,10 +101,9 @@ public class TwitterHandler {
 		}
 	}
 	
-	public void retweet() {
+	public void retweet(long tweetId) {
 	
 		try {
-			long tweetId = 1064579907219525632L;
 			TwitterFactory factory = new TwitterFactory();
 			Twitter twitter = factory.getInstance();
 			twitter.setOAuthConsumer(authConsumerKey, authConsumerSecret);
@@ -110,16 +111,14 @@ public class TwitterHandler {
 			twitter.setOAuthAccessToken(accessToken);
 			twitter.retweetStatus(tweetId);
 		} catch (TwitterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "You have already retweeted this tweet!");
 		}
 
 	}
 
-	public void favorite() {
+	public void favorite(long tweetId) {
 
 		try {
-			long tweetId = 1064579907219525632L;
 			TwitterFactory factory = new TwitterFactory();
 			Twitter twitter = factory.getInstance();
 			twitter.setOAuthConsumer(authConsumerKey, authConsumerSecret);
@@ -127,8 +126,7 @@ public class TwitterHandler {
 			twitter.setOAuthAccessToken(accessToken);
 			Status status = twitter.createFavorite(tweetId);
 		} catch (TwitterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "You have already favorited this tweet!");
 		}
 
 	}
