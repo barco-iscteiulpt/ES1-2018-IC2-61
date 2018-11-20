@@ -76,7 +76,7 @@ public class Config {
 			Document doc = dBuilder.parse(inputFile);
 			doc.getDocumentElement().normalize();
 			Element element = doc.createElement(s);
-			element.setAttribute("Account", email);
+			element.setAttribute("Conta", email);
 			element.setAttribute("Token", token);
 
 			Node node = doc.getDocumentElement();

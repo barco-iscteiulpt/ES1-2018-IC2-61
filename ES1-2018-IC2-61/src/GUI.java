@@ -49,6 +49,7 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -279,7 +280,10 @@ public class GUI extends Thread {
 
 	protected void configFrame() {
 		JFrame config = new JFrame();
-		config.setLayout(new GridLayout(7, 1));
+		config.setLayout(new GridLayout(3, 1));
+		JLabel fb_icon = new JLabel(new ImageIcon("src/resources/facebook_big.png"));
+		JLabel twitter_icon = new JLabel(new ImageIcon("src/resources/twitter_big.png"));
+		JLabel email_icon = new JLabel(new ImageIcon("src/resources/gmail_big.png"));
 
 		// Line 1
 		JPanel panel1;
@@ -290,6 +294,7 @@ public class GUI extends Thread {
 		if (configAccounts.getFacebookAccount() == null) {
 			panel1 = new JPanel();
 			panel1.setLayout(new BorderLayout());
+			panel1.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 			labelFb = new JLabel("Facebook");
 			labelFb.setHorizontalAlignment(JLabel.CENTER);
 			actionFb = new JButton("Login");
@@ -311,14 +316,14 @@ public class GUI extends Thread {
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
 						configAccounts.write("Facebook", conta.getText(), token.getText());
-						System.out.println("olaaaaaaaaaaaaaaaaaa");
 					}
 				}
 			});
 
 		} else {
 			panel1 = new JPanel();
-			panel1.setLayout(new BorderLayout());
+			panel1.setLayout(new BorderLayout(20,20));
+			panel1.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 			labelFb = new JLabel("Facebook");
 			labelFb.setHorizontalAlignment(JLabel.CENTER);
 			fbAccount = new JLabel(configAccounts.getFacebookAccount());
@@ -328,7 +333,6 @@ public class GUI extends Thread {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					configAccounts.delete("Facebook");
-					System.out.println("olaaaaaaaaaaaaaaaaaa");
 				}
 			});
 		}
@@ -341,19 +345,50 @@ public class GUI extends Thread {
 
 		if (configAccounts.getTwitterAccount() == null) {
 			panel2 = new JPanel();
-			panel2.setLayout(new BorderLayout());
+			panel2.setLayout(new BorderLayout(20,20));
+			panel2.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 			labelTw = new JLabel("Twitter");
 			labelTw.setHorizontalAlignment(JLabel.CENTER);
 			actionTw = new JButton("Login");
+			actionTw.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+
+					JTextField conta = new JTextField(20);
+					JTextField token = new JTextField(20);
+					JPanel dialog = new JPanel();
+					dialog.add(new JLabel("Conta: "));
+					dialog.add(conta);
+					dialog.add(Box.createHorizontalStrut(15));
+					dialog.add(new JLabel("Token: "));
+					dialog.add(token);
+
+					int result = JOptionPane.showConfirmDialog(null, dialog, "Please enter account info",
+							JOptionPane.OK_CANCEL_OPTION);
+					if (result == JOptionPane.OK_OPTION) {
+						configAccounts.write("Twitter", conta.getText(), token.getText());
+					}
+				}
+			});
 
 		} else {
 			panel2 = new JPanel();
-			panel2.setLayout(new BorderLayout());
+			panel2.setLayout(new BorderLayout(20,20));
+			panel2.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 			labelTw = new JLabel("Twitter");
 			labelTw.setHorizontalAlignment(JLabel.CENTER);
 			twAccount = new JLabel(configAccounts.getTwitterAccount());
 			actionTw = new JButton("Logout");
+			actionTw.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					configAccounts.delete("Twitter");
+				}
+			});
 		}
+		
 
 		// Line 3
 		JPanel panel3;
@@ -364,35 +399,71 @@ public class GUI extends Thread {
 		if (configAccounts.getEmailAccount() == null) {
 			panel3 = new JPanel();
 			panel3.setLayout(new BorderLayout());
+			panel3.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 			labelEm = new JLabel("Email");
 			labelEm.setHorizontalAlignment(JLabel.CENTER);
 			actionEm = new JButton("Login");
+			actionEm.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+
+					JTextField conta = new JTextField(20);
+					JTextField token = new JTextField(20);
+					JPanel dialog = new JPanel();
+					dialog.add(new JLabel("Conta: "));
+					dialog.add(conta);
+					dialog.add(Box.createHorizontalStrut(15));
+					dialog.add(new JLabel("Token: "));
+					dialog.add(token);
+
+					int result = JOptionPane.showConfirmDialog(null, dialog, "Please enter account info",
+							JOptionPane.OK_CANCEL_OPTION);
+					if (result == JOptionPane.OK_OPTION) {
+						configAccounts.write("Email", conta.getText(), token.getText());
+					}
+				}
+			});
 
 		} else {
 			panel3 = new JPanel();
 			panel3.setLayout(new BorderLayout());
+			panel3.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 			labelEm = new JLabel("Email");
 			labelEm.setHorizontalAlignment(JLabel.CENTER);
 			emAccount = new JLabel(configAccounts.getEmailAccount());
 			actionEm = new JButton("Logout");
-		}
+			actionEm.addActionListener(new ActionListener() {
 
-		panel1.add(labelFb, BorderLayout.NORTH);
-		panel1.add(fbAccount, BorderLayout.WEST);
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					configAccounts.delete("Email");
+				}
+			});
+		}
+		
+
+		panel1.add(labelFb, BorderLayout.WEST);
+		panel1.add(fbAccount, BorderLayout.CENTER);
 		panel1.add(actionFb, BorderLayout.EAST);
-		panel2.add(labelTw, BorderLayout.NORTH);
-		panel2.add(twAccount, BorderLayout.WEST);
+		panel1.add(fb_icon, BorderLayout.WEST);
+		panel2.add(labelTw, BorderLayout.WEST);
+		panel2.add(twAccount, BorderLayout.CENTER);
 		panel2.add(actionTw, BorderLayout.EAST);
-		panel3.add(labelEm, BorderLayout.NORTH);
-		panel3.add(emAccount, BorderLayout.WEST);
+		panel2.add(twitter_icon, BorderLayout.WEST);
+		panel3.add(labelEm, BorderLayout.WEST);
+		panel3.add(emAccount, BorderLayout.CENTER);
 		panel3.add(actionEm, BorderLayout.EAST);
+		panel3.add(email_icon, BorderLayout.WEST);
+		
+		
 
 		config.add(panel1);
 		config.add(panel2);
 		config.add(panel3);
 
-		config.pack();
-		config.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		config.setBounds(100,100, 400, 300);
+		config.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		config.setVisible(true);
 
 	}
