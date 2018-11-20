@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.Parameter;
+import com.restfb.types.FacebookType;
 import com.restfb.types.Page;
 import com.restfb.types.Post;
 
@@ -57,6 +59,7 @@ public class FacebookHandler {
 						calendar.add(Calendar.DAY_OF_MONTH, -7);
 						if (post.getCreatedTime().after(calendar.getTime())) {
 							finalPostsList.add(post);
+							
 						}
 					}
 
@@ -69,6 +72,11 @@ public class FacebookHandler {
 				}
 			}
 		}
+	}
+	
+	public void share() {
+		FacebookClient fbClient = new DefaultFacebookClient(accessToken);
+		fbClient.publish("me/feed", FacebookType.class, Parameter.with("message", "Isto é um teste"));
 	}
 
 	public ArrayList<Post> getFinalPostsList() {

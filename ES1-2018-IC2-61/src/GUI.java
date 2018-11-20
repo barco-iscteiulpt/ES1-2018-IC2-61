@@ -223,12 +223,24 @@ public class GUI extends Thread {
 		JButton searchButton = new JButton();
 		JButton retweetButton = new JButton();
 		JButton favoriteButton = new JButton();
+		JButton commentButton = new JButton();
+		JButton shareButton = new JButton();
+		shareButton.setMargin(new Insets(8, 8, 8, 8));
+		shareButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/share.png")));
+		JButton likeButton = new JButton();
+		likeButton.setMargin(new Insets(8, 8, 8, 8));
+		likeButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/like.png")));
+		commentButton.setMargin(new Insets(8, 8, 8, 8));
+		commentButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/comment.png")));
 		retweetButton.setMargin(new Insets(8, 8, 8, 8));
 		retweetButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/retweet.png")));
 		favoriteButton.setMargin(new Insets(8, 8, 8, 8));
 		favoriteButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/heart.png")));
 		retweetButton.setVisible(false);
 		favoriteButton.setVisible(false);
+		commentButton.setVisible(false);
+		shareButton.setVisible(false);
+		likeButton.setVisible(false);
 
 		keywords.setPreferredSize(new Dimension(120, 24));
 		searchButton.setMargin(new Insets(2, 8, 2, 8));
@@ -259,7 +271,10 @@ public class GUI extends Thread {
 		content.setLayout(new BorderLayout());
 		contentSouth.add(retweetButton);
 		contentSouth.add(favoriteButton);
-		
+		contentSouth.add(likeButton);
+		contentSouth.add(commentButton);
+		contentSouth.add(shareButton);
+
 		article = new JTextArea();
 
 		JScrollPane scrollPaneTimeline = new JScrollPane();
@@ -292,15 +307,24 @@ public class GUI extends Thread {
 				if (timeline.getSelectedRow() >= 0) {
 					
 					String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
-					System.out.println(tableModel.getValueAt(timeline.getSelectedRow(), 3).toString());
 					article.setText(text);
 					
 					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Status) {
-						System.out.println("nice");
+						likeButton.setVisible(false);
+						commentButton.setVisible(false);
+						shareButton.setVisible(false);
 						retweetButton.setVisible(true);
 						favoriteButton.setVisible(true);		
 						Status tweet = (Status) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
 						tweetId = tweet.getId();
+					}
+					
+					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Post) {
+						retweetButton.setVisible(false);
+						favoriteButton.setVisible(false);
+						likeButton.setVisible(true);
+						commentButton.setVisible(true);
+						shareButton.setVisible(true);
 					}
 				}
 			}
@@ -317,6 +341,12 @@ public class GUI extends Thread {
 				twitter.favorite(tweetId);
 			}
 		});
+		
+		likeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				facebook.share();
+			}
+		});
 
 		center.add(scrollPaneTimeline);
 		center.add(content);
@@ -328,11 +358,6 @@ public class GUI extends Thread {
 				if (twitter_checkbox.isSelected()) {
 					twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 					manageTimeline();
-					//					twitter.retweet();
-					//					twitter.favorite();
-					//					twitter.reply();
-
-
 				}
 				if (fb_checkbox.isSelected()) {
 					facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
