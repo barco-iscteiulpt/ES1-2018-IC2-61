@@ -101,6 +101,10 @@ public class TwitterHandler {
 		}
 	}
 	
+
+	/**
+	 * Retweets the specified Status in its parameter.
+	 */
 	public void retweet(long tweetId) {
 	
 		try {
@@ -116,6 +120,10 @@ public class TwitterHandler {
 
 	}
 
+
+	/**
+	 * Favorites the specified Status in its parameter.
+	 */
 	public void favorite(long tweetId) {
 
 		try {
@@ -131,6 +139,9 @@ public class TwitterHandler {
 
 	}
 	
+	/**
+	 * Replies to the specified Status in its first parameter with the text specified as second parameter.
+	 */
 	public void reply(long tweetId, String reply) {
 		try {
 			TwitterFactory factory = new TwitterFactory();
@@ -148,7 +159,11 @@ public class TwitterHandler {
     
 }
 
-
+	/**
+	 * Returns the current Twitter tweets list.
+	 * 
+	 * @return finalTweetsList
+	 */
 	public ArrayList<Status> getFinalTweetsList() {
 		return this.finalTweetsList;
 	}

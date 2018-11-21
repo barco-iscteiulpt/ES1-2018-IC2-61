@@ -11,14 +11,30 @@ public class LoginRequest {
 		this.token=token;
 	}
 
+	/**
+	 * Returns the service to request the login.
+	 * 
+	 * @return service
+	 */
 	public String getService() {
 		return service;
 	}
 
+	/**
+	 * Returns the account used.
+	 * 
+	 * @return conta
+	 */
 	public String getConta() {
 		return conta;
 	}
 
+
+	/**
+	 * Returns the token used.
+	 * 
+	 * @return token
+	 */
 	public String getToken() {
 		return token;
 	}

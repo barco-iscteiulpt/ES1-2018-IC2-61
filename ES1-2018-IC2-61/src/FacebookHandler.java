@@ -74,11 +74,17 @@ public class FacebookHandler {
 		}
 	}
 	
+	
 	public void share() {
 		FacebookClient fbClient = new DefaultFacebookClient(accessToken);
 		fbClient.publish("me/feed", FacebookType.class, Parameter.with("message", "Isto é um teste"));
 	}
 
+	/**
+	 * Returns the current Facebook Posts list.
+	 * 
+	 * @return finalPostsList
+	 */
 	public ArrayList<Post> getFinalPostsList() {
 		return finalPostsList;
 	}

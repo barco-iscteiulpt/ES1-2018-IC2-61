@@ -41,6 +41,10 @@ public class Config {
 		read("Email");
 	}
 
+
+	/**
+	 * Reads the account elements on the XML file and saves them to their respective fields.
+	 */
 	public void read(String s) {
 		try {
 			File inputFile = new File("src/resources/config.xml");
@@ -72,6 +76,9 @@ public class Config {
 
 	}
 
+	/**
+	 * Writes all the elements on the XML file according to their type.
+	 */
 	public void write(Object o) {
 		try {
 			File inputFile = new File("src/resources/config.xml");
@@ -141,6 +148,11 @@ public class Config {
 //
 //	}
 	
+
+	/**
+	 * Deletes one account element according to the parameter type it receives. 
+	 * Useful when logging out of an account. 
+	 */
 	public void delete(String s) {
 		try {
 			File inputFile = new File("src/resources/config.xml");
@@ -185,14 +197,29 @@ public class Config {
 		this.emailAccount = emailAccount;
 	}
 
+	/**
+	 * Returns the current Facebook account.
+	 * 
+	 * @return facebookAccount
+	 */
 	public String getFacebookAccount() {
 		return facebookAccount;
 	}
 
+	/**
+	 * Returns the current Twitter account.
+	 * 
+	 * @return twitterAccount
+	 */
 	public String getTwitterAccount() {
 		return twitterAccount;
 	}
 
+	/**
+	 * Returns the current Email account.
+	 * 
+	 * @return emailAccount
+	 */
 	public String getEmailAccount() {
 		return emailAccount;
 	}

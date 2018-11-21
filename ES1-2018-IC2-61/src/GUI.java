@@ -412,6 +412,9 @@ public class GUI extends Thread {
 		});
 
 	}
+	/**
+	 * Convert all elements on the JTable to the XML file. 
+	 */
 
 	protected void tableToXML() {
 		if(facebook.getFinalPostsList()!=null && twitter.getFinalTweetsList()!=null) {
@@ -422,6 +425,10 @@ public class GUI extends Thread {
 				configAccounts.write(twitter.getFinalTweetsList().get(i));
 		}
 	}
+
+	/**
+	 * Initializes the contents of the configuration frame and its adaptation to the XML file.
+	 */
 
 	protected void configFrame() {
 		JFrame config = new JFrame();
@@ -633,7 +640,10 @@ public class GUI extends Thread {
 		config.setVisible(true);
 
 	}
-
+	
+	/**
+	 * Gets content from both Facebook and Twitter lists and adds them to the table.
+	 */
 	private void manageTimeline() {
 
 		ArrayList<Post> postsList = facebook.getFinalPostsList();
@@ -655,6 +665,10 @@ public class GUI extends Thread {
 		//		sortTable();
 	}
 
+	/**
+	 * (unused) Organizes the table chronologically 
+	 */
+
 	private void sortTable() {
 
 		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel> (tableModel);
@@ -665,6 +679,11 @@ public class GUI extends Thread {
 		sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
 	}
 
+	/**
+	 * Returns the current timeline.
+	 * 
+	 * @return timeline
+	 */
 	public JTable getTimeline() {
 		return timeline;
 	}
@@ -678,12 +697,24 @@ public class GUI extends Thread {
 		return frame;
 	}
 
+
+	/**
+	 * Returns the current keywords.
+	 * 
+	 * @return keywords.getText()
+	 */
 	public String getKeywords() {
 		return keywords.getText();
 	}
 
+
+	/**
+	 * Returns the current tableModel.
+	 * 
+	 * @return tableModel
+	 */
 	public DefaultTableModel getTableModel() {
-		return this.tableModel;
+		return tableModel;
 	}
 
 	/**
