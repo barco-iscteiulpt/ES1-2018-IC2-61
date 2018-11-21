@@ -720,7 +720,7 @@ public class GUI extends Thread {
 	/**
 	 * Sets the specified frame to the GUI object.
 	 * 
-	 * @param frame
+	 * @param frame the current frame
 	 */
 	public void setFrame(JFrame frame) {
 		this.frame = frame;

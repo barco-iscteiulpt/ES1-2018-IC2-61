@@ -44,6 +44,8 @@ public class Config {
 
 	/**
 	 * Reads the account elements on the XML file and saves them to their respective fields.
+	 *
+	 *@param s String to determine which service to find and save
 	 */
 	public void read(String s) {
 		try {
@@ -78,6 +80,8 @@ public class Config {
 
 	/**
 	 * Writes all the elements on the XML file according to their type.
+	 * 
+	 * @param o Object to determine the service used 
 	 */
 	public void write(Object o) {
 		try {
@@ -152,6 +156,8 @@ public class Config {
 	/**
 	 * Deletes one account element according to the parameter type it receives. 
 	 * Useful when logging out of an account. 
+	 * 
+	 * @param s String to determine which element to delete
 	 */
 	public void delete(String s) {
 		try {

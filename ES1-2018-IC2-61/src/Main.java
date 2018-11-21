@@ -5,7 +5,7 @@ public class Main {
 	/**
 	 * Creates the GUI and sets it visible
 	 * 
-	 * @param args
+	 * @param args parameter is used on the app execution 
 	 */
 	public static void main(String[] args) {
 

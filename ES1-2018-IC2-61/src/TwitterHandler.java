@@ -104,6 +104,8 @@ public class TwitterHandler {
 
 	/**
 	 * Retweets the specified Status in its parameter.
+	 * 
+	 * @param tweetId number of the tweet to retweet
 	 */
 	public void retweet(long tweetId) {
 	
@@ -123,6 +125,8 @@ public class TwitterHandler {
 
 	/**
 	 * Favorites the specified Status in its parameter.
+	 * 	 
+	 * @param tweetId number of the tweet to favorite
 	 */
 	public void favorite(long tweetId) {
 
@@ -141,6 +145,9 @@ public class TwitterHandler {
 	
 	/**
 	 * Replies to the specified Status in its first parameter with the text specified as second parameter.
+	 * 
+	 * @param tweetId number of the tweet to reply
+	 * @param reply actual text to create a reply
 	 */
 	public void reply(long tweetId, String reply) {
 		try {
