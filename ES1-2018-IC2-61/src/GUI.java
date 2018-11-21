@@ -346,6 +346,7 @@ public class GUI extends Thread {
 						favoriteButton.setVisible(true);		
 						Status tweet = (Status) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
 						tweetId = tweet.getId();
+						System.out.println(tweetId);
 					}
 
 					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Post) {
