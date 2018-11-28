@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import com.restfb.Connection;
@@ -76,8 +77,13 @@ public class FacebookHandler {
 	
 	
 	public void share() {
-		FacebookClient fbClient = new DefaultFacebookClient(accessToken);
-		fbClient.publish("me/feed", FacebookType.class, Parameter.with("message", "Isto é um teste"));
+		try {
+			FacebookClient fbClient = new DefaultFacebookClient(accessToken);
+			fbClient.publish("me/feed", FacebookType.class, Parameter.with("message", "Isto é um teste"));
+		}
+		catch (com.restfb.exception.FacebookOAuthException e) {
+			JOptionPane.showMessageDialog(null, "Action not authorized by Facebook.");
+		}
 	}
 
 	/**

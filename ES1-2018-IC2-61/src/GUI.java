@@ -387,7 +387,7 @@ public class GUI extends Thread {
 
 		shareButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//				facebook.share();
+				facebook.share();
 			}
 		});
 
