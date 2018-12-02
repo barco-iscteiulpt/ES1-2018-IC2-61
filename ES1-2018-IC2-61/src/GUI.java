@@ -81,6 +81,8 @@ public class GUI extends Thread {
 	private JPanel content;
 	private JPanel contentSouth;
 	private long tweetId;
+	private String postLink;
+	private String postId;
 
 	/**
 	 * Create the application.
@@ -242,10 +244,6 @@ public class GUI extends Thread {
 		replyButton.setMargin(new Insets(8, 8, 8, 8));
 		replyButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/reply.png")));
 
-		JButton shareButton = new JButton();
-		shareButton.setMargin(new Insets(8, 8, 8, 8));
-		shareButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/share.png")));
-
 		JButton likeButton = new JButton();
 		likeButton.setMargin(new Insets(8, 8, 8, 8));
 		likeButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/like.png")));	
@@ -259,7 +257,6 @@ public class GUI extends Thread {
 		favoriteButton.setVisible(false);
 		replyButton.setVisible(false);
 		commentButton.setVisible(false);
-		shareButton.setVisible(false);
 		likeButton.setVisible(false);
 		comment.setVisible(false);
 
@@ -299,7 +296,6 @@ public class GUI extends Thread {
 		contentSouth.add(comment);
 		contentSouth.add(commentButton);
 		contentSouth.add(likeButton);
-		contentSouth.add(shareButton);
 
 		article = new JTextArea();
 
@@ -339,14 +335,12 @@ public class GUI extends Thread {
 						comment.setVisible(false);
 						likeButton.setVisible(false);
 						commentButton.setVisible(false);
-						shareButton.setVisible(false);
 						reply.setVisible(true);
 						replyButton.setVisible(true);
 						retweetButton.setVisible(true);
 						favoriteButton.setVisible(true);		
 						Status tweet = (Status) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
 						tweetId = tweet.getId();
-						System.out.println(tweetId);
 					}
 
 					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Post) {
@@ -357,7 +351,10 @@ public class GUI extends Thread {
 						comment.setVisible(true);
 						likeButton.setVisible(true);
 						commentButton.setVisible(true);
-						shareButton.setVisible(true);
+						Post post = (Post) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
+						postLink = "www.facebook.com/"+post.getId();
+						postId = post.getId();
+						System.out.println(postLink);
 					}
 				}
 			}
@@ -383,11 +380,16 @@ public class GUI extends Thread {
 					twitter.reply(tweetId, reply.getText());
 			}
 		});
-
-
-		shareButton.addActionListener(new ActionListener() {
+		
+		commentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				facebook.share();
+				facebook.comment(postId, comment.getText());
+			}
+		});
+		
+		likeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				facebook.like(postId);
 			}
 		});
 
@@ -396,6 +398,13 @@ public class GUI extends Thread {
 
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				retweetButton.setVisible(false);
+				favoriteButton.setVisible(false);
+				reply.setVisible(false);
+				replyButton.setVisible(false);
+				comment.setVisible(false);
+				likeButton.setVisible(false);
+				commentButton.setVisible(false);
 				timeline.clearSelection();
 				article.setText(null);
 				if (twitter_checkbox.isSelected()) {
