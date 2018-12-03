@@ -21,11 +21,11 @@ public class Tests {
 	
 	@Test
 	public void twitterSearchShouldReturnThreePost() {
-		//When searching twitter for "last week" tweets, should return 3 tweets
+		//When searching twitter for "last week" tweets, should return 10 tweets
 		GUI gui = new GUI();
 		gui.twitter.searchTwitter("", "Last week");
 		ArrayList<Status> list = gui.twitter.getFinalTweetsList();
-		assertEquals(3,list.size());
+		assertEquals(10,list.size());
 	}
 	
 	@Test

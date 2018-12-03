@@ -398,6 +398,7 @@ public class GUI extends Thread {
 
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				twitter.login();
 				retweetButton.setVisible(false);
 				favoriteButton.setVisible(false);
 				reply.setVisible(false);

@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -16,16 +19,66 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.api.SearchResource;
 import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterHandler {
-	
+
 	private String authConsumerKey = "0I3XKOkznUjpuwdDOSkLvcSpg";
 	private String authConsumerSecret = "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G";
-	private String authAccessToken = "325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg";
-	private String authAccessTokenSecret = "Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT";
+//	private String authAccessToken = "325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg";
+//	private String authAccessTokenSecret = "Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT";
+	private String authAccessToken;
+	private String authAccessTokenSecret;
 
 	public ArrayList<Status> finalTweetsList;
+
+	public void login() {
+
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
+		.setOAuthConsumerSecret(authConsumerSecret);
+
+		try {
+
+
+			TwitterFactory twitterFactory = new TwitterFactory(cb.build());
+			Twitter twitter = twitterFactory.getInstance();
+			RequestToken requestToken = twitter.getOAuthRequestToken();
+			
+			System.out.println("got request token");
+			System.out.println("request token: "+ requestToken.getToken());
+			System.out.println("request token secret: "+ requestToken.getTokenSecret());
+			System.out.println("--------");
+			
+			AccessToken accessToken = null;
+			BufferedReader br = new BufferedReader(new InputStreamReader (System.in));
+			
+			while(accessToken==null) {
+				
+				System.out.println("open the url");
+				System.out.println(requestToken.getAuthorizationURL());
+				System.out.println("enter the pin");
+				String pin = br.readLine();
+				
+				if (pin.length()>0) {
+					accessToken = twitter.getOAuthAccessToken(requestToken, pin);
+				} else {
+					accessToken = twitter.getOAuthAccessToken(requestToken);
+				}
+			}
+			
+			System.out.println("got access token");
+			authAccessToken = accessToken.getToken();
+			authAccessTokenSecret = accessToken.getTokenSecret();
+
+		} catch (TwitterException e) {
+			System.out.println("failed to get timeline");
+		} catch (IOException e1) {
+			System.out.println("failed to read the system input");
+		}
+
+	}
 
 	/**
 	 * Accesses a specific Twitter page, gets its tweets and saves each one on a
@@ -41,9 +94,9 @@ public class TwitterHandler {
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
-				.setOAuthConsumerSecret(authConsumerSecret)
-				.setOAuthAccessToken(authAccessToken)
-				.setOAuthAccessTokenSecret(authAccessTokenSecret);
+		.setOAuthConsumerSecret(authConsumerSecret)
+		.setOAuthAccessToken(authAccessToken)
+		.setOAuthAccessTokenSecret(authAccessTokenSecret);
 
 		TwitterFactory twitterFactory = new TwitterFactory(cb.build());
 		Twitter twitter = twitterFactory.getInstance();
@@ -100,7 +153,7 @@ public class TwitterHandler {
 			e.printStackTrace();
 		}
 	}
-	
+
 
 	/**
 	 * Retweets the specified Status in its parameter.
@@ -108,7 +161,7 @@ public class TwitterHandler {
 	 * @param tweetId number of the tweet to retweet
 	 */
 	public void retweet(long tweetId) {
-	
+
 		try {
 			TwitterFactory factory = new TwitterFactory();
 			Twitter twitter = factory.getInstance();
@@ -142,7 +195,7 @@ public class TwitterHandler {
 		}
 
 	}
-	
+
 	/**
 	 * Replies to the specified Status in its first parameter with the text specified as second parameter.
 	 * 
@@ -153,18 +206,19 @@ public class TwitterHandler {
 		try {
 			TwitterFactory factory = new TwitterFactory();
 			Twitter twitter = factory.getInstance();
-			twitter.setOAuthConsumer("0I3XKOkznUjpuwdDOSkLvcSpg", "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G");
-			AccessToken accessToken = new AccessToken("325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg", "Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT");
+			twitter.setOAuthConsumer(authConsumerKey, authConsumerSecret);
+			AccessToken accessToken = new AccessToken(authAccessToken, authAccessTokenSecret);
 			twitter.setOAuthAccessToken(accessToken);
-			StatusUpdate statusUpdate = new StatusUpdate(reply);
+			Status b = twitter.showStatus(tweetId);
+			StatusUpdate statusUpdate = new StatusUpdate("@"+b.getUser().getScreenName()+" "+reply);
 			statusUpdate.setInReplyToStatusId(tweetId);
 			Status status = twitter.updateStatus(statusUpdate);
 		} catch (TwitterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    
-}
+
+	}
 
 	/**
 	 * Returns the current Twitter tweets list.
