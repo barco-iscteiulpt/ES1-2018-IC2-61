@@ -2,13 +2,13 @@
 public class LoginRequest {
 	
 	private String service;
-	private String conta;
-	private String token;
+	private String accessToken;
+	private String accessTokenSecret;
 	
 	public LoginRequest(String service, String conta, String token) {
 		this.service=service;
-		this.conta=conta;
-		this.token=token;
+		this.accessToken=conta;
+		this.accessTokenSecret=token;
 	}
 
 	/**
@@ -23,20 +23,20 @@ public class LoginRequest {
 	/**
 	 * Returns the account used.
 	 * 
-	 * @return conta
+	 * @return accessToken
 	 */
-	public String getConta() {
-		return conta;
+	public String getAccessToken() {
+		return accessToken;
 	}
 
 
 	/**
 	 * Returns the token used.
 	 * 
-	 * @return token
+	 * @return accessTokenSecret
 	 */
-	public String getToken() {
-		return token;
+	public String getAccessTokenSecret() {
+		return accessTokenSecret;
 	}
 	
 	
