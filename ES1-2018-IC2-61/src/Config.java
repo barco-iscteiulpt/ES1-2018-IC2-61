@@ -94,8 +94,13 @@ public class Config {
 			if (o instanceof LoginRequest) {
 				LoginRequest lr = (LoginRequest) o;
 				element = doc.createElement(lr.getService());
-				element.setAttribute("Conta", lr.getConta());
-				element.setAttribute("Token", lr.getToken());
+				if(lr.getService().equals("Twitter")) {
+					element.setAttribute("Auth Access Token", lr.getAccessToken());
+					element.setAttribute("Auth Access Token Secret", lr.getAccessTokenSecret());
+				} else {
+				element.setAttribute("Conta", lr.getAccessToken());
+				element.setAttribute("Token", lr.getAccessTokenSecret());
+				}
 			} else if (o instanceof Post){
 				Post p = (Post) o;
 				element = doc.createElement("Post");
