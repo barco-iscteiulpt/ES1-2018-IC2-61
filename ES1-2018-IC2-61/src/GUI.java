@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -66,6 +68,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import javax.swing.JComboBox;
 import java.awt.Color;
+import java.awt.Desktop;
+
 import javax.swing.UIManager;
 
 public class GUI extends Thread {
@@ -83,7 +87,7 @@ public class GUI extends Thread {
 	private long tweetId;
 	private String postLink;
 	private String postId;
-
+	
 	/**
 	 * Create the application.
 	 */
@@ -117,16 +121,14 @@ public class GUI extends Thread {
 				tableToXML();
 				frame.dispose();
 			}
-
 		});
-
 
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		facebook = new FacebookHandler();
 		twitter = new TwitterHandler();
-
+		
 		// Create the menu bar. Create and add 3 menus.
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu1 = new JMenu("File");
@@ -398,7 +400,7 @@ public class GUI extends Thread {
 
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				twitter.login();
+//				twitter.login();
 				retweetButton.setVisible(false);
 				favoriteButton.setVisible(false);
 				reply.setVisible(false);
@@ -409,14 +411,18 @@ public class GUI extends Thread {
 				timeline.clearSelection();
 				article.setText(null);
 				if (twitter_checkbox.isSelected()) {
-					twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
-					manageTimeline();
+					if (twitter.loggedIn) {
+						twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
+						manageTimeline();
+					} else {
+						JOptionPane.showMessageDialog(null, "Please loggin first (Edit>Configurations).");
+					}
 				}
 				if (fb_checkbox.isSelected()) {
 					facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
 					manageTimeline();
 				}
-				if (timeline.getModel().getRowCount() == 0) {
+				if (timeline.getModel().getRowCount() == 0 && twitter.loggedIn) {
 					JOptionPane.showMessageDialog(null, "No search results!");
 				}
 			}
@@ -524,28 +530,33 @@ public class GUI extends Thread {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-
-					JTextField conta = new JTextField(20);
-					JTextField token = new JTextField(20);
+					
+					JTextField pin = new JTextField(20);
+					JTextField username = new JTextField(20);
 					JPanel dialog = new JPanel();
-					dialog.add(new JLabel("Conta: "));
-					dialog.add(conta);
+					dialog.add(new JLabel("Username: "));
+					dialog.add(username);
 					dialog.add(Box.createHorizontalStrut(15));
-					dialog.add(new JLabel("Token: "));
-					dialog.add(token);
-
+					dialog.add(new JLabel("PIN: "));
+					dialog.add(pin);
+					twitter.open();
+					
 					int result = JOptionPane.showConfirmDialog(null, dialog, "Please enter account info",
 							JOptionPane.OK_CANCEL_OPTION);
+					
 					if (result == JOptionPane.OK_OPTION) {
-						configAccounts.write(new LoginRequest("Twitter", conta.getText(), token.getText()));
+						configAccounts.write(new LoginRequest("Twitter", pin.getText(), username.getText()));
 						configAccounts.read("Twitter");
 						config.dispose();
 						configFrame();
+						twitter.login(pin.getText());
 					}
+					
 				}
 			});
 
 		} else {
+			twitter.loggedIn = false;
 			panel2 = new JPanel();
 			panel2.setLayout(new BorderLayout());
 			panel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
@@ -738,5 +749,7 @@ public class GUI extends Thread {
 		frame.setBackground(Color.LIGHT_GRAY);
 		frame.setFont(new Font("Arial", Font.PLAIN, 12));
 	}
+	
+
 
 }

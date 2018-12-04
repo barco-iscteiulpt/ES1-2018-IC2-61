@@ -12,6 +12,8 @@ import com.restfb.DefaultFacebookClient;
 import com.restfb.Facebook;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
+import com.restfb.Version;
+import com.restfb.scope.ScopeBuilder;
 import com.restfb.types.Comment;
 import com.restfb.types.Comments;
 import com.restfb.types.FacebookType;
@@ -29,7 +31,6 @@ public class FacebookHandler {
 //	Page page = fbClient.fetchObject("listajespeniche", Page.class);
 //	Connection<Post> postFeed = fbClient.fetchConnection(page.getId() + "/feed", Post.class);
 	Connection<Post> postFeed = fbClient.fetchConnection(group.getId() + "/feed", Post.class);
-	
 	
 	public ArrayList<Post> finalPostsList;
 

@@ -1,6 +1,11 @@
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -26,41 +31,45 @@ public class TwitterHandler {
 
 	private String authConsumerKey = "0I3XKOkznUjpuwdDOSkLvcSpg";
 	private String authConsumerSecret = "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G";
-//	private String authAccessToken = "325579017-itc5klbFYmBcGvHUaZaUz0sCD29J7GVfuMiw5ZCg";
-//	private String authAccessTokenSecret = "Wz55x8BoTY8wdU5zwQCBI45520ic5JjLi9VCHXBArg5JT";
 	private String authAccessToken;
 	private String authAccessTokenSecret;
+	
+	ConfigurationBuilder cbLogin = new ConfigurationBuilder().setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
+	.setOAuthConsumerSecret(authConsumerSecret);
+	TwitterFactory twitterFactory = new TwitterFactory(cbLogin.build());
+	Twitter twitter = twitterFactory.getInstance();
+	RequestToken requestToken;
 
 	public ArrayList<Status> finalTweetsList;
+	public boolean loggedIn;
+	public String loginTwitter;
 
-	public void login() {
-
-		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
-		.setOAuthConsumerSecret(authConsumerSecret);
-
+	public void open() {
+		
 		try {
-
-
-			TwitterFactory twitterFactory = new TwitterFactory(cb.build());
-			Twitter twitter = twitterFactory.getInstance();
-			RequestToken requestToken = twitter.getOAuthRequestToken();
 			
-			System.out.println("got request token");
-			System.out.println("request token: "+ requestToken.getToken());
-			System.out.println("request token secret: "+ requestToken.getTokenSecret());
-			System.out.println("--------");
+			requestToken = twitter.getOAuthRequestToken();
+			setLoginTwitter(requestToken.getAuthorizationURL()); 
+	        Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
+	        
+		} catch (TwitterException e) {
+			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		
+	}
+	
+	public void login(String pin) {
+		try {
 			
 			AccessToken accessToken = null;
-			BufferedReader br = new BufferedReader(new InputStreamReader (System.in));
 			
 			while(accessToken==null) {
-				
-				System.out.println("open the url");
-				System.out.println(requestToken.getAuthorizationURL());
-				System.out.println("enter the pin");
-				String pin = br.readLine();
-				
 				if (pin.length()>0) {
 					accessToken = twitter.getOAuthAccessToken(requestToken, pin);
 				} else {
@@ -68,16 +77,14 @@ public class TwitterHandler {
 				}
 			}
 			
-			System.out.println("got access token");
 			authAccessToken = accessToken.getToken();
 			authAccessTokenSecret = accessToken.getTokenSecret();
+			this.loggedIn = true;
 
 		} catch (TwitterException e) {
-			System.out.println("failed to get timeline");
-		} catch (IOException e1) {
-			System.out.println("failed to read the system input");
-		}
-
+			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
+		} 
+		
 	}
 
 	/**
@@ -227,6 +234,10 @@ public class TwitterHandler {
 	 */
 	public ArrayList<Status> getFinalTweetsList() {
 		return this.finalTweetsList;
+	}
+	
+	public void setLoginTwitter(String logginTwitter) {
+		this.loginTwitter = logginTwitter;
 	}
 
 }
