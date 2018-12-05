@@ -400,6 +400,8 @@ public class GUI extends Thread {
 
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				configAccounts.clearResults("Post");
+				configAccounts.clearResults("Status");
 //				twitter.login();
 				retweetButton.setVisible(false);
 				favoriteButton.setVisible(false);
@@ -460,7 +462,8 @@ public class GUI extends Thread {
 		JLabel fbAccount = new JLabel();
 		JButton actionFb;
 
-		if (configAccounts.getFacebookAccount() == null) {
+		System.out.println("Facebook: " + configAccounts.isLoggedFacebook());
+		if (!configAccounts.isLoggedFacebook()) {
 			panel1 = new JPanel();
 			panel1.setLayout(new BorderLayout());
 			panel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
@@ -518,8 +521,10 @@ public class GUI extends Thread {
 		JLabel labelTw;
 		JLabel twAccount = new JLabel();
 		JButton actionTw;
+		
+		System.out.println("Twitter: " + configAccounts.isLoggedTwitter());
 
-		if (configAccounts.getTwitterAccount() == null) {
+		if (!configAccounts.isLoggedTwitter()) {
 			panel2 = new JPanel();
 			panel2.setLayout(new BorderLayout());
 			panel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
@@ -545,18 +550,18 @@ public class GUI extends Thread {
 							JOptionPane.OK_CANCEL_OPTION);
 					
 					if (result == JOptionPane.OK_OPTION) {
+						twitter.login(pin.getText());
+
 						configAccounts.write(new LoginRequest("Twitter", pin.getText(), username.getText()));
 						configAccounts.read("Twitter");
 						config.dispose();
 						configFrame();
-						twitter.login(pin.getText());
 					}
 					
 				}
 			});
 
 		} else {
-			twitter.loggedIn = false;
 			panel2 = new JPanel();
 			panel2.setLayout(new BorderLayout());
 			panel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
@@ -568,9 +573,14 @@ public class GUI extends Thread {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
+					twitter.loggedIn = false;
+					twitter.setAuthAccessToken(null);
+					twitter.setAuthAccessTokenSecret(null);
+					twitter.setRequestToken(null);
 					configAccounts.delete("Twitter");
 					configAccounts.read("Twitter");
 					config.dispose();
+					System.out.println(twitter.getRequestToken());
 					configFrame();
 				}
 			});
@@ -583,7 +593,7 @@ public class GUI extends Thread {
 		JLabel emAccount = new JLabel();
 		JButton actionEm;
 
-		if (configAccounts.getEmailAccount() == null) {
+		if (!configAccounts.isLoggedEmail()) {
 			panel3 = new JPanel();
 			panel3.setLayout(new BorderLayout());
 			panel3.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));

@@ -32,6 +32,22 @@ public class TwitterHandler {
 	private String authConsumerKey = "0I3XKOkznUjpuwdDOSkLvcSpg";
 	private String authConsumerSecret = "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G";
 	private String authAccessToken;
+	public String getAuthAccessToken() {
+		return authAccessToken;
+	}
+
+	public void setAuthAccessToken(String authAccessToken) {
+		this.authAccessToken = authAccessToken;
+	}
+
+	public String getAuthAccessTokenSecret() {
+		return authAccessTokenSecret;
+	}
+
+	public void setAuthAccessTokenSecret(String authAccessTokenSecret) {
+		this.authAccessTokenSecret = authAccessTokenSecret;
+	}
+
 	private String authAccessTokenSecret;
 	
 	ConfigurationBuilder cbLogin = new ConfigurationBuilder().setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
@@ -47,9 +63,9 @@ public class TwitterHandler {
 	public void open() {
 		
 		try {
-			
+			System.out.println("Token no inicio do open(): " + requestToken);
 			requestToken = twitter.getOAuthRequestToken();
-			setLoginTwitter(requestToken.getAuthorizationURL()); 
+			setLoginTwitter(requestToken.getAuthorizationURL());
 	        Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
 	        
 		} catch (TwitterException e) {
@@ -64,6 +80,14 @@ public class TwitterHandler {
 		
 	}
 	
+	public RequestToken getRequestToken() {
+		return requestToken;
+	}
+
+	public void setRequestToken(RequestToken requestToken) {
+		this.requestToken = requestToken;
+	}
+
 	public void login(String pin) {
 		try {
 			
