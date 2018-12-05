@@ -1,13 +1,17 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
@@ -34,6 +38,25 @@ public class Config {
 	private String facebookAccount;
 	private String twitterAccount;
 	private String emailAccount;
+	
+	private boolean loggedFacebook;
+	private boolean loggedTwitter;
+	private boolean loggedEmail;
+
+	public boolean isLoggedFacebook() {
+		return loggedFacebook;
+	}
+
+
+	public boolean isLoggedTwitter() {
+		return loggedTwitter;
+	}
+
+
+	public boolean isLoggedEmail() {
+		return loggedEmail;
+	}
+
 
 	public Config() {
 		read("Facebook");
@@ -65,11 +88,14 @@ public class Config {
 				System.out.println(nl.item(i).getFirstChild().getNodeValue());
 				if (nl.item(i).getNodeName().equals("Conta")) {
 					if (s.equals("Facebook"))
-						facebookAccount = nl.item(i).getFirstChild().getNodeValue();
+						loggedFacebook=true;
+//						facebookAccount = nl.item(i).getFirstChild().getNodeValue();
 					if (s.equals("Twitter"))
-						twitterAccount = nl.item(i).getFirstChild().getNodeValue();
+						loggedTwitter=true;
+//						twitterAccount = nl.item(i).getFirstChild().getNodeValue();
 					if (s.equals("Email"))
-						emailAccount = nl.item(i).getFirstChild().getNodeValue();
+						loggedEmail=true;
+//						emailAccount = nl.item(i).getFirstChild().getNodeValue();
 				}
 			}
 		} catch (Exception e) {
@@ -94,17 +120,19 @@ public class Config {
 			if (o instanceof LoginRequest) {
 				LoginRequest lr = (LoginRequest) o;
 				element = doc.createElement(lr.getService());
+				System.out.println(lr.getService());
 				if(lr.getService().equals("Twitter")) {
-					element.setAttribute("Auth Access Token", lr.getAccessToken());
-					element.setAttribute("Auth Access Token Secret", lr.getAccessTokenSecret());
+					element.setAttribute("Conta", lr.getAccessTokenSecret());
+					element.setAttribute("Token", lr.getAccessToken());
+				
 				} else {
-				element.setAttribute("Conta", lr.getAccessToken());
-				element.setAttribute("Token", lr.getAccessTokenSecret());
+					element.setAttribute("Conta", lr.getAccessToken());
+					element.setAttribute("Token", lr.getAccessTokenSecret());
 				}
 			} else if (o instanceof Post){
 				Post p = (Post) o;
 				element = doc.createElement("Post");
-				element.setAttribute("Date", p.getCreatedTime().toString());
+				element.setAttribute("Date", p.getUpdatedTime().toString());
 				element.setAttribute("Content", p.getMessage());
 				element.setAttribute("ID", p.getId());
 			} else if (o instanceof Status) {
@@ -175,7 +203,7 @@ public class Config {
 			Element element = (Element) doc.getElementsByTagName(s).item(0);
 			System.out.println(element.getNodeName());
 			System.out.println(element.getParentNode().getNodeName());
-			;
+			
 			element.getParentNode().removeChild(element);
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -184,16 +212,61 @@ public class Config {
 			transformer.transform(source, result);
 			
 			if(s.equals("Facebook"))
-				setFacebookAccount(null);
+				setLoggedFacebook(false);
 			else if(s.equals("Twitter"))
-				setTwitterAccount(null);
+				setLoggedTwitter(false);
 			else if(s.equals("Email"))
-				setEmailAccount(null);
+				setLoggedEmail(false);
 	
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void setLoggedFacebook(boolean loggedFacebook) {
+		this.loggedFacebook = loggedFacebook;
+	}
+
+
+	public void setLoggedTwitter(boolean loggedTwitter) {
+		this.loggedTwitter = loggedTwitter;
+	}
+
+
+	public void setLoggedEmail(boolean loggedEmail) {
+		this.loggedEmail = loggedEmail;
+	}
+
+
+	public void clearResults(String s) {
+		try {
+		File inputFile = new File("src/resources/config.xml");
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(inputFile);
+		doc.getDocumentElement().normalize();
+		
+		for(int i=0; i<doc.getElementsByTagName(s).getLength(); i++) {
+			Element element = (Element) doc.getElementsByTagName(s).item(i);
+			System.out.println(element.getNodeName());
+			System.out.println(element.getParentNode().getNodeName());
+			
+			element.getParentNode().removeChild(element);
+			
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			StreamResult result = new StreamResult(new FileOutputStream(inputFile));
+			DOMSource source = new DOMSource(doc);
+			transformer.transform(source, result);
+		}
+		
+
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public void setFacebookAccount(String facebookAccount) {
@@ -234,4 +307,5 @@ public class Config {
 	public String getEmailAccount() {
 		return emailAccount;
 	}
+
 }

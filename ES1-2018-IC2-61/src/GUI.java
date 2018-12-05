@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -54,6 +55,9 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
@@ -82,13 +86,18 @@ public class GUI extends Thread {
 	protected JTextArea article ;
 	public FacebookHandler facebook;
 	public TwitterHandler twitter;
+	public EmailHandler email;
 	private Config configAccounts = new Config();
 	private JPanel content;
 	private JPanel contentSouth;
 	private long tweetId;
 	private String postLink;
 	private String postId;
-	
+	private Message currentEmail;
+	private String replyTo;
+	private String replyFrom;
+	public boolean isClicked=false;
+
 	/**
 	 * Create the application.
 	 */
@@ -129,7 +138,8 @@ public class GUI extends Thread {
 
 		facebook = new FacebookHandler();
 		twitter = new TwitterHandler();
-		
+		email = new EmailHandler();
+
 		// Create the menu bar. Create and add 3 menus.
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu1 = new JMenu("File");
@@ -228,10 +238,18 @@ public class GUI extends Thread {
 		JTextField reply = new JTextField();
 		reply.setPreferredSize(new Dimension(120, 24));
 		reply.setToolTipText("Insert your reply");
-		
+
 		JTextField comment = new JTextField();
 		comment.setPreferredSize(new Dimension(120, 24));
 		comment.setToolTipText("Insert your comment");
+
+		JTextField emailReply = new JTextField();
+		emailReply.setPreferredSize(new Dimension(120, 24));
+		emailReply.setToolTipText("Insert your email reply");
+		
+		JTextField emailSubject = new JTextField();
+		emailSubject.setPreferredSize(new Dimension(120, 24));
+		emailSubject.setToolTipText("Insert your email subject");
 
 		JButton searchButton = new JButton();
 
@@ -255,6 +273,10 @@ public class GUI extends Thread {
 		commentButton.setMargin(new Insets(8, 8, 8, 8));
 		commentButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/comment.png")));
 
+		JButton sendEmailButton = new JButton();
+		sendEmailButton.setMargin(new Insets(8, 8, 8, 8));
+		sendEmailButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/send-button.png")));
+
 		reply.setVisible(false);
 		retweetButton.setVisible(false);
 		favoriteButton.setVisible(false);
@@ -262,6 +284,9 @@ public class GUI extends Thread {
 		commentButton.setVisible(false);
 		likeButton.setVisible(false);
 		comment.setVisible(false);
+		emailReply.setVisible(false);
+		sendEmailButton.setVisible(false);
+		emailSubject.setVisible(false);
 
 		keywords.setPreferredSize(new Dimension(120, 24));
 		keywords.setToolTipText("Insert keywords");
@@ -300,6 +325,10 @@ public class GUI extends Thread {
 		contentSouth.add(commentButton);
 		contentSouth.add(likeButton);
 
+		contentSouth.add(emailSubject);
+		contentSouth.add(emailReply);
+		contentSouth.add(sendEmailButton);
+
 		article = new JTextArea();
 
 		JScrollPane scrollPaneTimeline = new JScrollPane();
@@ -329,37 +358,72 @@ public class GUI extends Thread {
 		timeline.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if (timeline.getSelectedRow() >= 0) {
+					System.out.println("entrei no listener");
+					if (timeline.getSelectedRow() >= 0) {
 
-					String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
-					article.setText(text);
+						String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
+						article.setText(text);
 
-					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Status) {
-						comment.setVisible(false);
-						likeButton.setVisible(false);
-						commentButton.setVisible(false);
-						reply.setVisible(true);
-						replyButton.setVisible(true);
-						retweetButton.setVisible(true);
-						favoriteButton.setVisible(true);		
-						Status tweet = (Status) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
-						tweetId = tweet.getId();
+						if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Status) {
+							emailReply.setVisible(false);
+							sendEmailButton.setVisible(false);
+							emailSubject.setVisible(false);
+							comment.setVisible(false);
+							likeButton.setVisible(false);
+							commentButton.setVisible(false);
+							reply.setVisible(true);
+							replyButton.setVisible(true);
+							retweetButton.setVisible(true);
+							favoriteButton.setVisible(true);		
+							Status tweet = (Status) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
+							tweetId = tweet.getId();
+						}
+
+						if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Post) {
+							emailReply.setVisible(false);
+							sendEmailButton.setVisible(false);
+							emailSubject.setVisible(false);
+							retweetButton.setVisible(false);
+							favoriteButton.setVisible(false);
+							reply.setVisible(false);
+							replyButton.setVisible(false);
+							comment.setVisible(true);
+							likeButton.setVisible(true);
+							commentButton.setVisible(true);
+							Post post = (Post) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
+							postLink = "www.facebook.com/"+post.getId();
+							postId = post.getId();
+						}
+
+						if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Message) {
+							retweetButton.setVisible(false);
+							favoriteButton.setVisible(false);
+							reply.setVisible(false);
+							replyButton.setVisible(false);
+							comment.setVisible(false);
+							likeButton.setVisible(false);
+							commentButton.setVisible(false);
+							emailReply.setVisible(true);
+							sendEmailButton.setVisible(true);
+							emailSubject.setVisible(true);
+							currentEmail = (Message) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
+							System.out.println(tableModel.getValueAt(timeline.getSelectedRow(), 2));
+
+							try {	
+								String aux = InternetAddress.toString(currentEmail.getFrom());
+								if(aux.startsWith("E")) {
+									int x = aux.indexOf("<");
+									int y = aux.indexOf(">");
+									String temp = aux.substring(x+1, y);
+									aux = temp;
+								}
+								replyTo = aux;
+								replyFrom = email.getUsername();
+							} catch (MessagingException e1) {
+								e1.printStackTrace();
+							}
+						}
 					}
-
-					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Post) {
-						retweetButton.setVisible(false);
-						favoriteButton.setVisible(false);
-						reply.setVisible(false);
-						replyButton.setVisible(false);
-						comment.setVisible(true);
-						likeButton.setVisible(true);
-						commentButton.setVisible(true);
-						Post post = (Post) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
-						postLink = "www.facebook.com/"+post.getId();
-						postId = post.getId();
-						System.out.println(postLink);
-					}
-				}
 			}
 		});
 
@@ -383,16 +447,22 @@ public class GUI extends Thread {
 					twitter.reply(tweetId, reply.getText());
 			}
 		});
-		
+
 		commentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				facebook.comment(postId, comment.getText());
 			}
 		});
-		
+
 		likeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				facebook.like(postId);
+			}
+		});
+
+		sendEmailButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				email.sendEmail(replyFrom, replyTo, emailSubject.getText(), emailReply.getText());
 			}
 		});
 
@@ -401,7 +471,6 @@ public class GUI extends Thread {
 
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				twitter.login();
 				retweetButton.setVisible(false);
 				favoriteButton.setVisible(false);
 				reply.setVisible(false);
@@ -409,6 +478,9 @@ public class GUI extends Thread {
 				comment.setVisible(false);
 				likeButton.setVisible(false);
 				commentButton.setVisible(false);
+				emailReply.setVisible(false);
+				sendEmailButton.setVisible(false);
+				emailSubject.setVisible(false);
 				timeline.clearSelection();
 				article.setText(null);
 				if (twitter_checkbox.isSelected()) {
@@ -422,6 +494,14 @@ public class GUI extends Thread {
 				if (fb_checkbox.isSelected()) {
 					facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
 					manageTimeline();
+				}
+				if (email_checkbox.isSelected()) {
+					if(email.loggedIn) {
+						email.searchGmail(keywords.getText(), comboBox.getSelectedItem().toString());
+						manageTimeline();
+					} else {
+						JOptionPane.showMessageDialog(null, "Please loggin first (Edit>Configurations).");
+					}
 				}
 				if (timeline.getModel().getRowCount() == 0 && twitter.loggedIn) {
 					JOptionPane.showMessageDialog(null, "No search results!");
@@ -461,7 +541,8 @@ public class GUI extends Thread {
 		JLabel fbAccount = new JLabel();
 		JButton actionFb;
 
-		if (configAccounts.getFacebookAccount() == null) {
+		System.out.println("Facebook: " + configAccounts.isLoggedFacebook());
+		if (!configAccounts.isLoggedFacebook()) {
 			panel1 = new JPanel();
 			panel1.setLayout(new BorderLayout());
 			panel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
@@ -524,7 +605,7 @@ public class GUI extends Thread {
 		JLabel twAccount = new JLabel();
 		JButton actionTw;
 
-		if (configAccounts.getTwitterAccount() == null) {
+		if (!configAccounts.isLoggedTwitter()) {
 			panel2 = new JPanel();
 			panel2.setLayout(new BorderLayout());
 			panel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
@@ -535,7 +616,7 @@ public class GUI extends Thread {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					
+
 					JTextField pin = new JTextField(20);
 					JTextField username = new JTextField(20);
 					JPanel dialog = new JPanel();
@@ -545,10 +626,10 @@ public class GUI extends Thread {
 					dialog.add(new JLabel("PIN: "));
 					dialog.add(pin);
 					twitter.open();
-					
+
 					int result = JOptionPane.showConfirmDialog(null, dialog, "Please enter account info",
 							JOptionPane.OK_CANCEL_OPTION);
-					
+
 					if (result == JOptionPane.OK_OPTION) {
 						configAccounts.write(new LoginRequest("Twitter", pin.getText(), username.getText()));
 						configAccounts.read("Twitter");
@@ -561,7 +642,6 @@ public class GUI extends Thread {
 			});
 
 		} else {
-			twitter.loggedIn = false;
 			panel2 = new JPanel();
 			panel2.setLayout(new BorderLayout());
 			panel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
@@ -573,9 +653,14 @@ public class GUI extends Thread {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
+					twitter.loggedIn = false;
+					twitter.setAuthAccessToken(null);
+					twitter.setAuthAccessTokenSecret(null);
+					twitter.setRequestToken(null);
 					configAccounts.delete("Twitter");
 					configAccounts.read("Twitter");
 					config.dispose();
+					System.out.println(twitter.getRequestToken());
 					configFrame();
 				}
 			});
@@ -588,7 +673,7 @@ public class GUI extends Thread {
 		JLabel emAccount = new JLabel();
 		JButton actionEm;
 
-		if (configAccounts.getEmailAccount() == null) {
+		if (!configAccounts.isLoggedEmail()) {
 			panel3 = new JPanel();
 			panel3.setLayout(new BorderLayout());
 			panel3.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
@@ -600,22 +685,24 @@ public class GUI extends Thread {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 
-					JTextField conta = new JTextField(20);
-					JTextField token = new JTextField(20);
+					JTextField username = new JTextField(20);
+					JPasswordField password = new JPasswordField(20);
 					JPanel dialog = new JPanel();
-					dialog.add(new JLabel("Conta: "));
-					dialog.add(conta);
+					dialog.add(new JLabel("Email: "));
+					dialog.add(username);
 					dialog.add(Box.createHorizontalStrut(15));
-					dialog.add(new JLabel("Token: "));
-					dialog.add(token);
+					dialog.add(new JLabel("Password: "));
+					dialog.add(password);
+					password.setEchoChar('*');
 
 					int result = JOptionPane.showConfirmDialog(null, dialog, "Please enter account info",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
-						configAccounts.write(new LoginRequest("Email", conta.getText(), token.getText()));
+						configAccounts.write(new LoginRequest("Email", username.getText(), password.getText()));
 						configAccounts.read("Email");
 						config.dispose();
 						configFrame();
+						email.login(username.getText(), password.getText());
 					}
 				}
 			});
@@ -675,12 +762,13 @@ public class GUI extends Thread {
 
 		ArrayList<Post> postsList = facebook.getFinalPostsList();
 		ArrayList<Status> tweetsList = twitter.getFinalTweetsList();
+		ArrayList<Message> emailsList = email.getFinalEmailsList();
 		tableModel.setRowCount(0);
 		timeline.clearSelection();
 
 		if (postsList != null) {
 			for (Post p : postsList) {
-				tableModel.addRow(new Object[]{"Facebook", p.getCreatedTime(), p.getMessage(),p});
+				tableModel.addRow(new Object[]{"Facebook", p.getUpdatedTime(), p.getMessage(),p});
 			}
 		}
 
@@ -689,6 +777,17 @@ public class GUI extends Thread {
 				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText(), t});
 			}
 		}
+
+		if (emailsList != null) {
+			for (Message m : emailsList) {
+				try {
+					tableModel.addRow(new Object[]{"Email", m.getSentDate(), m.getSubject(), m});
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
 		//		sortTable();
 	}
 
@@ -754,7 +853,7 @@ public class GUI extends Thread {
 		frame.setBackground(Color.LIGHT_GRAY);
 		frame.setFont(new Font("Arial", Font.PLAIN, 12));
 	}
-	
+
 
 
 }

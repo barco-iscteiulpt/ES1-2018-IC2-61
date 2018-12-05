@@ -32,10 +32,26 @@ public class TwitterHandler {
 	private String authConsumerKey = "0I3XKOkznUjpuwdDOSkLvcSpg";
 	private String authConsumerSecret = "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G";
 	private String authAccessToken;
+	public String getAuthAccessToken() {
+		return authAccessToken;
+	}
+
+	public void setAuthAccessToken(String authAccessToken) {
+		this.authAccessToken = authAccessToken;
+	}
+
+	public String getAuthAccessTokenSecret() {
+		return authAccessTokenSecret;
+	}
+
+	public void setAuthAccessTokenSecret(String authAccessTokenSecret) {
+		this.authAccessTokenSecret = authAccessTokenSecret;
+	}
+
 	private String authAccessTokenSecret;
-	
+
 	ConfigurationBuilder cbLogin = new ConfigurationBuilder().setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
-	.setOAuthConsumerSecret(authConsumerSecret);
+			.setOAuthConsumerSecret(authConsumerSecret);
 	TwitterFactory twitterFactory = new TwitterFactory(cbLogin.build());
 	Twitter twitter = twitterFactory.getInstance();
 	RequestToken requestToken;
@@ -44,14 +60,17 @@ public class TwitterHandler {
 	public boolean loggedIn;
 	public String loginTwitter;
 
-	public void open() {
-		
+	public void open() {	
 		try {
-			
+			System.out.println("Token no inicio do open(): " + requestToken);
+
 			requestToken = twitter.getOAuthRequestToken();
-			setLoginTwitter(requestToken.getAuthorizationURL()); 
+			setLoginTwitter(requestToken.getAuthorizationURL());
 	        Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
 	        
+			setLoginTwitter(requestToken.getAuthorizationURL()); 
+			Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
+
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
 		} catch (MalformedURLException e) {
@@ -61,14 +80,20 @@ public class TwitterHandler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
-		
+
 	}
 	
+	public RequestToken getRequestToken() {
+		return requestToken;
+	}
+
+	public void setRequestToken(RequestToken requestToken) {
+		this.requestToken = requestToken;
+	}
+
 	public void login(String pin) {
 		try {
-			
 			AccessToken accessToken = null;
-			
 			while(accessToken==null) {
 				if (pin.length()>0) {
 					accessToken = twitter.getOAuthAccessToken(requestToken, pin);
@@ -76,15 +101,13 @@ public class TwitterHandler {
 					accessToken = twitter.getOAuthAccessToken(requestToken);
 				}
 			}
-			
 			authAccessToken = accessToken.getToken();
 			authAccessTokenSecret = accessToken.getTokenSecret();
 			this.loggedIn = true;
-
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
 		} 
-		
+
 	}
 
 	/**
@@ -235,7 +258,7 @@ public class TwitterHandler {
 	public ArrayList<Status> getFinalTweetsList() {
 		return this.finalTweetsList;
 	}
-	
+
 	public void setLoginTwitter(String logginTwitter) {
 		this.loginTwitter = logginTwitter;
 	}
