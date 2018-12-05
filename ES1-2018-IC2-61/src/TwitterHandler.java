@@ -33,9 +33,9 @@ public class TwitterHandler {
 	private String authConsumerSecret = "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G";
 	private String authAccessToken;
 	private String authAccessTokenSecret;
-	
+
 	ConfigurationBuilder cbLogin = new ConfigurationBuilder().setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
-	.setOAuthConsumerSecret(authConsumerSecret);
+			.setOAuthConsumerSecret(authConsumerSecret);
 	TwitterFactory twitterFactory = new TwitterFactory(cbLogin.build());
 	Twitter twitter = twitterFactory.getInstance();
 	RequestToken requestToken;
@@ -44,14 +44,12 @@ public class TwitterHandler {
 	public boolean loggedIn;
 	public String loginTwitter;
 
-	public void open() {
-		
+	public void open() {	
 		try {
-			
 			requestToken = twitter.getOAuthRequestToken();
 			setLoginTwitter(requestToken.getAuthorizationURL()); 
-	        Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
-	        
+			Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
+
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
 		} catch (MalformedURLException e) {
@@ -61,14 +59,12 @@ public class TwitterHandler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
-		
+
 	}
-	
+
 	public void login(String pin) {
 		try {
-			
 			AccessToken accessToken = null;
-			
 			while(accessToken==null) {
 				if (pin.length()>0) {
 					accessToken = twitter.getOAuthAccessToken(requestToken, pin);
@@ -76,15 +72,13 @@ public class TwitterHandler {
 					accessToken = twitter.getOAuthAccessToken(requestToken);
 				}
 			}
-			
 			authAccessToken = accessToken.getToken();
 			authAccessTokenSecret = accessToken.getTokenSecret();
 			this.loggedIn = true;
-
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
 		} 
-		
+
 	}
 
 	/**
@@ -235,7 +229,7 @@ public class TwitterHandler {
 	public ArrayList<Status> getFinalTweetsList() {
 		return this.finalTweetsList;
 	}
-	
+
 	public void setLoginTwitter(String logginTwitter) {
 		this.loginTwitter = logginTwitter;
 	}
