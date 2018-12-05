@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
@@ -471,7 +472,7 @@ public class GUI extends Thread {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-
+					
 					JTextField conta = new JTextField(20);
 					JTextField token = new JTextField(20);
 					JPanel dialog = new JPanel();
@@ -480,7 +481,8 @@ public class GUI extends Thread {
 					dialog.add(Box.createHorizontalStrut(15));
 					dialog.add(new JLabel("Token: "));
 					dialog.add(token);
-
+					facebook.login();
+					
 					int result = JOptionPane.showConfirmDialog(null, dialog, "Please enter account info",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
@@ -488,11 +490,14 @@ public class GUI extends Thread {
 						configAccounts.read("Facebook");
 						config.dispose();
 						configFrame();
+						facebook.setAccessToken(token.getText());
+						facebook.loggedIn = true;
 					}
 				}
 			});
 
 		} else {
+			facebook.loggedIn = false;
 			panel1 = new JPanel();
 			panel1.setLayout(new BorderLayout());
 			panel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
