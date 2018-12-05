@@ -86,6 +86,7 @@ public class GUI extends Thread {
 	protected JTextArea article ;
 	public FacebookHandler facebook;
 	public TwitterHandler twitter;
+	public EmailHandler email;
 	private Config configAccounts = new Config();
 	private JPanel content;
 	private JPanel contentSouth;
@@ -423,7 +424,6 @@ public class GUI extends Thread {
 							}
 						}
 					}
-				}
 			}
 		});
 
@@ -681,22 +681,24 @@ public class GUI extends Thread {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 
-					JTextField conta = new JTextField(20);
-					JTextField token = new JTextField(20);
+					JTextField username = new JTextField(20);
+					JPasswordField password = new JPasswordField(20);
 					JPanel dialog = new JPanel();
-					dialog.add(new JLabel("Conta: "));
-					dialog.add(conta);
+					dialog.add(new JLabel("Email: "));
+					dialog.add(username);
 					dialog.add(Box.createHorizontalStrut(15));
-					dialog.add(new JLabel("Token: "));
-					dialog.add(token);
+					dialog.add(new JLabel("Password: "));
+					dialog.add(password);
+					password.setEchoChar('*');
 
 					int result = JOptionPane.showConfirmDialog(null, dialog, "Please enter account info",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
-						configAccounts.write(new LoginRequest("Email", conta.getText(), token.getText()));
+						configAccounts.write(new LoginRequest("Email", username.getText(), password.getText()));
 						configAccounts.read("Email");
 						config.dispose();
 						configFrame();
+						email.login(username.getText(), password.getText());
 					}
 				}
 			});
@@ -756,12 +758,13 @@ public class GUI extends Thread {
 
 		ArrayList<Post> postsList = facebook.getFinalPostsList();
 		ArrayList<Status> tweetsList = twitter.getFinalTweetsList();
+		ArrayList<Message> emailsList = email.getFinalEmailsList();
 		tableModel.setRowCount(0);
 		timeline.clearSelection();
 
 		if (postsList != null) {
 			for (Post p : postsList) {
-				tableModel.addRow(new Object[]{"Facebook", p.getCreatedTime(), p.getMessage(),p});
+				tableModel.addRow(new Object[]{"Facebook", p.getUpdatedTime(), p.getMessage(),p});
 			}
 		}
 
@@ -770,6 +773,17 @@ public class GUI extends Thread {
 				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText(), t});
 			}
 		}
+
+		if (emailsList != null) {
+			for (Message m : emailsList) {
+				try {
+					tableModel.addRow(new Object[]{"Email", m.getSentDate(), m.getSubject(), m});
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
 		//		sortTable();
 	}
 
@@ -835,7 +849,7 @@ public class GUI extends Thread {
 		frame.setBackground(Color.LIGHT_GRAY);
 		frame.setFont(new Font("Arial", Font.PLAIN, 12));
 	}
-	
+
 
 
 }

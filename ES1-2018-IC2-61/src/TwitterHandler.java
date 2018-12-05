@@ -62,20 +62,15 @@ public class TwitterHandler {
 
 	public void open() {	
 		try {
-<<<<<<< HEAD
 			System.out.println("Token no inicio do open(): " + requestToken);
-=======
->>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
+
 			requestToken = twitter.getOAuthRequestToken();
-<<<<<<< HEAD
 			setLoginTwitter(requestToken.getAuthorizationURL());
 	        Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
 	        
-=======
 			setLoginTwitter(requestToken.getAuthorizationURL()); 
 			Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
 
->>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
 		} catch (MalformedURLException e) {
@@ -87,7 +82,6 @@ public class TwitterHandler {
 		} 
 
 	}
-<<<<<<< HEAD
 	
 	public RequestToken getRequestToken() {
 		return requestToken;
@@ -96,8 +90,6 @@ public class TwitterHandler {
 	public void setRequestToken(RequestToken requestToken) {
 		this.requestToken = requestToken;
 	}
-=======
->>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
 
 	public void login(String pin) {
 		try {
