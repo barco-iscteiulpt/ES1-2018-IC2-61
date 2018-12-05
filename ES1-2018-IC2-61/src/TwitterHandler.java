@@ -49,9 +49,9 @@ public class TwitterHandler {
 	}
 
 	private String authAccessTokenSecret;
-	
+
 	ConfigurationBuilder cbLogin = new ConfigurationBuilder().setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
-	.setOAuthConsumerSecret(authConsumerSecret);
+			.setOAuthConsumerSecret(authConsumerSecret);
 	TwitterFactory twitterFactory = new TwitterFactory(cbLogin.build());
 	Twitter twitter = twitterFactory.getInstance();
 	RequestToken requestToken;
@@ -60,14 +60,22 @@ public class TwitterHandler {
 	public boolean loggedIn;
 	public String loginTwitter;
 
-	public void open() {
-		
+	public void open() {	
 		try {
+<<<<<<< HEAD
 			System.out.println("Token no inicio do open(): " + requestToken);
+=======
+>>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
 			requestToken = twitter.getOAuthRequestToken();
+<<<<<<< HEAD
 			setLoginTwitter(requestToken.getAuthorizationURL());
 	        Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
 	        
+=======
+			setLoginTwitter(requestToken.getAuthorizationURL()); 
+			Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
+
+>>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
 		} catch (MalformedURLException e) {
@@ -77,8 +85,9 @@ public class TwitterHandler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
-		
+
 	}
+<<<<<<< HEAD
 	
 	public RequestToken getRequestToken() {
 		return requestToken;
@@ -87,12 +96,12 @@ public class TwitterHandler {
 	public void setRequestToken(RequestToken requestToken) {
 		this.requestToken = requestToken;
 	}
+=======
+>>>>>>> branch 'master' of https://github.com/barco-iscteiulpt/ES1-2018-IC2-61.git
 
 	public void login(String pin) {
 		try {
-			
 			AccessToken accessToken = null;
-			
 			while(accessToken==null) {
 				if (pin.length()>0) {
 					accessToken = twitter.getOAuthAccessToken(requestToken, pin);
@@ -100,15 +109,13 @@ public class TwitterHandler {
 					accessToken = twitter.getOAuthAccessToken(requestToken);
 				}
 			}
-			
 			authAccessToken = accessToken.getToken();
 			authAccessTokenSecret = accessToken.getTokenSecret();
 			this.loggedIn = true;
-
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
 		} 
-		
+
 	}
 
 	/**
@@ -259,7 +266,7 @@ public class TwitterHandler {
 	public ArrayList<Status> getFinalTweetsList() {
 		return this.finalTweetsList;
 	}
-	
+
 	public void setLoginTwitter(String logginTwitter) {
 		this.loginTwitter = logginTwitter;
 	}

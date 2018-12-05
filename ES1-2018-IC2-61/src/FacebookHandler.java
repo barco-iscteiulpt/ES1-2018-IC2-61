@@ -23,7 +23,7 @@ import com.restfb.types.Post;
 
 public class FacebookHandler {
 
-	protected String accessToken = "EAAEprSZC8PBABAJyQpTxdEQaXh9dkvPOopFsDUmjJIB3m7n3IT6rxiWOXSwPpYzCJtUm0CH3D6pjzCPoH9ZAYgplLKeRwkQ2ZCcEsZCc4lU9olFarz3Pcz5JJb6zZCzUH94DSidZAbw85xyV3JpsQSx5RZCaWICuel33cJH4TIufR4BPDti62z5NVhaSAM2s54ZD";
+//	protected String accessToken = "EAAEprSZC8PBABAJyQpTxdEQaXh9dkvPOopFsDUmjJIB3m7n3IT6rxiWOXSwPpYzCJtUm0CH3D6pjzCPoH9ZAYgplLKeRwkQ2ZCcEsZCc4lU9olFarz3Pcz5JJb6zZCzUH94DSidZAbw85xyV3JpsQSx5RZCaWICuel33cJH4TIufR4BPDti62z5NVhaSAM2s54ZD";
 	protected String accessToken2 = "EAAEprSZC8PBABAERNOUaTHT17JMZCnuHwOZBL3EGknDVPGGZAss879cu9c38Of0LFnYZCVZA3iZCcO8KhyQn4J7lsFmsgZArS6TJVGoPOAZBmJMWMH3g3032KV8ajmpdqk5mvlaKBeAZC7ZCkS4N108jMAKkDYvR4DjFdrEq8v5IudGFgZDZD";
 	protected String pageToken = "EAAEprSZC8PBABAMGZCJdBrU0KAYnv97FHHIfWuiJ39mt1Br5ZBZBq1XblyomzIhCoHKNi7VzxZBRcgMZA0sEODdnjZCO889RMYZADt72mDp7trfkv3eIGBvKNGxGBYxIXuEvGdXxZAiJZBm5fo27lV0wAp0I9ez8hieGahNLl8fXArNd1uUNB9t5uHU0jQ2HIotiQMRoToIXP72AZDZD";
 	FacebookClient fbClient = new DefaultFacebookClient(accessToken2);
@@ -55,21 +55,21 @@ public class FacebookHandler {
 					}
 					if (period.equals("Last hour")) {
 						calendar.add(Calendar.HOUR_OF_DAY, -1);
-						if (post.getCreatedTime().after(calendar.getTime())) {
+						if (post.getUpdatedTime().after(calendar.getTime())) {
 							finalPostsList.add(post);
 						}
 					}
 
 					if (period.equals("Last day")) {
 						calendar.add(Calendar.DAY_OF_MONTH, -1);
-						if (post.getCreatedTime().after(calendar.getTime())) {
+						if (post.getUpdatedTime().after(calendar.getTime())) {
 							finalPostsList.add(post);
 						}
 					}
 
 					if (period.equals("Last week")) {
 						calendar.add(Calendar.DAY_OF_MONTH, -7);
-						if (post.getCreatedTime().after(calendar.getTime())) {
+						if (post.getUpdatedTime().after(calendar.getTime())) {
 							finalPostsList.add(post);
 							
 						}
@@ -77,7 +77,7 @@ public class FacebookHandler {
 
 					if (period.equals("Last month")) {
 						calendar.add(Calendar.MONTH, -1);
-						if (post.getCreatedTime().after(calendar.getTime())) {
+						if (post.getUpdatedTime().after(calendar.getTime())) {
 							finalPostsList.add(post);
 						}
 					}

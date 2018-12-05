@@ -1,9 +1,12 @@
 
+import java.io.IOException;
 import java.util.*;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
@@ -27,13 +30,17 @@ public class EmailHandler {
 	private String text;
 	private String receivingHost;
 	private int receivingPort;
-	
+	public String currentBody;
+
+	public boolean loggedIn;
+
 	public ArrayList<Message> finalEmailsList;
 
 	public void login(String userName,String password){
 
 		this.userName=userName; //sender's email can also use as User Name
 		this.password=password;
+		this.loggedIn = true;
 
 	}
 
@@ -55,7 +62,7 @@ public class EmailHandler {
 		propertiesSender.put("mail.smtp.auth", "true");
 
 		Session session1 = Session.getDefaultInstance(propertiesSender);
-		Message simpleMessage = new MimeMessage(session1);
+		Message replyMessage = new MimeMessage(session1);
 		InternetAddress fromAddress = null;
 		InternetAddress toAddress = null;
 		try {
@@ -66,13 +73,13 @@ public class EmailHandler {
 			JOptionPane.showMessageDialog(null, "Sending email to: " + to + " failed !!!", "Falied to Send!!!", JOptionPane.ERROR_MESSAGE);
 		}
 		try {
-			simpleMessage.setFrom(fromAddress);
-			simpleMessage.setRecipient(RecipientType.TO, toAddress);
-			simpleMessage.setSubject(this.subject);
-			simpleMessage.setText(this.text);
+			replyMessage.setFrom(fromAddress);
+			replyMessage.setRecipient(RecipientType.TO, toAddress);
+			replyMessage.setSubject(this.subject);
+			replyMessage.setText(this.text);
 			Transport transport = session1.getTransport("smtps");
 			transport.connect (this.sendingHost,sendingPort, this.userName, this.password);
-			transport.sendMessage(simpleMessage, simpleMessage.getAllRecipients());
+			transport.sendMessage(replyMessage, replyMessage.getAllRecipients());
 			transport.close();
 			JOptionPane.showMessageDialog(null, "Mail sent successfully ...","Mail sent",JOptionPane.PLAIN_MESSAGE);
 		} catch (MessagingException e) {
@@ -91,51 +98,86 @@ public class EmailHandler {
 		try {
 			Store store=session2.getStore("imaps");
 			store.connect("imap.gmail.com",this.userName, this.password);
+			//			store.connect("imap.gmail.com","projetoes61@gmail.com", "rumoao20");
 			Folder folder=store.getFolder("INBOX");//get inbox
 
 			folder.open(Folder.READ_ONLY);//open folder only to read
 
 			Message message[]=folder.getMessages();
-			
+
 			Calendar calendar = Calendar.getInstance();
 
 			for(int i=0;i<message.length;i++){
 				if(message[i].getSubject().contains(info)) {
 					if(period.equals("Anytime")) {
-						finalEmailsList.add(message[i]);
+						getBody(message[i]);
+						Message m = new MimeMessage(session2);
+						m.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+						m.setSentDate(message[i].getReceivedDate());
+						InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
+						m.setFrom(fromAddress);
+						finalEmailsList.add(m);
 					}
 					if (period.equals("Last hour")) {
 						calendar.add(Calendar.HOUR_OF_DAY, -1);
 						if (message[i].getReceivedDate().after(calendar.getTime())) {
-							finalEmailsList.add(message[i]);
+							getBody(message[i]);
+							Message m = new MimeMessage(session2);
+							m.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+							m.setSentDate(message[i].getReceivedDate());
+							InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
+							m.setFrom(fromAddress);
+							finalEmailsList.add(m);
 						}
 					}
 
 					if (period.equals("Last day")) {
 						calendar.add(Calendar.DAY_OF_MONTH, -1);
 						if (message[i].getReceivedDate().after(calendar.getTime())) {
-							finalEmailsList.add(message[i]);
+							getBody(message[i]);
+							Message m = new MimeMessage(session2);
+							m.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+							m.setSentDate(message[i].getReceivedDate());
+							InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
+							m.setFrom(fromAddress);
+							finalEmailsList.add(m);
 						}
 					}
 
 					if (period.equals("Last week")) {
 						calendar.add(Calendar.DAY_OF_MONTH, -7);
 						if (message[i].getReceivedDate().after(calendar.getTime())) {
-							finalEmailsList.add(message[i]);
+							getBody(message[i]);
+							Message m = new MimeMessage(session2);
+							m.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+							m.setSentDate(message[i].getReceivedDate());
+							InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
+							m.setFrom(fromAddress);
+							finalEmailsList.add(m);
 						}
 					}
 
 					if (period.equals("Last month")) {
 						calendar.add(Calendar.MONTH, -1);
 						if (message[i].getReceivedDate().after(calendar.getTime())) {
-							finalEmailsList.add(message[i]);
+							getBody(message[i]);
+							Message m = new MimeMessage(session2);
+							m.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+							m.setSentDate(message[i].getReceivedDate());
+							InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
+							m.setFrom(fromAddress);
+							finalEmailsList.add(m);
 						}
 					}
+					//					String from = InternetAddress.toString(message[i].getFrom());
+					//					int x = from.indexOf("<");
+					//					int y = from.indexOf(">");
+					//					String b = from.substring(x+1, y);
+					//					System.out.println(from);
+					//					System.out.println("subject: "+message[i].getSubject());
+					//					getBody(message[i]);
+					//					System.out.println("Body: "+this.currentBody);
 				}
-				finalEmailsList.add(message[i]);
-				System.out.println(message[i].getSubject());
-				System.out.println(message[i].getContent());
-				//anything else you want
 			}
 			folder.close(true);
 			store.close();
@@ -143,25 +185,68 @@ public class EmailHandler {
 			System.out.println(e.toString());
 		}
 	}
-	
-	public ArrayList<Message> getFinalTweetsList() {
+
+	public void getBody(Message email) {
+		//		currentBody = null;
+		try {
+			Object content = email.getContent();
+			if (content instanceof Multipart) {
+				StringBuffer messageContent = new StringBuffer();
+				Multipart multipart = (Multipart) content;
+				for (int i = 0; i < multipart.getCount(); i++) {
+					Part part = multipart.getBodyPart(i);
+					if (part.isMimeType("text/plain")) {
+						messageContent.append(part.getContent().toString());
+					}
+				}
+				this.currentBody = messageContent.toString();
+				return;
+			}
+			this.currentBody = content.toString();
+			return;
+
+		} catch (IOException e) {
+			System.out.println("Unable to get email body content.");
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		//		  return "";
+	}
+
+	public String getCurrentBody() {
+		return this.currentBody;
+	}
+
+	public ArrayList<Message> getFinalEmailsList() {
 		return this.finalEmailsList;
 	}
 
-//	public static void main(String[] args) {
-//		//Sender must be a Gmail account
-//		String mailFrom=new String("projetoes61@gmail.com");
-//		String mailTo=new String("barco@iscte-iul.pt");
-//		EmailHandler newGmailClient=new EmailHandler();
-//		//Setting up account details
-//		newGmailClient.login("projetoes61@gmail.com", "rumoao20");
-//		String mailSubject=new String("Testing Mail");
-//		String mailText=new String("Have an Nice Day ...........!!!");
-//		//Send mail
-////		newGmailClient.sendGmail(mailFrom, mailTo, mailSubject, mailText);
-//		//Receive mails
-//		newGmailClient.searchGmail();
-//
-//	}
+	public String getUsername() {
+		return this.userName;
+	}
+
+	public void setUsername(String email) {
+		this.userName = email;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	//	public static void main(String[] args) {
+	//		//Sender must be a Gmail account
+	//		String mailFrom=new String("projetoes61@gmail.com");
+	//		String mailTo=new String("barco@iscte-iul.pt");
+	//		EmailHandler newGmailClient=new EmailHandler();
+	//		//Setting up account details
+	//		newGmailClient.login("projetoes61@gmail.com", "rumoao20");
+	//		String mailSubject=new String("Testing Mail");
+	//		String mailText=new String("Have an Nice Day ...........!!!");
+	//		//Send mail
+	////		newGmailClient.sendGmail(mailFrom, mailTo, mailSubject, mailText);
+	//		//Receive mails
+	//		newGmailClient.searchGmail();
+	//
+	//	}
 
 }
