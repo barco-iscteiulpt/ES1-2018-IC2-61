@@ -1,5 +1,4 @@
 
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -58,7 +57,7 @@ public class GUI extends Thread {
 	private JTextField keywords;
 	public DefaultTableModel tableModel;
 	protected JTable timeline;
-	protected JTextArea article ;
+	protected JTextArea article;
 	public FacebookHandler facebook;
 	public TwitterHandler twitter;
 	public EmailHandler email;
@@ -70,7 +69,7 @@ public class GUI extends Thread {
 	private Message currentEmail;
 	private String replyTo;
 	private String replyFrom;
-	public boolean isClicked=false;
+	public boolean isClicked = false;
 
 	/**
 	 * Create the application.
@@ -90,14 +89,14 @@ public class GUI extends Thread {
 	 */
 	public void addFrameContent() {
 
-		// Create the frame. Specify the title, placement, size, closing operation and
+		// Create the frame. Specify the title, placement, size, closing
+		// operation and
 		// layout of the frame.
 		frame = new JFrame();
 		frame.setTitle("Bom Dia Academia!");
 		frame.setBounds(100, 100, 800, 600);
 		ImageIcon appIcon = new ImageIcon("src/resources/app-icon.png");
 		frame.setIconImage(appIcon.getImage());
-
 
 		frame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
@@ -160,20 +159,23 @@ public class GUI extends Thread {
 
 		frame.setJMenuBar(menuBar);
 
-		// Create the top panel. Specify height and layout of the panel. Add it to the
+		// Create the top panel. Specify height and layout of the panel. Add it
+		// to the
 		// frame.
 		JPanel top = new JPanel();
 		top.setLayout(new GridLayout(1, 2, 0, 0));
 		frame.getContentPane().add(top, BorderLayout.NORTH);
 
-		// Create the left side of the top panel. Specify layout and orientation. Add to
+		// Create the left side of the top panel. Specify layout and
+		// orientation. Add to
 		// top panel.
 		JPanel top_left = new JPanel();
 		top_left.setBackground(UIManager.getColor("CheckBox.background"));
 		top_left.setLayout(new FlowLayout(FlowLayout.LEADING));
 		top.add(top_left);
 
-		// Get social icons from "resources" folder. Create 3 checkboxes (selected by
+		// Get social icons from "resources" folder. Create 3 checkboxes
+		// (selected by
 		// default). Add them to top-left panel.
 		JLabel fb_icon = new JLabel(new ImageIcon("src/resources/facebook.png"));
 		JLabel twitter_icon = new JLabel(new ImageIcon("src/resources/twitter.png"));
@@ -193,20 +195,23 @@ public class GUI extends Thread {
 		top_left.add(email_checkbox);
 		top_left.add(email_icon);
 
-		// Create the right side of the top panel. Specify layout and orientation. Add
+		// Create the right side of the top panel. Specify layout and
+		// orientation. Add
 		// to top panel.
 		JPanel top_right = new JPanel();
 		top_right.setLayout(new FlowLayout(FlowLayout.TRAILING));
 		top.add(top_right);
 
-		// Create period filter and add different options. Add to top-right panel.
+		// Create period filter and add different options. Add to top-right
+		// panel.
 		String[] options = { "Anytime", "Last hour", "Last day", "Last week", "Last month" };
 		JComboBox<String> comboBox = new JComboBox<String>(options);
 		comboBox.setFont(new Font("Arial", Font.PLAIN, 13));
 		comboBox.setSelectedIndex(0);
 		top_right.add(comboBox);
 
-		// Define keyword search and create "Search" button. Specify dimensions, margins
+		// Define keyword search and create "Search" button. Specify dimensions,
+		// margins
 		// and icon. Add ActionListener. Add to top-right panel.
 		keywords = new JTextField();
 		JTextField reply = new JTextField();
@@ -241,7 +246,7 @@ public class GUI extends Thread {
 
 		JButton likeButton = new JButton();
 		likeButton.setMargin(new Insets(8, 8, 8, 8));
-		likeButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/like.png")));	
+		likeButton.setIcon(new ImageIcon(GUI.class.getResource("/resources/like.png")));
 
 		JButton commentButton = new JButton();
 		commentButton.setMargin(new Insets(8, 8, 8, 8));
@@ -282,7 +287,8 @@ public class GUI extends Thread {
 		center.setLayout(new GridLayout(1, 2, 0, 0));
 		frame.getContentPane().add(center, BorderLayout.CENTER);
 
-		// Create scrolling panes. Create timeline and article boxes. Add them to the
+		// Create scrolling panes. Create timeline and article boxes. Add them
+		// to the
 		// respective panes.
 		tableModel = new DefaultTableModel();
 		timeline = new JTable(tableModel);
@@ -309,12 +315,11 @@ public class GUI extends Thread {
 		JScrollPane scrollPaneArticle = new JScrollPane();
 		scrollPaneTimeline.setViewportView(timeline);
 		scrollPaneArticle.setViewportView(article);
-		scrollPaneArticle.setPreferredSize(new Dimension(content.getWidth(),460));
+		scrollPaneArticle.setPreferredSize(new Dimension(content.getWidth(), 460));
 		article.setLineWrap(true);
 		article.setWrapStyleWord(true);
 		content.add(scrollPaneArticle, BorderLayout.NORTH);
 		content.add(contentSouth, BorderLayout.SOUTH);
-
 
 		// Create table columns.
 		tableModel.addColumn("Source");
@@ -327,16 +332,17 @@ public class GUI extends Thread {
 		timeline.setFont(new Font("Arial", Font.PLAIN, 12));
 		timeline.getTableHeader().setFont(new Font("Arial", Font.ITALIC, 13));
 
-		// Add ListSelectionListener to timeline and ActionListener to the search
+		// Add ListSelectionListener to timeline and ActionListener to the
+		// search
 		// button.
 		timeline.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (timeline.getSelectedRow() >= 0) {
-					
+
 					int modelRow = timeline.convertRowIndexToModel(timeline.getSelectedRow());
 					String text = timeline.getModel().getValueAt(modelRow, 2).toString();
-					
+
 					article.setText(text);
 
 					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Status) {
@@ -349,7 +355,7 @@ public class GUI extends Thread {
 						reply.setVisible(true);
 						replyButton.setVisible(true);
 						retweetButton.setVisible(true);
-						favoriteButton.setVisible(true);		
+						favoriteButton.setVisible(true);
 						Status tweet = (Status) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
 						tweetId = tweet.getId();
 					}
@@ -382,12 +388,12 @@ public class GUI extends Thread {
 						emailSubject.setVisible(true);
 						currentEmail = (Message) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
 
-						try {	
+						try {
 							String aux = InternetAddress.toString(currentEmail.getFrom());
-							if(aux.startsWith("E")) {
+							if (aux.startsWith("E")) {
 								int x = aux.indexOf("<");
 								int y = aux.indexOf(">");
-								String temp = aux.substring(x+1, y);
+								String temp = aux.substring(x + 1, y);
 								aux = temp;
 							}
 							replyTo = aux;
@@ -416,7 +422,7 @@ public class GUI extends Thread {
 			public void actionPerformed(ActionEvent e) {
 				if (reply.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please insert a reply.");
-				}else
+				} else
 					twitter.reply(tweetId, reply.getText());
 			}
 		});
@@ -460,61 +466,63 @@ public class GUI extends Thread {
 					if (configAccounts.isLoggedTwitter()) {
 						twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 						manageTimeline();
-					} 
+					}
 				}
 				if (fb_checkbox.isSelected()) {
 					if (configAccounts.isLoggedFacebook()) {
 						facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
 						manageTimeline();
-					} 
+					}
 				}
 				if (email_checkbox.isSelected()) {
-					if(configAccounts.isLoggedEmail()) {
+					if (configAccounts.isLoggedEmail()) {
 						email.searchGmail(keywords.getText(), comboBox.getSelectedItem().toString());
 						manageTimeline();
-					} 
+					}
 				}
-				if ((twitter_checkbox.isSelected() && !configAccounts.isLoggedTwitter()) || (fb_checkbox.isSelected() && !configAccounts.isLoggedFacebook()) || (email_checkbox.isSelected() && !configAccounts.isLoggedEmail())) {
+				if ((twitter_checkbox.isSelected() && !configAccounts.isLoggedTwitter())
+						|| (fb_checkbox.isSelected() && !configAccounts.isLoggedFacebook())
+						|| (email_checkbox.isSelected() && !configAccounts.isLoggedEmail())) {
 					JOptionPane.showMessageDialog(null, "Please login first (Edit>Configurations).");
 				}
-				if (timeline.getModel().getRowCount() == 0 && (configAccounts.isLoggedTwitter() || configAccounts.isLoggedFacebook() || configAccounts.isLoggedEmail())) {
+				if (timeline.getModel().getRowCount() == 0 && (configAccounts.isLoggedTwitter()
+						|| configAccounts.isLoggedFacebook() || configAccounts.isLoggedEmail())) {
 					JOptionPane.showMessageDialog(null, "No search results!");
 				}
-//				tableToXML();
+				// tableToXML();
 			}
 		});
 
 	}
+
 	/**
-	 * Convert all elements on the JTable to the XML file. 
+	 * Convert all elements on the JTable to the XML file.
 	 */
 
 	protected void tableToXML() {
 		configAccounts.clearResults("Post");
 		configAccounts.clearResults("Status");
 		configAccounts.clearResults("Message");
-		if(facebook.getFinalPostsList()!=null) {
-			for(int i =0; i<facebook.getFinalPostsList().size(); i++) {
+		if (facebook.getFinalPostsList() != null) {
+			for (int i = 0; i < facebook.getFinalPostsList().size(); i++) {
 				configAccounts.write(facebook.getFinalPostsList().get(i));
 			}
 		}
-		if(twitter.getFinalTweetsList()!=null) {
-			for(int i = 0; i<twitter.getFinalTweetsList().size(); i++) {
+		if (twitter.getFinalTweetsList() != null) {
+			for (int i = 0; i < twitter.getFinalTweetsList().size(); i++) {
 				configAccounts.write(twitter.getFinalTweetsList().get(i));
 			}
 		}
-		//		if(email.getFinalEmailsList()!=null) {
-		//			for(int i = 0; i<email.getFinalEmailsList().size(); i++) {
-		//				configAccounts.clearResults("Post");
-		//				configAccounts.clearResults("Status");
-		//				configAccounts.clearResults("Message");
-		//				configAccounts.write(email.getFinalEmailsList().get(i));
-		//			}
-		//		}
+		if (email.getFinalEmailsList() != null) {
+			for (int i = 0; i < email.getFinalEmailsList().size(); i++) {
+				configAccounts.write(email.getFinalEmailsList().get(i));
+			}
+		}
 	}
 
 	/**
-	 * Initializes the contents of the configuration frame and its adaptation to the XML file.
+	 * Initializes the contents of the configuration frame and its adaptation to
+	 * the XML file.
 	 */
 
 	protected void configFrame() {
@@ -547,8 +555,8 @@ public class GUI extends Thread {
 					JLabel label = new JLabel("      Get token > Get user token");
 					JPanel dialog = new JPanel();
 					JPanel aux = new JPanel();
-					//					aux.add(Box.createVerticalStrut(15));
-					aux.setLayout(new GridLayout(2,1));
+					// aux.add(Box.createVerticalStrut(15));
+					aux.setLayout(new GridLayout(2, 1));
 					dialog.add(Box.createHorizontalStrut(15));
 					dialog.add(new JLabel("Token: "));
 					dialog.add(token);
@@ -583,7 +591,7 @@ public class GUI extends Thread {
 				public void actionPerformed(ActionEvent arg0) {
 					configAccounts.delete("Facebook");
 					configAccounts.read("Facebook");
-					//					System.out.println(configAccounts.getFacebookAccount());
+					// System.out.println(configAccounts.getFacebookAccount());
 					config.dispose();
 					configFrame();
 					configAccounts.setLoggedFacebook(false);
@@ -621,7 +629,8 @@ public class GUI extends Thread {
 
 					if (result == JOptionPane.OK_OPTION) {
 						twitter.login(pin.getText());
-						configAccounts.write(new TwitterLoginRequest(twitter.getAuthAccessToken(), twitter.getAuthAccessTokenSecret()));
+						configAccounts.write(new TwitterLoginRequest(twitter.getAuthAccessToken(),
+								twitter.getAuthAccessTokenSecret()));
 						configAccounts.read("Twitter");
 						config.dispose();
 						configFrame();
@@ -655,7 +664,6 @@ public class GUI extends Thread {
 				}
 			});
 		}
-
 
 		// Line 3
 		JPanel panel3;
@@ -718,7 +726,6 @@ public class GUI extends Thread {
 			});
 		}
 
-
 		panel1.add(labelFb, BorderLayout.WEST);
 		panel1.add(fbAccount, BorderLayout.CENTER);
 		panel1.add(actionFb, BorderLayout.EAST);
@@ -732,22 +739,21 @@ public class GUI extends Thread {
 		panel3.add(actionEm, BorderLayout.EAST);
 		panel3.add(email_icon, BorderLayout.WEST);
 
-
-
 		config.getContentPane().add(panel1);
 		config.getContentPane().add(new JSeparator(JSeparator.HORIZONTAL));
 		config.getContentPane().add(panel2);
 		config.getContentPane().add(new JSeparator(JSeparator.HORIZONTAL));
 		config.getContentPane().add(panel3);
 
-		config.setBounds(100,100, 400, 300);
+		config.setBounds(100, 100, 400, 300);
 		config.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		config.setVisible(true);
 
 	}
 
 	/**
-	 * Gets content from both Facebook and Twitter lists and adds them to the table.
+	 * Gets content from both Facebook and Twitter lists and adds them to the
+	 * table.
 	 */
 	private void manageTimeline() {
 
@@ -759,20 +765,20 @@ public class GUI extends Thread {
 
 		if (postsList != null) {
 			for (Post p : postsList) {
-				tableModel.addRow(new Object[]{"Facebook", p.getUpdatedTime(), p.getMessage(),p});
+				tableModel.addRow(new Object[] { "Facebook", p.getUpdatedTime(), p.getMessage(), p });
 			}
 		}
 
 		if (tweetsList != null) {
 			for (Status t : tweetsList) {
-				tableModel.addRow(new Object[]{"Twitter", t.getCreatedAt(), t.getText(), t});
+				tableModel.addRow(new Object[] { "Twitter", t.getCreatedAt(), t.getText(), t });
 			}
 		}
 
 		if (emailsList != null) {
 			for (Message m : emailsList) {
 				try {
-					tableModel.addRow(new Object[]{"Email", m.getSentDate(), m.getSubject(), m});
+					tableModel.addRow(new Object[] { "Email", m.getSentDate(), m.getSubject(), m });
 				} catch (MessagingException e) {
 					e.printStackTrace();
 				}
@@ -780,37 +786,48 @@ public class GUI extends Thread {
 		}
 
 		sortTable();
-		
+
 	}
 
 	private void manageLastTimeline() {
 
 		configAccounts.loadLastSearch("Post");
 		ArrayList<Post> postsList = configAccounts.getPostsList();
-		//		ArrayList<Status> tweetsList = new ArrayList<Status>();
-		//		ArrayList<Message> emailsList = new ArrayList<Message>();
+		// ArrayList<Status> tweetsList = new ArrayList<Status>();
+		configAccounts.loadLastSearch("Message");
+		ArrayList<Message> emailsList = configAccounts.getEmailsList();
 		tableModel.setRowCount(0);
 		timeline.clearSelection();
 
 		if (postsList != null) {
 			for (Post p : postsList) {
-				tableModel.addRow(new Object[]{"Facebook", p.getUpdatedTime(), p.getMessage(),p});
+				tableModel.addRow(new Object[] { "Facebook", p.getUpdatedTime(), p.getMessage(), p });
+			}
+		}
+
+		if (emailsList != null) {
+			for (Message m : emailsList) {
+				try {
+					tableModel.addRow(new Object[] { "Email", m.getSentDate(), m.getSubject(), m });
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
 		sortTable();
-		
+
 	}
 
 	/**
-	 * (unused) Organizes the table chronologically 
+	 * (unused) Organizes the table chronologically
 	 */
 
 	private void sortTable() {
 
-		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel> (tableModel);
+		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(tableModel);
 		sorter.setComparator(1, Comparator.reverseOrder());
-		timeline.setRowSorter(sorter);		
+		timeline.setRowSorter(sorter);
 
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 		sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
@@ -835,7 +852,6 @@ public class GUI extends Thread {
 		return frame;
 	}
 
-
 	/**
 	 * Returns the current keywords.
 	 * 
@@ -844,7 +860,6 @@ public class GUI extends Thread {
 	public String getKeywords() {
 		return keywords.getText();
 	}
-
 
 	/**
 	 * Returns the current tableModel.
@@ -858,14 +873,13 @@ public class GUI extends Thread {
 	/**
 	 * Sets the specified frame to the GUI object.
 	 * 
-	 * @param frame the current frame
+	 * @param frame
+	 *            the current frame
 	 */
 	public void setFrame(JFrame frame) {
 		this.frame = frame;
 		frame.setBackground(Color.LIGHT_GRAY);
 		frame.setFont(new Font("Arial", Font.PLAIN, 12));
 	}
-
-
 
 }

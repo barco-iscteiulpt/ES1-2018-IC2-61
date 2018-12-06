@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -36,14 +39,17 @@ public class Config {
 	private boolean loggedTwitter;
 	private boolean loggedEmail;
 
-	public ArrayList<Post> postsList = new ArrayList<Post>();
-	public ArrayList<Status> tweetsList = new ArrayList<Status>();
-
+	private ArrayList<Post> postsList = new ArrayList<Post>();
+	private ArrayList<Status> tweetsList = new ArrayList<Status>();
+	private ArrayList<Message> emailsList = new ArrayList<Message>();;
+	
 	private String facebookToken;
 	private String twitterToken;
 	private String twitterTokenSecret;
 	private String emailAccount;
 	private String emailPassword;
+
+	
 
 
 	public boolean isLoggedFacebook() {
@@ -148,6 +154,18 @@ public class Config {
 					p.setMessage(attributes.item(0).getNodeValue());
 					postsList.add(p);
 				}
+				if (string.equals("Message")) {
+					Session session = Session.getDefaultInstance(System.getProperties());
+					Message m = new MimeMessage(session);
+					m.setSubject(attributes.item(0).getNodeValue());
+					DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+					TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
+					Date date = dateFormat.parse(attributes.item(1).getNodeValue());
+					m.setSentDate(date);
+					InternetAddress from = new InternetAddress(attributes.item(2).getNodeValue());
+					m.setFrom(from);
+					emailsList.add(m);
+				}
 
 			}
 
@@ -196,6 +214,12 @@ public class Config {
 				element.setAttribute("Date", st.getCreatedAt().toString());
 				element.setAttribute("Content", st.getText());
 				element.setAttribute("ID", st.getSource());
+			} else if (o instanceof Message) {
+				Message msg = (Message) o;
+				element = doc.createElement("Message");
+				element.setAttribute("Date", msg.getSentDate().toString());
+				element.setAttribute("Content", msg.getSubject());
+				element.setAttribute("GetFrom", InternetAddress.toString(msg.getFrom()));
 			}
 
 
@@ -353,6 +377,10 @@ public class Config {
 
 	public ArrayList<Post> getPostsList() {
 		return postsList;
+	}
+	
+	public ArrayList<Message> getEmailsList() {
+		return emailsList;
 	}
 
 }
