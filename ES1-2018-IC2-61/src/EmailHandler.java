@@ -1,5 +1,8 @@
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -29,6 +32,7 @@ public class EmailHandler {
 	public String currentBody;
 
 	public boolean loggedIn;
+	private boolean connected = true;
 
 	public ArrayList<Message> finalEmailsList;
 
@@ -64,7 +68,7 @@ public class EmailHandler {
 			toAddress = new InternetAddress(this.to);
 		} catch (AddressException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Sending email to: " + to + " failed !!!", "Falied to Send!!!", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Sending email to: " + to + " failed !!!", "Failed to Send!!!", JOptionPane.ERROR_MESSAGE);
 		}
 		try {
 			replyMessage.setFrom(fromAddress);
@@ -77,14 +81,14 @@ public class EmailHandler {
 			transport.close();
 			JOptionPane.showMessageDialog(null, "Mail sent successfully ...","Mail sent",JOptionPane.PLAIN_MESSAGE);
 		} catch (MessagingException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Sending email to: " + to + " failed !!!", "Falied to Send!!!", JOptionPane.ERROR_MESSAGE);
+			checkConnection();
+			if(connected) 
+				JOptionPane.showMessageDialog(null, "Sending email to: " + to + " failed !!!", "Failed to Send!!!", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
 	public void searchGmail(String info, String period){
 		finalEmailsList = new ArrayList<>();
-		/*this will print subject of all messages in the inbox of sender@gmail.com*/
 		Properties propertiesReceiver = System.getProperties();
 		propertiesReceiver.setProperty("mail.store.protocol", "imaps");
 		Session session2 = Session.getDefaultInstance(propertiesReceiver, null);
@@ -166,7 +170,9 @@ public class EmailHandler {
 			folder.close(true);
 			store.close();
 		} catch (Exception e) {
-			loggedIn = false;
+			checkConnection();
+			if(connected) 
+				loggedIn = false;
 		}
 	}
 
@@ -193,6 +199,21 @@ public class EmailHandler {
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void checkConnection() {
+		  try {
+		        final URL url = new URL("http://www.google.com");
+		        final URLConnection connection = url.openConnection();
+		        connection.connect();
+		        connection.getInputStream().close();
+		        if(!connected)
+		        	connected = true;
+		    } catch (MalformedURLException e) {
+		    } catch (IOException e) {
+		    	JOptionPane.showMessageDialog(null, "No internet connection.");
+		    	connected = false; 
+		    }
 	}
 
 	public String getCurrentBody() {

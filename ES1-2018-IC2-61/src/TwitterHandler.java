@@ -1,8 +1,10 @@
 import java.awt.Desktop;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -27,22 +29,7 @@ public class TwitterHandler {
 	private String authConsumerKey = "0I3XKOkznUjpuwdDOSkLvcSpg";
 	private String authConsumerSecret = "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G";
 	private String authAccessToken;
-	public String getAuthAccessToken() {
-		return authAccessToken;
-	}
-
-	public void setAuthAccessToken(String authAccessToken) {
-		this.authAccessToken = authAccessToken;
-	}
-
-	public String getAuthAccessTokenSecret() {
-		return authAccessTokenSecret;
-	}
-
-	public void setAuthAccessTokenSecret(String authAccessTokenSecret) {
-		this.authAccessTokenSecret = authAccessTokenSecret;
-	}
-
+	private boolean connected = true;
 	private String authAccessTokenSecret;
 
 	ConfigurationBuilder cbLogin = new ConfigurationBuilder().setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
@@ -174,8 +161,7 @@ public class TwitterHandler {
 			}
 
 		} catch (TwitterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			checkConnection();
 		}
 	}
 
@@ -195,7 +181,11 @@ public class TwitterHandler {
 			twitter.setOAuthAccessToken(accessToken);
 			twitter.retweetStatus(tweetId);
 		} catch (TwitterException e) {
-			JOptionPane.showMessageDialog(null, "You have already retweeted this tweet!");
+			checkConnection();
+			System.out.println(connected);
+			if(connected) {
+				JOptionPane.showMessageDialog(null, "You have already retweeted this tweet!");
+			}
 		}
 
 	}
@@ -216,7 +206,9 @@ public class TwitterHandler {
 			twitter.setOAuthAccessToken(accessToken);
 			twitter.createFavorite(tweetId);
 		} catch (TwitterException e) {
-			JOptionPane.showMessageDialog(null, "You have already favorited this tweet!");
+			checkConnection();
+			if(connected) 
+				JOptionPane.showMessageDialog(null, "You have already favorited this tweet!");
 		}
 
 	}
@@ -239,10 +231,24 @@ public class TwitterHandler {
 			statusUpdate.setInReplyToStatusId(tweetId);
 			twitter.updateStatus(statusUpdate);
 		} catch (TwitterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			checkConnection();
 		}
 
+	}
+	
+	public void checkConnection() {
+		  try {
+		        final URL url = new URL("http://www.google.com");
+		        final URLConnection connection = url.openConnection();
+		        connection.connect();
+		        connection.getInputStream().close();
+		        if(!connected)
+		        	connected = true;
+		    } catch (MalformedURLException e) {
+		    } catch (IOException e) {
+		    	JOptionPane.showMessageDialog(null, "No internet connection.");
+		    	connected = false; 
+		    }
 	}
 
 	/**
@@ -256,6 +262,22 @@ public class TwitterHandler {
 
 	public void setLoginTwitter(String logginTwitter) {
 		this.loginTwitter = logginTwitter;
+	}
+	
+	public String getAuthAccessToken() {
+		return authAccessToken;
+	}
+
+	public void setAuthAccessToken(String authAccessToken) {
+		this.authAccessToken = authAccessToken;
+	}
+
+	public String getAuthAccessTokenSecret() {
+		return authAccessTokenSecret;
+	}
+
+	public void setAuthAccessTokenSecret(String authAccessTokenSecret) {
+		this.authAccessTokenSecret = authAccessTokenSecret;
 	}
 
 }
