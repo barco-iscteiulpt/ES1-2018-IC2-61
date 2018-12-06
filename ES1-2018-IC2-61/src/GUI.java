@@ -487,23 +487,24 @@ public class GUI extends Thread {
 					if (twitter.loggedIn) {
 						twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 						manageTimeline();
-					} else {
-						JOptionPane.showMessageDialog(null, "Please loggin first (Edit>Configurations).");
-					}
+					} 
 				}
 				if (fb_checkbox.isSelected()) {
-					facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
-					manageTimeline();
+					if (facebook.loggedIn) {
+						facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
+						manageTimeline();
+					} 
 				}
 				if (email_checkbox.isSelected()) {
 					if(email.loggedIn) {
 						email.searchGmail(keywords.getText(), comboBox.getSelectedItem().toString());
 						manageTimeline();
-					} else {
-						JOptionPane.showMessageDialog(null, "Please loggin first (Edit>Configurations).");
-					}
+					} 
 				}
-				if (timeline.getModel().getRowCount() == 0 && twitter.loggedIn) {
+				if ((twitter_checkbox.isSelected() && !twitter.loggedIn) || (fb_checkbox.isSelected() && !facebook.loggedIn) || (email_checkbox.isSelected() && !email.loggedIn)) {
+					JOptionPane.showMessageDialog(null, "Please loggin first (Edit>Configurations).");
+				}
+				if (timeline.getModel().getRowCount() == 0 && (twitter.loggedIn || facebook.loggedIn || email.loggedIn)) {
 					JOptionPane.showMessageDialog(null, "No search results!");
 				}
 			}
@@ -554,20 +555,23 @@ public class GUI extends Thread {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					
-					JTextField conta = new JTextField(20);
 					JTextField token = new JTextField(20);
+					JLabel label = new JLabel("      Get token > Get user token");
 					JPanel dialog = new JPanel();
-					dialog.add(new JLabel("Conta: "));
-					dialog.add(conta);
+					JPanel aux = new JPanel();
+//					aux.add(Box.createVerticalStrut(15));
+					aux.setLayout(new GridLayout(2,1));
 					dialog.add(Box.createHorizontalStrut(15));
 					dialog.add(new JLabel("Token: "));
 					dialog.add(token);
+					aux.add(label);
+					aux.add(dialog);
 					facebook.login();
 					
-					int result = JOptionPane.showConfirmDialog(null, dialog, "Please enter account info",
+					int result = JOptionPane.showConfirmDialog(null, aux, "Please enter account info",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
-						configAccounts.write(new LoginRequest("Facebook", conta.getText(), token.getText()));
+//						configAccounts.write(new LoginRequest("Facebook", conta.getText(), token.getText()));
 						configAccounts.read("Facebook");
 						config.dispose();
 						configFrame();
@@ -618,10 +622,7 @@ public class GUI extends Thread {
 				public void actionPerformed(ActionEvent arg0) {
 
 					JTextField pin = new JTextField(20);
-					JTextField username = new JTextField(20);
 					JPanel dialog = new JPanel();
-					dialog.add(new JLabel("Username: "));
-					dialog.add(username);
 					dialog.add(Box.createHorizontalStrut(15));
 					dialog.add(new JLabel("PIN: "));
 					dialog.add(pin);
@@ -631,7 +632,7 @@ public class GUI extends Thread {
 							JOptionPane.OK_CANCEL_OPTION);
 
 					if (result == JOptionPane.OK_OPTION) {
-						configAccounts.write(new LoginRequest("Twitter", pin.getText(), username.getText()));
+					//	configAccounts.write(new LoginRequest("Twitter", pin.getText(), username.getText()));
 						configAccounts.read("Twitter");
 						config.dispose();
 						configFrame();

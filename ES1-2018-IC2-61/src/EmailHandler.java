@@ -37,11 +37,9 @@ public class EmailHandler {
 	public ArrayList<Message> finalEmailsList;
 
 	public void login(String userName,String password){
-
 		this.userName=userName; //sender's email can also use as User Name
 		this.password=password;
 		this.loggedIn = true;
-
 	}
 
 	public void sendEmail(String from, String to, String subject, String text){
@@ -98,7 +96,6 @@ public class EmailHandler {
 		try {
 			Store store=session2.getStore("imaps");
 			store.connect("imap.gmail.com",this.userName, this.password);
-			//			store.connect("imap.gmail.com","projetoes61@gmail.com", "rumoao20");
 			Folder folder=store.getFolder("INBOX");//get inbox
 
 			folder.open(Folder.READ_ONLY);//open folder only to read
@@ -169,25 +166,16 @@ public class EmailHandler {
 							finalEmailsList.add(m);
 						}
 					}
-					//					String from = InternetAddress.toString(message[i].getFrom());
-					//					int x = from.indexOf("<");
-					//					int y = from.indexOf(">");
-					//					String b = from.substring(x+1, y);
-					//					System.out.println(from);
-					//					System.out.println("subject: "+message[i].getSubject());
-					//					getBody(message[i]);
-					//					System.out.println("Body: "+this.currentBody);
 				}
 			}
 			folder.close(true);
 			store.close();
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			loggedIn = false;
 		}
 	}
 
 	public void getBody(Message email) {
-		//		currentBody = null;
 		try {
 			Object content = email.getContent();
 			if (content instanceof Multipart) {
@@ -210,7 +198,6 @@ public class EmailHandler {
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
-		//		  return "";
 	}
 
 	public String getCurrentBody() {
@@ -233,20 +220,5 @@ public class EmailHandler {
 		this.password = password;
 	}
 
-	//	public static void main(String[] args) {
-	//		//Sender must be a Gmail account
-	//		String mailFrom=new String("projetoes61@gmail.com");
-	//		String mailTo=new String("barco@iscte-iul.pt");
-	//		EmailHandler newGmailClient=new EmailHandler();
-	//		//Setting up account details
-	//		newGmailClient.login("projetoes61@gmail.com", "rumoao20");
-	//		String mailSubject=new String("Testing Mail");
-	//		String mailText=new String("Have an Nice Day ...........!!!");
-	//		//Send mail
-	////		newGmailClient.sendGmail(mailFrom, mailTo, mailSubject, mailText);
-	//		//Receive mails
-	//		newGmailClient.searchGmail();
-	//
-	//	}
 
 }
