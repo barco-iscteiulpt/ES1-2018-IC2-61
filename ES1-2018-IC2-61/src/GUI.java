@@ -62,7 +62,7 @@ public class GUI extends Thread {
 	public FacebookHandler facebook;
 	public TwitterHandler twitter;
 	public EmailHandler email;
-	private Config configAccounts = new Config();
+	private Config configAccounts = Config.getInstance();
 	private JPanel content;
 	private JPanel contentSouth;
 	private long tweetId;
@@ -88,7 +88,7 @@ public class GUI extends Thread {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void addFrameContent() {
+	public void addFrameContent() {
 
 		// Create the frame. Specify the title, placement, size, closing operation and
 		// layout of the frame.
@@ -332,7 +332,6 @@ public class GUI extends Thread {
 		timeline.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-					System.out.println("entrei no listener");
 					if (timeline.getSelectedRow() >= 0) {
 
 						String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
@@ -457,27 +456,28 @@ public class GUI extends Thread {
 				timeline.clearSelection();
 				article.setText(null);
 				if (twitter_checkbox.isSelected()) {
-					if (twitter.loggedIn) {
+					if (configAccounts.isLoggedTwitter()) {
+						System.out.println(twitter.getAuthAccessToken());
 						twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 						manageTimeline();
 					} 
 				}
 				if (fb_checkbox.isSelected()) {
-					if (facebook.loggedIn) {
+					if (configAccounts.isLoggedFacebook()) {
 						facebook.searchFacebook(keywords.getText(), comboBox.getSelectedItem().toString());
 						manageTimeline();
 					} 
 				}
 				if (email_checkbox.isSelected()) {
-					if(email.loggedIn) {
+					if(configAccounts.isLoggedEmail()) {
 						email.searchGmail(keywords.getText(), comboBox.getSelectedItem().toString());
 						manageTimeline();
 					} 
 				}
-				if ((twitter_checkbox.isSelected() && !twitter.loggedIn) || (fb_checkbox.isSelected() && !facebook.loggedIn) || (email_checkbox.isSelected() && !email.loggedIn)) {
-					JOptionPane.showMessageDialog(null, "Please loggin first (Edit>Configurations).");
+				if ((twitter_checkbox.isSelected() && !configAccounts.isLoggedTwitter()) || (fb_checkbox.isSelected() && !configAccounts.isLoggedFacebook()) || (email_checkbox.isSelected() && !configAccounts.isLoggedEmail())) {
+					JOptionPane.showMessageDialog(null, "Please login first (Edit>Configurations).");
 				}
-				if (timeline.getModel().getRowCount() == 0 && (twitter.loggedIn || facebook.loggedIn || email.loggedIn)) {
+				if (timeline.getModel().getRowCount() == 0 && (configAccounts.isLoggedTwitter() || configAccounts.isLoggedFacebook() || configAccounts.isLoggedEmail())) {
 					JOptionPane.showMessageDialog(null, "No search results!");
 				}
 			}
@@ -490,7 +490,7 @@ public class GUI extends Thread {
 
 	protected void tableToXML() {
 		if(facebook.getFinalPostsList()!=null && twitter.getFinalTweetsList()!=null) {
-			for(int i =0; i<facebook.getFinalPostsList().size();i++) {
+			for(int i = 0; i<facebook.getFinalPostsList().size();i++) {
 				configAccounts.write(facebook.getFinalPostsList().get(i));
 			}
 			for(int i = 0; i<twitter.getFinalTweetsList().size();i++)
@@ -549,19 +549,18 @@ public class GUI extends Thread {
 						config.dispose();
 						configFrame();
 						facebook.setAccessToken(token.getText());
-						facebook.loggedIn = true;
+						configAccounts.setLoggedFacebook(true);
 					}
 				}
 			});
 
 		} else {
-			facebook.loggedIn = false;
 			panel1 = new JPanel();
 			panel1.setLayout(new BorderLayout());
 			panel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelFb = new JLabel("Facebook");
 			labelFb.setHorizontalAlignment(JLabel.CENTER);
-			fbAccount = new JLabel(configAccounts.getFacebookAccount());
+			fbAccount = new JLabel("Token: " + configAccounts.getFacebookToken());
 			actionFb = new JButton("Logout");
 			actionFb.addActionListener(new ActionListener() {
 
@@ -569,9 +568,10 @@ public class GUI extends Thread {
 				public void actionPerformed(ActionEvent arg0) {
 					configAccounts.delete("Facebook");
 					configAccounts.read("Facebook");
-					System.out.println(configAccounts.getFacebookAccount());
+//					System.out.println(configAccounts.getFacebookAccount());
 					config.dispose();
 					configFrame();
+					configAccounts.setLoggedFacebook(false);
 				}
 			});
 		}
@@ -622,13 +622,13 @@ public class GUI extends Thread {
 			panel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelTw = new JLabel("Twitter");
 			labelTw.setHorizontalAlignment(JLabel.CENTER);
-			twAccount = new JLabel(configAccounts.getTwitterAccount());
+			twAccount = new JLabel(configAccounts.getTwitterToken());
 			actionTw = new JButton("Logout");
 			actionTw.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					twitter.loggedIn = false;
+					configAccounts.setLoggedTwitter(false);
 					twitter.setAuthAccessToken(null);
 					twitter.setAuthAccessTokenSecret(null);
 					twitter.setRequestToken(null);

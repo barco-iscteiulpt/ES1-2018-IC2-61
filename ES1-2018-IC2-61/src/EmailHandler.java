@@ -18,8 +18,7 @@ import javax.swing.JOptionPane;
 
 public class EmailHandler {
 
-	private String userName;
-	private String password;
+
 	private String sendingHost;
 	private int sendingPort;
 	private String from;
@@ -27,15 +26,18 @@ public class EmailHandler {
 	private String subject;
 	private String text;
 	public String currentBody;
+	private Config configs = Config.getInstance();
+	private String userName = configs.getEmailAccount();
+	private String password = configs.getEmailPassword();
 
-	public boolean loggedIn;
+//	public boolean loggedIn;
 
 	public ArrayList<Message> finalEmailsList;
 
 	public void login(String userName,String password){
 		this.userName=userName; //sender's email can also use as User Name
 		this.password=password;
-		this.loggedIn = true;
+		configs.setLoggedEmail(true);
 	}
 
 	public void sendEmail(String from, String to, String subject, String text){
@@ -166,7 +168,7 @@ public class EmailHandler {
 			folder.close(true);
 			store.close();
 		} catch (Exception e) {
-			loggedIn = false;
+			configs.setLoggedEmail(false);
 		}
 	}
 

@@ -13,18 +13,21 @@ import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
+import com.restfb.FacebookClient.AccessToken;
 import com.restfb.types.Comment;
 import com.restfb.types.Group;
 import com.restfb.types.Post;
 
 public class FacebookHandler {
 
-	public String accessToken = null;
+	
 	protected String accessToken2 = "EAAEprSZC8PBABAERNOUaTHT17JMZCnuHwOZBL3EGknDVPGGZAss879cu9c38Of0LFnYZCVZA3iZCcO8KhyQn4J7lsFmsgZArS6TJVGoPOAZBmJMWMH3g3032KV8ajmpdqk5mvlaKBeAZC7ZCkS4N108jMAKkDYvR4DjFdrEq8v5IudGFgZDZD";
 	protected String pageToken = "EAAEprSZC8PBABAMGZCJdBrU0KAYnv97FHHIfWuiJ39mt1Br5ZBZBq1XblyomzIhCoHKNi7VzxZBRcgMZA0sEODdnjZCO889RMYZADt72mDp7trfkv3eIGBvKNGxGBYxIXuEvGdXxZAiJZBm5fo27lV0wAp0I9ez8hieGahNLl8fXArNd1uUNB9t5uHU0jQ2HIotiQMRoToIXP72AZDZD";
 	
 	public ArrayList<Post> finalPostsList;
-	public boolean loggedIn;
+	//public boolean loggedIn;
+	private Config configs = Config.getInstance();
+	public String accessToken = configs.getFacebookToken();
 
 	public void login() {
 		
@@ -42,7 +45,7 @@ public class FacebookHandler {
 //		WebDriver driver = new ChromeDriver();
 //		driver.get("https://developers.facebook.com");
 	}
-	
+
 
 	/**
 	 * Accesses a specific Facebook page, gets its feed and saves every post on a
