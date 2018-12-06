@@ -21,8 +21,7 @@ import javax.swing.JOptionPane;
 
 public class EmailHandler {
 
-	private String userName;
-	private String password;
+
 	private String sendingHost;
 	private int sendingPort;
 	private String from;
@@ -30,8 +29,11 @@ public class EmailHandler {
 	private String subject;
 	private String text;
 	public String currentBody;
+	private Config configs = Config.getInstance();
+	private String userName = configs.getEmailAccount();
+	private String password = configs.getEmailPassword();
 
-	public boolean loggedIn;
+//	public boolean loggedIn;
 	private boolean connected = true;
 
 	public ArrayList<Message> finalEmailsList;
@@ -39,7 +41,7 @@ public class EmailHandler {
 	public void login(String userName,String password){
 		this.userName=userName; //sender's email can also use as User Name
 		this.password=password;
-		this.loggedIn = true;
+		configs.setLoggedEmail(true);
 	}
 
 	public void sendEmail(String from, String to, String subject, String text){
@@ -68,7 +70,7 @@ public class EmailHandler {
 			toAddress = new InternetAddress(this.to);
 		} catch (AddressException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Sending email to: " + to + " failed !!!", "Failed to Send!!!", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Sending email to: " + to + " failed !!!", "Falied to Send!!!", JOptionPane.ERROR_MESSAGE);
 		}
 		try {
 			replyMessage.setFrom(fromAddress);
@@ -89,6 +91,7 @@ public class EmailHandler {
 
 	public void searchGmail(String info, String period){
 		finalEmailsList = new ArrayList<>();
+		/*this will print subject of all messages in the inbox of sender@gmail.com*/
 		Properties propertiesReceiver = System.getProperties();
 		propertiesReceiver.setProperty("mail.store.protocol", "imaps");
 		Session session2 = Session.getDefaultInstance(propertiesReceiver, null);
@@ -172,7 +175,7 @@ public class EmailHandler {
 		} catch (Exception e) {
 			checkConnection();
 			if(connected) 
-				loggedIn = false;
+				configs.setLoggedEmail(false);
 		}
 	}
 

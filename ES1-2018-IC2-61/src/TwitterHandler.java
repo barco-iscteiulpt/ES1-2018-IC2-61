@@ -28,9 +28,13 @@ public class TwitterHandler {
 
 	private String authConsumerKey = "0I3XKOkznUjpuwdDOSkLvcSpg";
 	private String authConsumerSecret = "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G";
-	private String authAccessToken;
+	
+	private Config configs = Config.getInstance();
+	private String authAccessToken = configs.getTwitterToken();
+	private String authAccessTokenSecret = configs.getTwitterTokenSecret();
+	
 	private boolean connected = true;
-	private String authAccessTokenSecret;
+	
 
 	ConfigurationBuilder cbLogin = new ConfigurationBuilder().setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
 			.setOAuthConsumerSecret(authConsumerSecret);
@@ -39,7 +43,7 @@ public class TwitterHandler {
 	RequestToken requestToken;
 
 	public ArrayList<Status> finalTweetsList;
-	public boolean loggedIn;
+//	public boolean loggedIn;
 	public String loginTwitter;
 
 	public void open() {	
@@ -85,7 +89,7 @@ public class TwitterHandler {
 			}
 			authAccessToken = accessToken.getToken();
 			authAccessTokenSecret = accessToken.getTokenSecret();
-			this.loggedIn = true;
+			configs.setLoggedTwitter(true);
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
 		} 

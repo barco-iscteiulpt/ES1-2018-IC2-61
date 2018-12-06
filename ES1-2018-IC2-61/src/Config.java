@@ -30,9 +30,7 @@ import twitter4j.Status;
 
 public class Config {
 
-	private String facebookAccount;
-	private String twitterAccount;
-	private String emailAccount;
+	private static Config configurations = null;
 
 	private boolean loggedFacebook;
 	private boolean loggedTwitter;
@@ -40,6 +38,12 @@ public class Config {
 
 	public ArrayList<Post> postsList = new ArrayList<Post>();
 	public ArrayList<Status> tweetsList = new ArrayList<Status>();
+
+	private String facebookToken;
+	private String twitterToken;
+	private String twitterTokenSecret;
+	private String emailAccount;
+	private String emailPassword;
 
 	public boolean isLoggedFacebook() {
 		return loggedFacebook;
@@ -56,12 +60,19 @@ public class Config {
 	}
 
 
-	public Config() {
+	private Config() {
 		read("Facebook");
 		read("Twitter");
 		read("Email");
 	}
 
+	public static Config getInstance(){
+
+		if(configurations == null)
+			configurations = new Config();
+
+		return configurations;
+	}
 
 	/**
 	 * Reads the account elements on the XML file and saves them to their respective fields.
@@ -79,21 +90,31 @@ public class Config {
 			// Query
 			XPathFactory xpathFactory = XPathFactory.newInstance();
 			XPath xpath = xpathFactory.newXPath();
-			XPathExpression expr = xpath.compile("/Config/" + s + "/@*");
+			XPathExpression expr = xpath.compile("/Config/" + s +"/@*");
 			NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
 			for (int i = 0; i < nl.getLength(); i++) {
 				System.out.println(nl.item(i).getNodeName() + ": ");
 				System.out.println(nl.item(i).getFirstChild().getNodeValue());
-				if (nl.item(i).getNodeName().equals("Token")) {
-					if (s.equals("Facebook"))
-						loggedFacebook=true;
-					//						facebookAccount = nl.item(i).getFirstChild().getNodeValue();
-					if (s.equals("Twitter"))
-						loggedTwitter=true;
+				if (s.equals("Facebook")) {
+					facebookToken = nl.item(i).getFirstChild().getNodeValue();
+					loggedFacebook=true;
+				}
+				//						facebookAccount = nl.item(i).getFirstChild().getNodeValue();
+				if (s.equals("Twitter")) {
+					if(nl.item(i).getNodeName().equals("Token"))
+						twitterToken = nl.item(i).getFirstChild().getNodeValue();
+					if(nl.item(i).getNodeName().equals("TokenSecret"))
+						twitterTokenSecret = nl.item(i).getFirstChild().getNodeValue();
+					loggedTwitter=true;
 				}
 				//						twitterAccount = nl.item(i).getFirstChild().getNodeValue();
-				if (nl.item(i).getNodeName().equals("Account"))
+				if (s.equals("Email")) {
+					if (nl.item(i).getNodeName().equals("Account"))
+						emailAccount = nl.item(i).getFirstChild().getNodeValue();
+					if (nl.item(i).getNodeName().equals("Password"))
+						emailPassword = nl.item(i).getFirstChild().getNodeValue();
 					loggedEmail=true;
+				}
 				//						emailAccount = nl.item(i).getFirstChild().getNodeValue();
 			}
 		} catch (Exception e) {
@@ -259,21 +280,6 @@ public class Config {
 		}
 	}
 
-	public void setLoggedFacebook(boolean loggedFacebook) {
-		this.loggedFacebook = loggedFacebook;
-	}
-
-
-	public void setLoggedTwitter(boolean loggedTwitter) {
-		this.loggedTwitter = loggedTwitter;
-	}
-
-
-	public void setLoggedEmail(boolean loggedEmail) {
-		this.loggedEmail = loggedEmail;
-	}
-
-
 	public void clearResults(String s) {
 		try {
 			File inputFile = new File("src/resources/config.xml");
@@ -304,47 +310,80 @@ public class Config {
 
 	}
 
-	public void setFacebookAccount(String facebookAccount) {
-		this.facebookAccount = facebookAccount;
+
+	public void setLoggedFacebook(boolean loggedFacebook) {
+		this.loggedFacebook = loggedFacebook;
+		if (!loggedFacebook)
+			setFacebookToken(null);
 	}
 
-	public void setTwitterAccount(String twitterAccount) {
-		this.twitterAccount = twitterAccount;
+	public void setLoggedTwitter(boolean loggedTwitter) {
+		this.loggedTwitter = loggedTwitter;
+		if (!loggedTwitter) {
+			setTwitterToken(null);
+			setTwitterTokenSecret(null);
+		}
 	}
+
+	public void setLoggedEmail(boolean loggedEmail) {
+		this.loggedEmail = loggedEmail;
+		if (!loggedEmail) {
+			setEmailAccount(null);
+			setEmailPassword(null);
+		}
+	}
+
+	public void setFacebookToken(String facebookToken) {
+		this.facebookToken = facebookToken;
+	}
+
+
+	public void setTwitterToken(String twitterToken) {
+		this.twitterToken = twitterToken;
+	}
+
+
+	public void setTwitterTokenSecret(String twitterTokenSecret) {
+		this.twitterTokenSecret = twitterTokenSecret;
+	}
+
 
 	public void setEmailAccount(String emailAccount) {
 		this.emailAccount = emailAccount;
 	}
 
-	/**
-	 * Returns the current Facebook account.
-	 * 
-	 * @return facebookAccount
-	 */
-	public String getFacebookAccount() {
-		return facebookAccount;
+
+	public void setEmailPassword(String emailPassword) {
+		this.emailPassword = emailPassword;
 	}
 
-	/**
-	 * Returns the current Twitter account.
-	 * 
-	 * @return twitterAccount
-	 */
-	public String getTwitterAccount() {
-		return twitterAccount;
+	public String getFacebookToken() {
+		return facebookToken;
 	}
 
-	/**
-	 * Returns the current Email account.
-	 * 
-	 * @return emailAccount
-	 */
+
+	public String getTwitterToken() {
+		return twitterToken;
+	}
+
+
+	public String getTwitterTokenSecret() {
+		return twitterTokenSecret;
+	}
+
+
 	public String getEmailAccount() {
 		return emailAccount;
 	}
 
 	public ArrayList<Post> getPostsList() {
 		return postsList;
+	}
+
+
+
+	public String getEmailPassword() {
+		return emailPassword;
 	}
 
 }
