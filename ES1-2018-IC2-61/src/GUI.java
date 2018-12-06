@@ -505,14 +505,14 @@ public class GUI extends Thread {
 				configAccounts.write(twitter.getFinalTweetsList().get(i));
 			}
 		}
-		if(email.getFinalEmailsList()!=null) {
-			for(int i = 0; i<email.getFinalEmailsList().size(); i++) {
-				configAccounts.clearResults("Post");
-				configAccounts.clearResults("Status");
-				configAccounts.clearResults("Message");
-				configAccounts.write(email.getFinalEmailsList().get(i));
-			}
-		}
+//		if(email.getFinalEmailsList()!=null) {
+//			for(int i = 0; i<email.getFinalEmailsList().size(); i++) {
+//				configAccounts.clearResults("Post");
+//				configAccounts.clearResults("Status");
+//				configAccounts.clearResults("Message");
+//				configAccounts.write(email.getFinalEmailsList().get(i));
+//			}
+//		}
 	}
 
 	/**

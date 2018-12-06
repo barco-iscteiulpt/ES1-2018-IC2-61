@@ -29,9 +29,17 @@
 
 <Twitter Token="601766891-9uh7nh5X6KIyA4oSnyBYI8ni3OHxrEmWHQRAkusv" TokenSecret="i3fJyTUAldcMtmUPH5bRgC94L0hi0jldbew5WuFvphjD4"/>
 
-<Facebook Token="EAAEprSZC8PBABAAtTTcnGOurtxZBeW2Err9P2x1FUWeJZAqVFbCFbdJyeV561AzoT23ELlg85404aTf5goCIZB2tYuzUzIUE5EPAZCMZAM20XXzlcosE3lqWfwNZBPAiI1idjsSXWZBxslDqnRZCMFb5nExPOKmNbGjEao6kdGRIImhrUl4ktcJ0jNb14wjM5ZAncZD"/>
+
 
 <Email Account="projeto61@gmail.com" Password="rumoao20"/>
+
+
+<Email Account="projetoes61@gmail.com" Password="rumoao20"/>
+
+
+
+
+<Facebook Token="EAAEprSZC8PBABAHQ9HgNZAyrX3ZCh8IlbXTNeCFmraVBewtOgZCCyvDZB0upuByzZAJCcpUf4YdY677yZAcq8MfdVyFZChycatGWTBlvyiq2bWXIXIFaa4OEnXfkcZCB0IZBL27vUalaIdZBne3ZC2UpMQygfCW0wCFJrEWHtwLOT8WTg2sFwbHaaVo9NpH3aZCiLiT8ZD"/>
 
 <Post Content="www.facebook.com/903964286283340_698505523592834" ID="494271834397031_494278164396398" UpdatedTime="Sat Dec 01 14:26:41 WET 2018"/>
 </Config>
