@@ -73,17 +73,17 @@ public class Config {
 			for (int i = 0; i < nl.getLength(); i++) {
 				System.out.println(nl.item(i).getNodeName() + ": ");
 				System.out.println(nl.item(i).getFirstChild().getNodeValue());
-				if (nl.item(i).getNodeName().equals("Conta")) {
+				if (nl.item(i).getNodeName().equals("Token")) {
 					if (s.equals("Facebook"))
 						loggedFacebook=true;
 					//						facebookAccount = nl.item(i).getFirstChild().getNodeValue();
 					if (s.equals("Twitter"))
 						loggedTwitter=true;
+				}
 					//						twitterAccount = nl.item(i).getFirstChild().getNodeValue();
-					if (s.equals("Email"))
+				if (nl.item(i).getNodeName().equals("Account"))
 						loggedEmail=true;
 					//						emailAccount = nl.item(i).getFirstChild().getNodeValue();
-				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

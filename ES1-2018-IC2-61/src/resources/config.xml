@@ -12,7 +12,10 @@
 <Status Content="Teste 2" Date="Mon Dec 03 16:12:00 WET 2018" ID="&lt;a href=&quot;http://twitter.com/download/iphone&quot; rel=&quot;nofollow&quot;&gt;Twitter for iPhone&lt;/a&gt;"/>
 <Status Content="Teste 1" Date="Mon Dec 03 16:11:56 WET 2018" ID="&lt;a href=&quot;http://twitter.com/download/iphone&quot; rel=&quot;nofollow&quot;&gt;Twitter for iPhone&lt;/a&gt;"/>
 
-<Facebook Token="EAAEprSZC8PBABACiIoe7JrSdMWDZCHkBMp7m0Akzi5g0L5wSsziKrPhOWiDPEMdH8iZCP2QKsz9safy42AliY0yHHaTluH3o9K7bZCdwPxGZB8g6OuVYkIJHTevZBRI4ptuZA3P8CuOjlWN03ZCDJm819dk58TBdOYT6dMrthLZAW3khEJzm2PxPgSYzOR0TD0W4ZD"/>
+
+
+
+
 <Twitter Token="601766891-9uh7nh5X6KIyA4oSnyBYI8ni3OHxrEmWHQRAkusv" TokenSecret="i3fJyTUAldcMtmUPH5bRgC94L0hi0jldbew5WuFvphjD4"/>
-<Email Account="projetoes61@gmail.com" Password="rumoao20"/>
+<Email Account="projeto61@gmail.com" Password="rumoao20"/>
 </Config>
