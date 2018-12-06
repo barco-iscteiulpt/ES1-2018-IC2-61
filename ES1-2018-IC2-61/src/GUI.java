@@ -379,7 +379,6 @@ public class GUI extends Thread {
 						sendEmailButton.setVisible(true);
 						emailSubject.setVisible(true);
 						currentEmail = (Message) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
-						System.out.println(tableModel.getValueAt(timeline.getSelectedRow(), 2));
 
 						try {	
 							String aux = InternetAddress.toString(currentEmail.getFrom());
@@ -457,7 +456,6 @@ public class GUI extends Thread {
 				article.setText(null);
 				if (twitter_checkbox.isSelected()) {
 					if (configAccounts.isLoggedTwitter()) {
-						System.out.println(twitter.getAuthAccessToken());
 						twitter.searchTwitter(keywords.getText(), comboBox.getSelectedItem().toString());
 						manageTimeline();
 					} 
@@ -796,7 +794,6 @@ public class GUI extends Thread {
 		timeline.clearSelection();
 
 		if (postsList != null) {
-			System.out.println("entrei no if da gui");
 			for (Post p : postsList) {
 				tableModel.addRow(new Object[]{"Facebook", p.getUpdatedTime(), p.getMessage(),p});
 			}
