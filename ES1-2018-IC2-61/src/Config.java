@@ -1,5 +1,12 @@
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
+
+import javax.mail.Message;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -14,6 +21,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import com.restfb.types.Post;
@@ -29,6 +37,9 @@ public class Config {
 	private boolean loggedFacebook;
 	private boolean loggedTwitter;
 	private boolean loggedEmail;
+
+	public ArrayList<Post> postsList = new ArrayList<Post>();
+	public ArrayList<Status> tweetsList = new ArrayList<Status>();
 
 	public boolean isLoggedFacebook() {
 		return loggedFacebook;
@@ -80,11 +91,46 @@ public class Config {
 					if (s.equals("Twitter"))
 						loggedTwitter=true;
 				}
-					//						twitterAccount = nl.item(i).getFirstChild().getNodeValue();
+				//						twitterAccount = nl.item(i).getFirstChild().getNodeValue();
 				if (nl.item(i).getNodeName().equals("Account"))
-						loggedEmail=true;
-					//						emailAccount = nl.item(i).getFirstChild().getNodeValue();
+					loggedEmail=true;
+				//						emailAccount = nl.item(i).getFirstChild().getNodeValue();
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void loadLastSearch(String string) {
+		try {
+			File inputFile = new File("src/resources/config.xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(inputFile);
+			doc.getDocumentElement().normalize();
+			XPathFactory xpathFactory = XPathFactory.newInstance();
+			XPath xpath = xpathFactory.newXPath();
+			XPathExpression expr = xpath.compile("/Config/"+string);
+			NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+
+			for (int i = 0; i < nl.getLength(); i++) {
+				System.out.println(nl.item(i).getNodeName() + ": ");
+				System.out.println(nl.item(i).getAttributes().item(0).getNodeValue());
+				NamedNodeMap attributes = nl.item(i).getAttributes();
+				if (string.equals("Post")) {
+					Post p = new Post();
+					p.setId(attributes.item(1).getNodeValue());
+					DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+					TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
+					Date date = dateFormat.parse(attributes.item(2).getNodeValue());
+					p.setUpdatedTime(date);
+					p.setMessage(attributes.item(0).getNodeValue());
+					postsList.add(p);
+				}
+
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -121,7 +167,7 @@ public class Config {
 			} else if (o instanceof Post){
 				Post p = (Post) o;
 				element = doc.createElement("Post");
-				element.setAttribute("Date", p.getUpdatedTime().toString());
+				element.setAttribute("UpdatedTime", p.getUpdatedTime().toString());
 				element.setAttribute("Content", p.getMessage());
 				element.setAttribute("ID", p.getId());
 			} else if (o instanceof Status) {
@@ -295,6 +341,10 @@ public class Config {
 	 */
 	public String getEmailAccount() {
 		return emailAccount;
+	}
+
+	public ArrayList<Post> getPostsList() {
+		return postsList;
 	}
 
 }

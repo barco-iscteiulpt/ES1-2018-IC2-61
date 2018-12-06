@@ -116,42 +116,42 @@ public class GUI extends Thread {
 
 		// Create the menu bar. Create and add 3 menus.
 		JMenuBar menuBar = new JMenuBar();
-		JMenu menu1 = new JMenu("File");
-		menu1.setFont(new Font("Arial", Font.PLAIN, 14));
-		JMenu menu2 = new JMenu("Edit");
-		menu2.setFont(new Font("Arial", Font.PLAIN, 14));
-		JMenu menu3 = new JMenu("About");
-		menu3.setFont(new Font("Arial", Font.PLAIN, 14));
+		JMenu file = new JMenu("File");
+		file.setFont(new Font("Arial", Font.PLAIN, 14));
+		JMenu edit = new JMenu("Edit");
+		edit.setFont(new Font("Arial", Font.PLAIN, 14));
+		JMenu about = new JMenu("About");
+		about.setFont(new Font("Arial", Font.PLAIN, 14));
 
 		// Create menu items and add them to their respective menu.
-		JMenuItem item1 = new JMenuItem("Close");
-		item1.setFont(new Font("Arial", Font.PLAIN, 14));
-		JMenuItem item2 = new JMenuItem("New");
-		item2.setFont(new Font("Arial", Font.PLAIN, 14));
-		menu1.add(item2);
-		menu1.add(item1);
-		JMenuItem item3 = new JMenuItem("Configurations");
-		menu2.add(item3);
-		menuBar.add(menu1);
-		menuBar.add(menu2);
-		menuBar.add(menu3);
+		JMenuItem close = new JMenuItem("Close");
+		close.setFont(new Font("Arial", Font.PLAIN, 14));
+		JMenuItem lastSearch = new JMenuItem("Last search");
+		lastSearch.setFont(new Font("Arial", Font.PLAIN, 14));
+		file.add(lastSearch);
+		file.add(close);
+		JMenuItem configurations = new JMenuItem("Configurations");
+		edit.add(configurations);
+		menuBar.add(file);
+		menuBar.add(edit);
+		menuBar.add(about);
 
 		// Add ActionListeners to all menu items.
-		item1.addActionListener(new ActionListener() {
+		close.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				getFrame().dispose();
 			}
 		});
 
-		item2.addActionListener(new ActionListener() {
+		lastSearch.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				manageLastTimeline();
 			}
 		});
 
-		item3.addActionListener(new ActionListener() {
+		configurations.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				configFrame();
@@ -220,7 +220,7 @@ public class GUI extends Thread {
 		JTextField emailReply = new JTextField();
 		emailReply.setPreferredSize(new Dimension(120, 24));
 		emailReply.setToolTipText("Insert your email reply");
-		
+
 		JTextField emailSubject = new JTextField();
 		emailSubject.setPreferredSize(new Dimension(120, 24));
 		emailSubject.setToolTipText("Insert your email subject");
@@ -332,71 +332,71 @@ public class GUI extends Thread {
 		timeline.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-					System.out.println("entrei no listener");
-					if (timeline.getSelectedRow() >= 0) {
+				System.out.println("entrei no listener");
+				if (timeline.getSelectedRow() >= 0) {
 
-						String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
-						article.setText(text);
+					String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
+					article.setText(text);
 
-						if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Status) {
-							emailReply.setVisible(false);
-							sendEmailButton.setVisible(false);
-							emailSubject.setVisible(false);
-							comment.setVisible(false);
-							likeButton.setVisible(false);
-							commentButton.setVisible(false);
-							reply.setVisible(true);
-							replyButton.setVisible(true);
-							retweetButton.setVisible(true);
-							favoriteButton.setVisible(true);		
-							Status tweet = (Status) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
-							tweetId = tweet.getId();
-						}
+					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Status) {
+						emailReply.setVisible(false);
+						sendEmailButton.setVisible(false);
+						emailSubject.setVisible(false);
+						comment.setVisible(false);
+						likeButton.setVisible(false);
+						commentButton.setVisible(false);
+						reply.setVisible(true);
+						replyButton.setVisible(true);
+						retweetButton.setVisible(true);
+						favoriteButton.setVisible(true);		
+						Status tweet = (Status) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
+						tweetId = tweet.getId();
+					}
 
-						if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Post) {
-							emailReply.setVisible(false);
-							sendEmailButton.setVisible(false);
-							emailSubject.setVisible(false);
-							retweetButton.setVisible(false);
-							favoriteButton.setVisible(false);
-							reply.setVisible(false);
-							replyButton.setVisible(false);
-							comment.setVisible(true);
-							likeButton.setVisible(true);
-							commentButton.setVisible(true);
-							Post post = (Post) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
-							postId = post.getId();
-						}
+					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Post) {
+						emailReply.setVisible(false);
+						sendEmailButton.setVisible(false);
+						emailSubject.setVisible(false);
+						retweetButton.setVisible(false);
+						favoriteButton.setVisible(false);
+						reply.setVisible(false);
+						replyButton.setVisible(false);
+						comment.setVisible(true);
+						likeButton.setVisible(true);
+						commentButton.setVisible(true);
+						Post post = (Post) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
+						postId = post.getId();
+					}
 
-						if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Message) {
-							retweetButton.setVisible(false);
-							favoriteButton.setVisible(false);
-							reply.setVisible(false);
-							replyButton.setVisible(false);
-							comment.setVisible(false);
-							likeButton.setVisible(false);
-							commentButton.setVisible(false);
-							emailReply.setVisible(true);
-							sendEmailButton.setVisible(true);
-							emailSubject.setVisible(true);
-							currentEmail = (Message) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
-							System.out.println(tableModel.getValueAt(timeline.getSelectedRow(), 2));
+					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Message) {
+						retweetButton.setVisible(false);
+						favoriteButton.setVisible(false);
+						reply.setVisible(false);
+						replyButton.setVisible(false);
+						comment.setVisible(false);
+						likeButton.setVisible(false);
+						commentButton.setVisible(false);
+						emailReply.setVisible(true);
+						sendEmailButton.setVisible(true);
+						emailSubject.setVisible(true);
+						currentEmail = (Message) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
+						System.out.println(tableModel.getValueAt(timeline.getSelectedRow(), 2));
 
-							try {	
-								String aux = InternetAddress.toString(currentEmail.getFrom());
-								if(aux.startsWith("E")) {
-									int x = aux.indexOf("<");
-									int y = aux.indexOf(">");
-									String temp = aux.substring(x+1, y);
-									aux = temp;
-								}
-								replyTo = aux;
-								replyFrom = email.getUsername();
-							} catch (MessagingException e1) {
-								e1.printStackTrace();
+						try {	
+							String aux = InternetAddress.toString(currentEmail.getFrom());
+							if(aux.startsWith("E")) {
+								int x = aux.indexOf("<");
+								int y = aux.indexOf(">");
+								String temp = aux.substring(x+1, y);
+								aux = temp;
 							}
+							replyTo = aux;
+							replyFrom = email.getUsername();
+						} catch (MessagingException e1) {
+							e1.printStackTrace();
 						}
 					}
+				}
 			}
 		});
 
@@ -480,6 +480,7 @@ public class GUI extends Thread {
 				if (timeline.getModel().getRowCount() == 0 && (twitter.loggedIn || facebook.loggedIn || email.loggedIn)) {
 					JOptionPane.showMessageDialog(null, "No search results!");
 				}
+				tableToXML();
 			}
 		});
 
@@ -489,12 +490,30 @@ public class GUI extends Thread {
 	 */
 
 	protected void tableToXML() {
-		if(facebook.getFinalPostsList()!=null && twitter.getFinalTweetsList()!=null) {
-			for(int i =0; i<facebook.getFinalPostsList().size();i++) {
+		if(facebook.getFinalPostsList()!=null) {
+			System.out.println("entrei no tableToXML()");
+			for(int i =0; i<facebook.getFinalPostsList().size(); i++) {
+				configAccounts.clearResults("Post");
+				configAccounts.clearResults("Status");
+				configAccounts.clearResults("Message");
 				configAccounts.write(facebook.getFinalPostsList().get(i));
 			}
-			for(int i = 0; i<twitter.getFinalTweetsList().size();i++)
+		}
+		if(twitter.getFinalTweetsList()!=null) {
+			for(int i = 0; i<twitter.getFinalTweetsList().size(); i++) {
+				configAccounts.clearResults("Post");
+				configAccounts.clearResults("Status");
+				configAccounts.clearResults("Message");
 				configAccounts.write(twitter.getFinalTweetsList().get(i));
+			}
+		}
+		if(email.getFinalEmailsList()!=null) {
+			for(int i = 0; i<email.getFinalEmailsList().size(); i++) {
+				configAccounts.clearResults("Post");
+				configAccounts.clearResults("Status");
+				configAccounts.clearResults("Message");
+				configAccounts.write(email.getFinalEmailsList().get(i));
+			}
 		}
 	}
 
@@ -527,12 +546,12 @@ public class GUI extends Thread {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					
+
 					JTextField token = new JTextField(20);
 					JLabel label = new JLabel("      Get token > Get user token");
 					JPanel dialog = new JPanel();
 					JPanel aux = new JPanel();
-//					aux.add(Box.createVerticalStrut(15));
+					//					aux.add(Box.createVerticalStrut(15));
 					aux.setLayout(new GridLayout(2,1));
 					dialog.add(Box.createHorizontalStrut(15));
 					dialog.add(new JLabel("Token: "));
@@ -540,7 +559,7 @@ public class GUI extends Thread {
 					aux.add(label);
 					aux.add(dialog);
 					facebook.login();
-					
+
 					int result = JOptionPane.showConfirmDialog(null, aux, "Please enter account info",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
@@ -610,9 +629,9 @@ public class GUI extends Thread {
 						configAccounts.read("Twitter");
 						config.dispose();
 						configFrame();
-						
+
 					}
-					
+
 				}
 			});
 
@@ -730,7 +749,7 @@ public class GUI extends Thread {
 		config.setVisible(true);
 
 	}
-	
+
 	/**
 	 * Gets content from both Facebook and Twitter lists and adds them to the table.
 	 */
@@ -761,6 +780,25 @@ public class GUI extends Thread {
 				} catch (MessagingException e) {
 					e.printStackTrace();
 				}
+			}
+		}
+
+		//		sortTable();
+	}
+	
+	private void manageLastTimeline() {
+
+		configAccounts.loadLastSearch("Post");
+		ArrayList<Post> postsList = configAccounts.getPostsList();
+//		ArrayList<Status> tweetsList = new ArrayList<Status>();
+//		ArrayList<Message> emailsList = new ArrayList<Message>();
+		tableModel.setRowCount(0);
+		timeline.clearSelection();
+
+		if (postsList != null) {
+			System.out.println("entrei no if da gui");
+			for (Post p : postsList) {
+				tableModel.addRow(new Object[]{"Facebook", p.getUpdatedTime(), p.getMessage(),p});
 			}
 		}
 
