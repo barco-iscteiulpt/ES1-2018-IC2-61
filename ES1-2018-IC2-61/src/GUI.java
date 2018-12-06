@@ -811,7 +811,7 @@ public class GUI extends Thread {
 	private void sortTable() {
 
 		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel> (tableModel);
-		sorter.setComparator(1, Comparator.naturalOrder());
+		sorter.setComparator(1, Comparator.reverseOrder());
 		timeline.setRowSorter(sorter);		
 
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
