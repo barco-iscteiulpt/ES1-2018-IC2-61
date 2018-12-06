@@ -332,9 +332,10 @@ public class GUI extends Thread {
 		timeline.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-					if (timeline.getSelectedRow() >= 0) {
-
-					String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
+				if (timeline.getSelectedRow() >= 0) {
+					
+					int modelRow = timeline.convertRowIndexToModel(timeline.getSelectedRow());
+					String text = timeline.getModel().getValueAt(modelRow, 2).toString();
 					article.setText(text);
 
 					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Status) {
@@ -505,14 +506,14 @@ public class GUI extends Thread {
 				configAccounts.write(twitter.getFinalTweetsList().get(i));
 			}
 		}
-//		if(email.getFinalEmailsList()!=null) {
-//			for(int i = 0; i<email.getFinalEmailsList().size(); i++) {
-//				configAccounts.clearResults("Post");
-//				configAccounts.clearResults("Status");
-//				configAccounts.clearResults("Message");
-//				configAccounts.write(email.getFinalEmailsList().get(i));
-//			}
-//		}
+		//		if(email.getFinalEmailsList()!=null) {
+		//			for(int i = 0; i<email.getFinalEmailsList().size(); i++) {
+		//				configAccounts.clearResults("Post");
+		//				configAccounts.clearResults("Status");
+		//				configAccounts.clearResults("Message");
+		//				configAccounts.write(email.getFinalEmailsList().get(i));
+		//			}
+		//		}
 	}
 
 	/**
@@ -585,7 +586,7 @@ public class GUI extends Thread {
 				public void actionPerformed(ActionEvent arg0) {
 					configAccounts.delete("Facebook");
 					configAccounts.read("Facebook");
-//					System.out.println(configAccounts.getFacebookAccount());
+					//					System.out.println(configAccounts.getFacebookAccount());
 					config.dispose();
 					configFrame();
 					configAccounts.setLoggedFacebook(false);
@@ -781,15 +782,15 @@ public class GUI extends Thread {
 			}
 		}
 
-		//		sortTable();
+		sortTable();
 	}
-	
+
 	private void manageLastTimeline() {
 
 		configAccounts.loadLastSearch("Post");
 		ArrayList<Post> postsList = configAccounts.getPostsList();
-//		ArrayList<Status> tweetsList = new ArrayList<Status>();
-//		ArrayList<Message> emailsList = new ArrayList<Message>();
+		//		ArrayList<Status> tweetsList = new ArrayList<Status>();
+		//		ArrayList<Message> emailsList = new ArrayList<Message>();
 		tableModel.setRowCount(0);
 		timeline.clearSelection();
 
@@ -799,7 +800,8 @@ public class GUI extends Thread {
 			}
 		}
 
-		//		sortTable();
+		sortTable();
+		
 	}
 
 	/**
