@@ -332,8 +332,7 @@ public class GUI extends Thread {
 		timeline.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				System.out.println("entrei no listener");
-				if (timeline.getSelectedRow() >= 0) {
+					if (timeline.getSelectedRow() >= 0) {
 
 					String text = tableModel.getValueAt(timeline.getSelectedRow(), 2).toString();
 					article.setText(text);
@@ -491,7 +490,6 @@ public class GUI extends Thread {
 	 */
 
 	protected void tableToXML() {
-
 		if(facebook.getFinalPostsList()!=null) {
 			System.out.println("entrei no tableToXML()");
 			for(int i =0; i<facebook.getFinalPostsList().size(); i++) {

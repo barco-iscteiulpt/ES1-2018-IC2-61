@@ -45,6 +45,7 @@ public class Config {
 	private String emailAccount;
 	private String emailPassword;
 
+
 	public boolean isLoggedFacebook() {
 		return loggedFacebook;
 	}
@@ -90,7 +91,7 @@ public class Config {
 			// Query
 			XPathFactory xpathFactory = XPathFactory.newInstance();
 			XPath xpath = xpathFactory.newXPath();
-			XPathExpression expr = xpath.compile("/Config/" + s +"/@*");
+			XPathExpression expr = xpath.compile("/Config/" + s + "/@*");
 			NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
 			for (int i = 0; i < nl.getLength(); i++) {
 				System.out.println(nl.item(i).getNodeName() + ": ");
@@ -115,6 +116,9 @@ public class Config {
 						emailPassword = nl.item(i).getFirstChild().getNodeValue();
 					loggedEmail=true;
 				}
+				//						twitterAccount = nl.item(i).getFirstChild().getNodeValue();
+				if (nl.item(i).getNodeName().equals("Account"))
+					loggedEmail=true;
 				//						emailAccount = nl.item(i).getFirstChild().getNodeValue();
 			}
 		} catch (Exception e) {
@@ -376,14 +380,14 @@ public class Config {
 		return emailAccount;
 	}
 
-	public ArrayList<Post> getPostsList() {
-		return postsList;
-	}
-
-
 
 	public String getEmailPassword() {
 		return emailPassword;
+	}
+
+
+	public ArrayList<Post> getPostsList() {
+		return postsList;
 	}
 
 }
