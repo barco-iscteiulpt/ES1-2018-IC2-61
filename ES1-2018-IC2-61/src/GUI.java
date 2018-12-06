@@ -544,7 +544,7 @@ public class GUI extends Thread {
 					int result = JOptionPane.showConfirmDialog(null, aux, "Please enter account info",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
-//						configAccounts.write(new LoginRequest("Facebook", conta.getText(), token.getText()));
+						configAccounts.write(new FacebookLoginRequest(token.getText()));
 						configAccounts.read("Facebook");
 						config.dispose();
 						configFrame();
@@ -605,11 +605,12 @@ public class GUI extends Thread {
 							JOptionPane.OK_CANCEL_OPTION);
 
 					if (result == JOptionPane.OK_OPTION) {
-					//	configAccounts.write(new LoginRequest("Twitter", pin.getText(), username.getText()));
+						twitter.login(pin.getText());
+						configAccounts.write(new TwitterLoginRequest(twitter.getAuthAccessToken(), twitter.getAuthAccessTokenSecret()));
 						configAccounts.read("Twitter");
 						config.dispose();
 						configFrame();
-						twitter.login(pin.getText());
+						
 					}
 					
 				}
@@ -673,7 +674,7 @@ public class GUI extends Thread {
 					int result = JOptionPane.showConfirmDialog(null, dialog, "Please enter account info",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
-						configAccounts.write(new LoginRequest("Email", username.getText(), password.getText()));
+						configAccounts.write(new EmailLoginRequest(username.getText(), password.getText()));
 						configAccounts.read("Email");
 						config.dispose();
 						configFrame();
