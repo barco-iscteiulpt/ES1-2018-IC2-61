@@ -480,7 +480,7 @@ public class GUI extends Thread {
 				if (timeline.getModel().getRowCount() == 0 && (configAccounts.isLoggedTwitter() || configAccounts.isLoggedFacebook() || configAccounts.isLoggedEmail())) {
 					JOptionPane.showMessageDialog(null, "No search results!");
 				}
-				tableToXML();
+//				tableToXML();
 			}
 		});
 
@@ -490,20 +490,16 @@ public class GUI extends Thread {
 	 */
 
 	protected void tableToXML() {
+		configAccounts.clearResults("Post");
+		configAccounts.clearResults("Status");
+		configAccounts.clearResults("Message");
 		if(facebook.getFinalPostsList()!=null) {
-			System.out.println("entrei no tableToXML()");
 			for(int i =0; i<facebook.getFinalPostsList().size(); i++) {
-				configAccounts.clearResults("Post");
-				configAccounts.clearResults("Status");
-				configAccounts.clearResults("Message");
 				configAccounts.write(facebook.getFinalPostsList().get(i));
 			}
 		}
 		if(twitter.getFinalTweetsList()!=null) {
 			for(int i = 0; i<twitter.getFinalTweetsList().size(); i++) {
-				configAccounts.clearResults("Post");
-				configAccounts.clearResults("Status");
-				configAccounts.clearResults("Message");
 				configAccounts.write(twitter.getFinalTweetsList().get(i));
 			}
 		}

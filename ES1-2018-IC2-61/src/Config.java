@@ -150,7 +150,7 @@ public class Config {
 				}
 
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -251,28 +251,31 @@ public class Config {
 	}
 
 	public void clearResults(String s) {
-		try {
-			File inputFile = new File("src/resources/config.xml");
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(inputFile);
-			doc.getDocumentElement().normalize();
+				try {
+					File inputFile = new File("src/resources/config.xml");
+					DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+					DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+					Document doc = dBuilder.parse(inputFile);
+					doc.getDocumentElement().normalize();
+					NodeList nl = doc.getElementsByTagName(s);
+					int aux = nl.getLength();
+		
+					for(int i=0; i<aux; i++) {
+						Element element = (Element)nl.item(0);
 
-			for(int i=0; i<doc.getElementsByTagName(s).getLength(); i++) {
-				Element element = (Element) doc.getElementsByTagName(s).item(i);
-
-				element.getParentNode().removeChild(element);
-
-				Transformer transformer = TransformerFactory.newInstance().newTransformer();
-				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-				StreamResult result = new StreamResult(new FileOutputStream(inputFile));
-				DOMSource source = new DOMSource(doc);
-				transformer.transform(source, result);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+						Node parent = element.getParentNode();
+						parent.removeChild(element);
+		
+						Transformer transformer = TransformerFactory.newInstance().newTransformer();
+						transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+						StreamResult result = new StreamResult(new FileOutputStream(inputFile));
+						DOMSource source = new DOMSource(doc);
+						transformer.transform(source, result);
+					}
+		
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 	}
 

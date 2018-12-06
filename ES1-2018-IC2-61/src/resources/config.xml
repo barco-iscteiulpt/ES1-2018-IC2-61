@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Config>
+<Facebook Token="EAAEprSZC8PBABAH9b5ZCenIihRPkPNoe1P4uDbAN7CQbnuMHZAOe7LUxBRf18LZB6ZBZCJF55D1NTYxD3L84a6UkB1YXGe2YgX6aubeA0NkZCLYsZCHuzRbuwXrXMpLFnj0tOPIgyaTOP6pHpKP1GwiDZAe52iUumB0ZAdkZAGnkG8LDgZDZD"/>
 
 
 
@@ -16,6 +17,7 @@
 
 
 
+<Twitter Token="325579017-F4NTQoyvPu5tiXhFxHRxDxXhFcc5gHJOQIP4wjSX" TokenSecret="q1fU6OGjh69wt65oPfuDU7whVYW3hhGbMVZExSchQQh3F"/>
 
 
 
@@ -27,19 +29,15 @@
 
 
 
-<Twitter Token="601766891-9uh7nh5X6KIyA4oSnyBYI8ni3OHxrEmWHQRAkusv" TokenSecret="i3fJyTUAldcMtmUPH5bRgC94L0hi0jldbew5WuFvphjD4"/>
 
 
 
-<Email Account="projeto61@gmail.com" Password="rumoao20"/>
 
 
-<Email Account="projetoes61@gmail.com" Password="rumoao20"/>
 
 
 
 
-<Facebook Token="EAAEprSZC8PBABAHQ9HgNZAyrX3ZCh8IlbXTNeCFmraVBewtOgZCCyvDZB0upuByzZAJCcpUf4YdY677yZAcq8MfdVyFZChycatGWTBlvyiq2bWXIXIFaa4OEnXfkcZCB0IZBL27vUalaIdZBne3ZC2UpMQygfCW0wCFJrEWHtwLOT8WTg2sFwbHaaVo9NpH3aZCiLiT8ZD"/>
 
 
 
@@ -116,18 +114,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-<Status Content="Teste 1" Date="Mon Dec 03 16:11:56 WET 2018" ID="&lt;a href=&quot;http://twitter.com/download/iphone&quot; rel=&quot;nofollow&quot;&gt;Twitter for iPhone&lt;/a&gt;"/>
 </Config>
