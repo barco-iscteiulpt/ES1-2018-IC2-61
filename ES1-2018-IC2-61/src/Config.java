@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.mail.Message;
@@ -147,7 +148,7 @@ public class Config {
 				if (string.equals("Post")) {
 					Post p = new Post();
 					p.setId(attributes.item(1).getNodeValue());
-					DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+					DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
 					TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
 					Date date = dateFormat.parse(attributes.item(2).getNodeValue());
 					p.setUpdatedTime(date);
@@ -158,7 +159,7 @@ public class Config {
 					Session session = Session.getDefaultInstance(System.getProperties());
 					Message m = new MimeMessage(session);
 					m.setSubject(attributes.item(0).getNodeValue());
-					DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+					DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
 					TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
 					Date date = dateFormat.parse(attributes.item(1).getNodeValue());
 					m.setSentDate(date);
