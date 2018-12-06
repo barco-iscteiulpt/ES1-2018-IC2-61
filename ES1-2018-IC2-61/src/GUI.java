@@ -336,6 +336,7 @@ public class GUI extends Thread {
 					
 					int modelRow = timeline.convertRowIndexToModel(timeline.getSelectedRow());
 					String text = timeline.getModel().getValueAt(modelRow, 2).toString();
+					
 					article.setText(text);
 
 					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Status) {
@@ -783,6 +784,7 @@ public class GUI extends Thread {
 		}
 
 		sortTable();
+		
 	}
 
 	private void manageLastTimeline() {
@@ -816,6 +818,7 @@ public class GUI extends Thread {
 
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 		sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
+		timeline.getRowSorter().toggleSortOrder(1);
 	}
 
 	/**
