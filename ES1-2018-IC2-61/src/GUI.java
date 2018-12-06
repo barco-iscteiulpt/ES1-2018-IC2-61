@@ -1,23 +1,15 @@
-import java.awt.EventQueue;
+
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -31,39 +23,23 @@ import java.awt.Dimension;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
-import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-import com.restfb.Connection;
-import com.restfb.DefaultFacebookClient;
-import com.restfb.FacebookClient;
-import com.restfb.types.Page;
 import com.restfb.types.Post;
-import com.restfb.types.User;
 
-import twitter4j.Query;
-import twitter4j.QueryResult;
 import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.conf.ConfigurationBuilder;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -73,7 +49,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import javax.swing.JComboBox;
 import java.awt.Color;
-import java.awt.Desktop;
 
 import javax.swing.UIManager;
 
@@ -91,7 +66,6 @@ public class GUI extends Thread {
 	private JPanel content;
 	private JPanel contentSouth;
 	private long tweetId;
-	private String postLink;
 	private String postId;
 	private Message currentEmail;
 	private String replyTo;
@@ -133,7 +107,7 @@ public class GUI extends Thread {
 			}
 		});
 
-		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		facebook = new FacebookHandler();
@@ -227,7 +201,7 @@ public class GUI extends Thread {
 
 		// Create period filter and add different options. Add to top-right panel.
 		String[] options = { "Anytime", "Last hour", "Last day", "Last week", "Last month" };
-		JComboBox comboBox = new JComboBox(options);
+		JComboBox<String> comboBox = new JComboBox<String>(options);
 		comboBox.setFont(new Font("Arial", Font.PLAIN, 13));
 		comboBox.setSelectedIndex(0);
 		top_right.add(comboBox);
@@ -391,7 +365,6 @@ public class GUI extends Thread {
 							likeButton.setVisible(true);
 							commentButton.setVisible(true);
 							Post post = (Post) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
-							postLink = "www.facebook.com/"+post.getId();
 							postId = post.getId();
 						}
 
@@ -683,6 +656,7 @@ public class GUI extends Thread {
 			actionEm = new JButton("Login");
 			actionEm.addActionListener(new ActionListener() {
 
+				@SuppressWarnings({ "deprecation" })
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 

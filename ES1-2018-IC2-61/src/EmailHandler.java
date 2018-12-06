@@ -15,8 +15,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.swing.JOptionPane;
 
-import twitter4j.Status;
-
 
 public class EmailHandler {
 
@@ -28,8 +26,6 @@ public class EmailHandler {
 	private String to;
 	private String subject;
 	private String text;
-	private String receivingHost;
-	private int receivingPort;
 	public String currentBody;
 
 	public boolean loggedIn;
@@ -89,7 +85,6 @@ public class EmailHandler {
 	public void searchGmail(String info, String period){
 		finalEmailsList = new ArrayList<>();
 		/*this will print subject of all messages in the inbox of sender@gmail.com*/
-		this.receivingHost="imap.gmail.com";//for imap protocol
 		Properties propertiesReceiver = System.getProperties();
 		propertiesReceiver.setProperty("mail.store.protocol", "imaps");
 		Session session2 = Session.getDefaultInstance(propertiesReceiver, null);

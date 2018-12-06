@@ -1,15 +1,10 @@
 import java.awt.Desktop;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -219,7 +214,7 @@ public class TwitterHandler {
 			twitter.setOAuthConsumer(authConsumerKey, authConsumerSecret);
 			AccessToken accessToken = new AccessToken(authAccessToken, authAccessTokenSecret);
 			twitter.setOAuthAccessToken(accessToken);
-			Status status = twitter.createFavorite(tweetId);
+			twitter.createFavorite(tweetId);
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "You have already favorited this tweet!");
 		}
@@ -242,7 +237,7 @@ public class TwitterHandler {
 			Status b = twitter.showStatus(tweetId);
 			StatusUpdate statusUpdate = new StatusUpdate("@"+b.getUser().getScreenName()+" "+reply);
 			statusUpdate.setInReplyToStatusId(tweetId);
-			Status status = twitter.updateStatus(statusUpdate);
+			twitter.updateStatus(statusUpdate);
 		} catch (TwitterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
