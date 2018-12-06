@@ -101,7 +101,7 @@ public class GUI extends Thread {
 		frame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				tableToXML();
+//				tableToXML();
 				frame.dispose();
 			}
 		});
@@ -489,7 +489,7 @@ public class GUI extends Thread {
 						|| configAccounts.isLoggedFacebook() || configAccounts.isLoggedEmail())) {
 					JOptionPane.showMessageDialog(null, "No search results!");
 				}
-				// tableToXML();
+				 tableToXML();
 			}
 		});
 
@@ -793,7 +793,8 @@ public class GUI extends Thread {
 
 		configAccounts.loadLastSearch("Post");
 		ArrayList<Post> postsList = configAccounts.getPostsList();
-		// ArrayList<Status> tweetsList = new ArrayList<Status>();
+		configAccounts.loadLastSearch("Status");
+		ArrayList<Status> tweetsList = configAccounts.getTweetsList();
 		configAccounts.loadLastSearch("Message");
 		ArrayList<Message> emailsList = configAccounts.getEmailsList();
 		tableModel.setRowCount(0);
@@ -802,6 +803,13 @@ public class GUI extends Thread {
 		if (postsList != null) {
 			for (Post p : postsList) {
 				tableModel.addRow(new Object[] { "Facebook", p.getUpdatedTime(), p.getMessage(), p });
+			}
+		}
+		
+		if (tweetsList != null) {
+			for (Status t : tweetsList) {
+				System.out.println("conteudo do tweet: "+t.getText());
+				tableModel.addRow(new Object[] { "Twitter", t.getCreatedAt(), t.getText(), t });
 			}
 		}
 

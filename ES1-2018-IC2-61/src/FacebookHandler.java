@@ -18,6 +18,7 @@ import com.restfb.FacebookClient.AccessToken;
 import com.restfb.types.Comment;
 import com.restfb.types.Group;
 import com.restfb.types.Post;
+import com.restfb.types.User;
 
 public class FacebookHandler {
 
@@ -66,6 +67,9 @@ public class FacebookHandler {
 			FacebookClient fbClient = new DefaultFacebookClient(accessToken);
 			Group group = fbClient.fetchObject("494271834397031", Group.class);
 			Connection<Post> postFeed = fbClient.fetchConnection(group.getId() + "/feed", Post.class);
+			
+			User me = fbClient.fetchObject("me", User.class, Parameter.with("fields","name"));
+			configs.setFacebookUsername(me.getName());
 
 			finalPostsList = new ArrayList<>();
 			Calendar calendar = Calendar.getInstance();
