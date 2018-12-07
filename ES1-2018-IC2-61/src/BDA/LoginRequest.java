@@ -4,9 +4,8 @@ public abstract class LoginRequest {
 
 	private String service;
 
-
 	public LoginRequest(String service) {
-		this.service=service;
+		this.service = service;
 	}
 
 	/**

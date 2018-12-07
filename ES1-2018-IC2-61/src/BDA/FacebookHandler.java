@@ -1,4 +1,5 @@
 package BDA;
+
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -17,20 +18,19 @@ import com.restfb.Parameter;
 import com.restfb.types.Comment;
 import com.restfb.types.Group;
 import com.restfb.types.Post;
-import com.restfb.types.User;
 
 public class FacebookHandler {
 
 	protected String pageToken = "EAAEprSZC8PBABAIJMzvVkTBeQpVaV2L8rmONckQKZB3dZABDZC94gSiDrbGZCCZCwK5X1hZBya69zpJ0nmyZBpaZBOUDV2NJiYm2PqMnS5fcow43HrOkbJTs2FUTR5eOLJ504RuPuq3hza0WGtIXMJvWcoG5AfgXXfGI2701jaLcmUgZDZD";
 
 	public ArrayList<Post> finalPostsList;
-	//public boolean loggedIn;
 	private Config configs = Config.getInstance();
 	public String accessToken = configs.getFacebookToken();
 	public boolean loggedIn;
-	
+
 	/**
-	 * Opens the browser on the Facebook developers page which allows them to retrieve their User Access Token.
+	 * Opens the browser on the Facebook developers page which allows them to
+	 * retrieve their User Access Token.
 	 */
 	public void login() {
 
@@ -44,19 +44,17 @@ public class FacebookHandler {
 			e.printStackTrace();
 		}
 
-		//		System.setProperty("webdriver.chrome.driver", "chromedriver");
-		//		WebDriver driver = new ChromeDriver();
-		//		driver.get("https://developers.facebook.com");
 	}
 
-
 	/**
-	 * Accesses a specific Facebook page, gets its feed and saves every post on a
-	 * list. Organizes the list from the most recent posts to the oldest. Chooses
-	 * which posts are displayed depending on the JComboBox chosen item.
+	 * Accesses a specific Facebook page, gets its feed and saves every post on
+	 * a list. Organizes the list from the most recent posts to the oldest.
+	 * Chooses which posts are displayed depending on the JComboBox chosen item.
 	 * 
-	 * @param info   The keywords used on the JTextField
-	 * @param period The time period chosen on the JComboBox
+	 * @param info
+	 *            The keywords used on the JTextField
+	 * @param period
+	 *            The time period chosen on the JComboBox
 	 */
 	@SuppressWarnings("deprecation")
 	public void searchFacebook(String info, String period) {
@@ -66,9 +64,6 @@ public class FacebookHandler {
 			FacebookClient fbClient = new DefaultFacebookClient(accessToken);
 			Group group = fbClient.fetchObject("494271834397031", Group.class);
 			Connection<Post> postFeed = fbClient.fetchConnection(group.getId() + "/feed", Post.class);
-			
-			User me = fbClient.fetchObject("me", User.class, Parameter.with("fields","name"));
-			configs.setFacebookUsername(me.getName());
 
 			finalPostsList = new ArrayList<>();
 			Calendar calendar = Calendar.getInstance();
@@ -116,17 +111,20 @@ public class FacebookHandler {
 	}
 
 	/**
-	 * Publishes the specified comment on the specified post on a page. Only pages are allowed to do this, otherwise it will display a dialog.
+	 * Publishes the specified comment on the specified post on a page. Only
+	 * pages are allowed to do this, otherwise it will display a dialog.
+	 * 
 	 * @param postId
-	 * 		the post where the user will comment
+	 *            the post where the user will comment
 	 * @param comment
-	 * 		the text to be in the comment
+	 *            the text to be in the comment
 	 */
 	@SuppressWarnings("deprecation")
 	public void comment(String postId, String comment) {
 		try {
 			FacebookClient fbClient = new DefaultFacebookClient(pageToken);
-			fbClient.publish(postId+"/comments", Comment.class, Parameter.with("message", comment));
+			fbClient.publish(postId + "/comments", Comment.class, Parameter.with("message", comment));
+			JOptionPane.showMessageDialog(null, "Comment sent successfully.");
 		} catch (com.restfb.exception.FacebookOAuthException e) {
 			JOptionPane.showMessageDialog(null, "Only Facebook pages can comment.");
 		} catch (com.restfb.exception.FacebookNetworkException e1) {
@@ -135,22 +133,24 @@ public class FacebookHandler {
 	}
 
 	/**
-	 * Likes the specified post on a page. Only pages are allowed to do this, otherwise it will display a dialog.
+	 * Likes the specified post on a page. Only pages are allowed to do this,
+	 * otherwise it will display a dialog.
+	 * 
 	 * @param postId
-	 * 		the post the user will like
+	 *            the post the user will like
 	 */
 	@SuppressWarnings("deprecation")
 	public void like(String postId) {
 		try {
 			FacebookClient fbClient = new DefaultFacebookClient(pageToken);
-			fbClient.publish(postId+"/likes", Boolean.class);
+			fbClient.publish(postId + "/likes", Boolean.class);
+			JOptionPane.showMessageDialog(null, "Post liked.");
 		} catch (com.restfb.exception.FacebookOAuthException e) {
 			JOptionPane.showMessageDialog(null, "Only Facebook pages can like.");
 		} catch (com.restfb.exception.FacebookNetworkException e1) {
 			JOptionPane.showMessageDialog(null, "No internet connection.");
 		}
 	}
-
 
 	/**
 	 * Returns the current Facebook Posts list.

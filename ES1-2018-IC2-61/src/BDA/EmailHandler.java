@@ -19,7 +19,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.swing.JOptionPane;
 
-
 public class EmailHandler {
 
 	private String sendingHost;
@@ -29,7 +28,7 @@ public class EmailHandler {
 	private String subject;
 	private String text;
 	public String currentBody;
-	
+
 	private Config configs = Config.getInstance();
 	private String userName = configs.getEmailAccount();
 	private String password = configs.getEmailPassword();
@@ -39,38 +38,43 @@ public class EmailHandler {
 	public ArrayList<Message> finalEmailsList;
 
 	/**
-	 * Stores specified information on their respective fields and sets login state to true.
+	 * Stores specified information on their respective fields and sets login
+	 * state to true.
+	 * 
 	 * @param userName
-	 * 		the username to use for login
+	 *            the username to use for login
 	 * @param password
-	 * 		the password for that user
+	 *            the password for that user
 	 */
-	public void login(String userName,String password){
-		this.userName=userName; //sender's email can also use as User Name
-		this.password=password;
+	public void login(String userName, String password) {
+		this.userName = userName; // sender's email can also use as User Name
+		this.password = password;
 		configs.setLoggedEmail(true);
 	}
 
 	/**
-	 * Creates a new session with sender and receiver info. Sends an email, from sender to receiver, with specified subject and text. 
+	 * Creates a new session with sender and receiver info. Sends an email, from
+	 * sender to receiver, with specified subject and text.
+	 * 
 	 * @param from
-	 * 		the email from which the message is to be sent
+	 *            the email from which the message is to be sent
 	 * @param to
-	 * 		the email the message will be sent to
+	 *            the email the message will be sent to
 	 * @param subject
-	 * 		the subject of the email
+	 *            the subject of the email
 	 * @param text
-	 * 		the body of the email
+	 *            the body of the email
 	 */
-	public void sendEmail(String from, String to, String subject, String text){
+	public void sendEmail(String from, String to, String subject, String text) {
 		// This will send mail from -->sender@gmail.com to -->receiver@gmail.com
-		this.from=from;
-		this.to=to;
-		this.subject=subject;
-		this.text=text;
-		// For a Gmail account--sending mails-- host and port should be as follows
-		this.sendingHost="smtp.gmail.com";
-		this.sendingPort=465;
+		this.from = from;
+		this.to = to;
+		this.subject = subject;
+		this.text = text;
+		// For a Gmail account--sending mails-- host and port should be as
+		// follows
+		this.sendingHost = "smtp.gmail.com";
+		this.sendingPort = 465;
 
 		Properties propertiesSender = new Properties();
 		propertiesSender.put("mail.smtp.host", this.sendingHost);
@@ -88,7 +92,8 @@ public class EmailHandler {
 			toAddress = new InternetAddress(this.to);
 		} catch (AddressException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Sending email to: " + to + " failed !!!", "Falied to Send!!!", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Sending email to: " + to + " failed.", "Failed to send.",
+					JOptionPane.ERROR_MESSAGE);
 		}
 		try {
 			replyMessage.setFrom(fromAddress);
@@ -96,50 +101,59 @@ public class EmailHandler {
 			replyMessage.setSubject(this.subject);
 			replyMessage.setText(this.text);
 			Transport transport = sendingSession.getTransport("smtps");
-			transport.connect (this.sendingHost,sendingPort, this.userName, this.password);
+			transport.connect(this.sendingHost, sendingPort, this.userName, this.password);
 			transport.sendMessage(replyMessage, replyMessage.getAllRecipients());
 			transport.close();
-			JOptionPane.showMessageDialog(null, "Mail sent successfully ...","Mail sent",JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Mail sent successfully.", "Mail sent", JOptionPane.PLAIN_MESSAGE);
 		} catch (MessagingException e) {
 			checkConnection();
-			if(connected) 
-				JOptionPane.showMessageDialog(null, "Sending email to: " + to + " failed !!!", "Failed to Send!!!", JOptionPane.ERROR_MESSAGE);
+			if (connected)
+				JOptionPane.showMessageDialog(null, "Sending email to: " + to + " failed.", "Failed to send.",
+						JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
 	/**
 	 * Accesses a specific Email folder, gets all its emails and saves them on a
-	 * list. Organizes the list from the most recent emails to the oldest. Chooses
-	 * which emails are displayed depending on the JComboBox chosen item.
+	 * list. Organizes the list from the most recent emails to the oldest.
+	 * Chooses which emails are displayed depending on the JComboBox chosen
+	 * item.
 	 * 
-	 * @param info   The keywords used on the JTextField
-	 * @param period The time period chosen on the JComboBox
+	 * @param info
+	 *            The keywords used on the JTextField
+	 * @param period
+	 *            The time period chosen on the JComboBox
 	 */
-	public void searchGmail(String info, String period){
+	public void searchGmail(String info, String period) {
 		finalEmailsList = new ArrayList<>();
-		/*this will print subject of all messages in the inbox of sender@gmail.com*/
+		/*
+		 * this will print subject of all messages in the inbox of
+		 * sender@gmail.com
+		 */
 		Properties propertiesReceiver = System.getProperties();
 		propertiesReceiver.setProperty("mail.store.protocol", "imaps");
 		Session receivingSession = Session.getDefaultInstance(propertiesReceiver, null);
 		try {
-			Store store=receivingSession.getStore("imaps");
-			store.connect("imap.gmail.com",this.userName, this.password);
-			Folder folder=store.getFolder("INBOX");//get inbox
+			Store store = receivingSession.getStore("imaps");
+			store.connect("imap.gmail.com", this.userName, this.password);
+			Folder folder = store.getFolder("INBOX");// get inbox
 
-			folder.open(Folder.READ_ONLY);//open folder only to read
+			folder.open(Folder.READ_ONLY);// open folder only to read
 
-			Message message[]=folder.getMessages();
+			Message message[] = folder.getMessages();
 
 			Calendar calendar = Calendar.getInstance();
 
-			for(int i=0;i<message.length;i++){
-				if(message[i].getSubject().contains(info)) {
-					if(period.equals("Anytime")) {
+			for (int i = 0; i < message.length; i++) {
+				if (message[i].getSubject().contains(info)) {
+					if (period.equals("Anytime")) {
 						getBody(message[i]);
 						Message msg = new MimeMessage(receivingSession);
-						msg.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+						msg.setSubject(message[i].getSubject() + "\n" + this.currentBody);
 						msg.setSentDate(message[i].getReceivedDate());
-						InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
+						InternetAddress fromAddress = new InternetAddress(
+								InternetAddress.toString(message[i].getFrom()));
+						;
 						msg.setFrom(fromAddress);
 						finalEmailsList.add(msg);
 					}
@@ -148,9 +162,11 @@ public class EmailHandler {
 						if (message[i].getReceivedDate().after(calendar.getTime())) {
 							getBody(message[i]);
 							Message msg = new MimeMessage(receivingSession);
-							msg.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+							msg.setSubject(message[i].getSubject() + "\n" + this.currentBody);
 							msg.setSentDate(message[i].getReceivedDate());
-							InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
+							InternetAddress fromAddress = new InternetAddress(
+									InternetAddress.toString(message[i].getFrom()));
+							;
 							msg.setFrom(fromAddress);
 							finalEmailsList.add(msg);
 						}
@@ -161,9 +177,11 @@ public class EmailHandler {
 						if (message[i].getReceivedDate().after(calendar.getTime())) {
 							getBody(message[i]);
 							Message msg = new MimeMessage(receivingSession);
-							msg.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+							msg.setSubject(message[i].getSubject() + "\n" + this.currentBody);
 							msg.setSentDate(message[i].getReceivedDate());
-							InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
+							InternetAddress fromAddress = new InternetAddress(
+									InternetAddress.toString(message[i].getFrom()));
+							;
 							msg.setFrom(fromAddress);
 							finalEmailsList.add(msg);
 						}
@@ -174,9 +192,11 @@ public class EmailHandler {
 						if (message[i].getReceivedDate().after(calendar.getTime())) {
 							getBody(message[i]);
 							Message msg = new MimeMessage(receivingSession);
-							msg.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+							msg.setSubject(message[i].getSubject() + "\n" + this.currentBody);
 							msg.setSentDate(message[i].getReceivedDate());
-							InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
+							InternetAddress fromAddress = new InternetAddress(
+									InternetAddress.toString(message[i].getFrom()));
+							;
 							msg.setFrom(fromAddress);
 							finalEmailsList.add(msg);
 						}
@@ -187,9 +207,11 @@ public class EmailHandler {
 						if (message[i].getReceivedDate().after(calendar.getTime())) {
 							getBody(message[i]);
 							Message msg = new MimeMessage(receivingSession);
-							msg.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+							msg.setSubject(message[i].getSubject() + "\n" + this.currentBody);
 							msg.setSentDate(message[i].getReceivedDate());
-							InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
+							InternetAddress fromAddress = new InternetAddress(
+									InternetAddress.toString(message[i].getFrom()));
+							;
 							msg.setFrom(fromAddress);
 							finalEmailsList.add(msg);
 						}
@@ -200,7 +222,7 @@ public class EmailHandler {
 			store.close();
 		} catch (Exception e) {
 			checkConnection();
-			if(connected) {
+			if (connected) {
 				configs.setLoggedEmail(false);
 				configs.delete("Email");
 			}
@@ -209,8 +231,9 @@ public class EmailHandler {
 
 	/**
 	 * Adds to the current body the message of the specified email.
+	 * 
 	 * @param email
-	 * 		the email from which the body will be retrieved
+	 *            the email from which the body will be retrieved
 	 */
 	public void getBody(Message email) {
 		try {
@@ -236,23 +259,23 @@ public class EmailHandler {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Checks if there is internet connection using google.com
 	 */
 	public void checkConnection() {
-		  try {
-		        final URL url = new URL("http://www.google.com");
-		        final URLConnection connection = url.openConnection();
-		        connection.connect();
-		        connection.getInputStream().close();
-		        if(!connected)
-		        	connected = true;
-		    } catch (MalformedURLException e) {
-		    } catch (IOException e) {
-		    	JOptionPane.showMessageDialog(null, "No internet connection.");
-		    	connected = false; 
-		    }
+		try {
+			final URL url = new URL("http://www.google.com");
+			final URLConnection connection = url.openConnection();
+			connection.connect();
+			connection.getInputStream().close();
+			if (!connected)
+				connected = true;
+		} catch (MalformedURLException e) {
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "No internet connection.");
+			connected = false;
+		}
 	}
 
 	/**
@@ -301,6 +324,5 @@ public class EmailHandler {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 
 }

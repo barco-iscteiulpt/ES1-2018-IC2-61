@@ -1,4 +1,5 @@
 package BDA;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.DateFormat;
@@ -29,6 +30,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import com.restfb.types.Post;
 
 import twitter4j.Status;
@@ -63,7 +65,7 @@ public class Config {
 	public boolean isLoggedFacebook() {
 		return loggedFacebook;
 	}
-	
+
 	/**
 	 * Returns the current state of Twitter login
 	 * 
@@ -88,7 +90,6 @@ public class Config {
 		read("Email");
 	}
 
-
 	/**
 	 * Returns the single instance of configurations
 	 * 
@@ -103,10 +104,11 @@ public class Config {
 	}
 
 	/**
-	 * Reads the account elements on the XML file and saves them to their respective
-	 * fields.
+	 * Reads the account elements on the XML file and saves them to their
+	 * respective fields.
 	 *
-	 * @param s String to determine which service to find and save
+	 * @param s
+	 *            String to determine which service to find and save
 	 */
 	public void read(String s) {
 		try {
@@ -153,10 +155,11 @@ public class Config {
 	}
 
 	/**
-	 * Reads the XML file and creates objects for each respective element. Adds these objects to lists that are displayed in GUI
+	 * Reads the XML file and creates objects for each respective element. Adds
+	 * these objects to lists that are displayed in GUI
 	 *
 	 * @param string
-	 * 		the type of element to load from XML
+	 *            the type of element to load from XML
 	 */
 	public void loadLastSearch(String string) {
 		try {
@@ -218,7 +221,8 @@ public class Config {
 	/**
 	 * Writes all the elements on the XML file according to their type.
 	 * 
-	 * @param o Object to determine the service used
+	 * @param o
+	 *            Object to determine the service used
 	 */
 	public void write(Object o) {
 		try {
@@ -282,7 +286,8 @@ public class Config {
 	 * Deletes one account element according to the parameter type it receives.
 	 * Useful when logging out of an account.
 	 * 
-	 * @param s String to determine which element to delete
+	 * @param s
+	 *            String to determine which element to delete
 	 */
 	public void delete(String s) {
 		try {
@@ -313,11 +318,12 @@ public class Config {
 		}
 	}
 
-
 	/**
-	 * Removes all elements of the specified type in its parameter. Does not work with login requests. 
+	 * Removes all elements of the specified type in its parameter. Does not
+	 * work with login requests.
+	 * 
 	 * @param s
-	 * 		the type of elements to be cleared
+	 *            the type of elements to be cleared
 	 */
 	public void clearResults(String s) {
 		try {
@@ -412,7 +418,7 @@ public class Config {
 	 * Sets the specified String as Twitter token secret.
 	 * 
 	 * @param twitterTokenSecret
-	 *            the current twitter token secret 
+	 *            the current twitter token secret
 	 */
 	public void setTwitterTokenSecret(String twitterTokenSecret) {
 		this.twitterTokenSecret = twitterTokenSecret;
@@ -437,7 +443,6 @@ public class Config {
 	public void setEmailPassword(String emailPassword) {
 		this.emailPassword = emailPassword;
 	}
-
 
 	/**
 	 * Returns the current Facebook Token.
@@ -475,7 +480,6 @@ public class Config {
 		return emailAccount;
 	}
 
-
 	/**
 	 * Returns the current Email password.
 	 * 
@@ -510,15 +514,6 @@ public class Config {
 	 */
 	public ArrayList<Message> getEmailsList() {
 		return emailsList;
-	}
-
-	/**
-	 * Sets the specified user name.
-	 * 
-	 * @param facebookUsername
-	 *            the user name 
-	 */
-	public void setFacebookUsername(String facebookUsername) {
 	}
 
 }

@@ -4,19 +4,20 @@ public class TwitterLoginRequest extends LoginRequest {
 
 	private String token;
 	private String tokenSecret;
-	
+
 	/**
 	 * Constructs a new instance of twitter login request
+	 * 
 	 * @param token
-	 * 		the token used to authenticate twitter actions
+	 *            the token used to authenticate twitter actions
 	 * @param tokenSecret
-	 * 		the token secret associated with that token
+	 *            the token secret associated with that token
 	 */
 	public TwitterLoginRequest(String token, String tokenSecret) {
 		super("Twitter");
-		this.token=token;
-		this.tokenSecret=tokenSecret;
-		
+		this.token = token;
+		this.tokenSecret = tokenSecret;
+
 	}
 
 	/**
@@ -38,5 +39,3 @@ public class TwitterLoginRequest extends LoginRequest {
 	}
 
 }
-
-

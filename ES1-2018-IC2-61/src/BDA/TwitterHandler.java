@@ -1,4 +1,5 @@
 package BDA;
+
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -28,13 +29,12 @@ public class TwitterHandler {
 
 	private String authConsumerKey = "0I3XKOkznUjpuwdDOSkLvcSpg";
 	private String authConsumerSecret = "zy8i9meaxzK5Rn05rKIsJwWvclJPfdpmtfnE5UuJvHxsW6oZ0G";
-	
+
 	private Config configs = Config.getInstance();
 	private String authAccessToken = configs.getTwitterToken();
 	private String authAccessTokenSecret = configs.getTwitterTokenSecret();
-	
+
 	private boolean connected = true;
-	
 
 	ConfigurationBuilder cbLogin = new ConfigurationBuilder().setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
 			.setOAuthConsumerSecret(authConsumerSecret);
@@ -46,14 +46,15 @@ public class TwitterHandler {
 	public String loginTwitterURL;
 
 	/**
-	 * Uses the application request token to generate a URL opened by the browser in which the users can get their pin.
+	 * Uses the application request token to generate a URL opened by the
+	 * browser in which the users can get their pin.
 	 */
-	public void open() {	
+	public void open() {
 		try {
-			
+
 			requestToken = twitter.getOAuthRequestToken();
 			setLoginTwitter(requestToken.getAuthorizationURL());
-	        Desktop.getDesktop().browse(new URL(loginTwitterURL).toURI());
+			Desktop.getDesktop().browse(new URL(loginTwitterURL).toURI());
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
 		} catch (MalformedURLException e) {
@@ -62,20 +63,23 @@ public class TwitterHandler {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		}
 
 	}
-	
+
 	/**
-	 * Uses the specified pin to generate an access token used to authenticate every twitter function and sets the login state to true. If the pin is incorrect it displays a dialog.
+	 * Uses the specified pin to generate an access token used to authenticate
+	 * every twitter function and sets the login state to true. If the pin is
+	 * incorrect it displays a dialog.
+	 * 
 	 * @param pin
-	 * 		the code given by Twitter to authorize access
+	 *            the code given by Twitter to authorize access
 	 */
 	public void login(String pin) {
 		try {
 			AccessToken accessToken = null;
-			while(accessToken==null) {
-				if (pin.length()>0) {
+			while (accessToken == null) {
+				if (pin.length() > 0) {
 					accessToken = twitter.getOAuthAccessToken(requestToken, pin);
 				} else {
 					accessToken = twitter.getOAuthAccessToken(requestToken);
@@ -86,27 +90,28 @@ public class TwitterHandler {
 			configs.setLoggedTwitter(true);
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
-		} 
+		}
 
 	}
 
 	/**
 	 * Accesses a specific Twitter page, gets its tweets and saves each one on a
-	 * list. Organizes the list from the most recent tweets to the oldest. Chooses
-	 * which tweets are displayed depending on the JComboBox chosen item.
+	 * list. Organizes the list from the most recent tweets to the oldest.
+	 * Chooses which tweets are displayed depending on the JComboBox chosen
+	 * item.
 	 *
-	 * @param info   The keywords used on the JTextField
-	 * @param period The time period chosen on the JComboBox
+	 * @param info
+	 *            The keywords used on the JTextField
+	 * @param period
+	 *            The time period chosen on the JComboBox
 	 */
 	public void searchTwitter(String info, String period) {
 
 		finalTweetsList = new ArrayList<>();
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey)
-		.setOAuthConsumerSecret(authConsumerSecret)
-		.setOAuthAccessToken(authAccessToken)
-		.setOAuthAccessTokenSecret(authAccessTokenSecret);
+		cb.setDebugEnabled(true).setOAuthConsumerKey(authConsumerKey).setOAuthConsumerSecret(authConsumerSecret)
+				.setOAuthAccessToken(authAccessToken).setOAuthAccessTokenSecret(authAccessTokenSecret);
 
 		TwitterFactory twitterFactory = new TwitterFactory(cb.build());
 		Twitter twitter = twitterFactory.getInstance();
@@ -163,11 +168,11 @@ public class TwitterHandler {
 		}
 	}
 
-
 	/**
 	 * Retweets the specified Status in its parameter.
 	 * 
-	 * @param tweetId number of the tweet to retweet
+	 * @param tweetId
+	 *            number of the tweet to retweet
 	 */
 	public void retweet(long tweetId) {
 
@@ -178,21 +183,22 @@ public class TwitterHandler {
 			AccessToken accessToken = new AccessToken(authAccessToken, authAccessTokenSecret);
 			twitter.setOAuthAccessToken(accessToken);
 			twitter.retweetStatus(tweetId);
+			JOptionPane.showMessageDialog(null, "Retweet done successfully.");
 		} catch (TwitterException e) {
 			checkConnection();
 			System.out.println(connected);
-			if(connected) {
-				JOptionPane.showMessageDialog(null, "You have already retweeted this tweet!");
+			if (connected) {
+				JOptionPane.showMessageDialog(null, "You have already retweeted this tweet.");
 			}
 		}
 
 	}
 
-
 	/**
 	 * Favorites the specified Status in its parameter.
-	 * 	 
-	 * @param tweetId number of the tweet to favorite
+	 * 
+	 * @param tweetId
+	 *            number of the tweet to favorite
 	 */
 	public void favorite(long tweetId) {
 
@@ -203,19 +209,23 @@ public class TwitterHandler {
 			AccessToken accessToken = new AccessToken(authAccessToken, authAccessTokenSecret);
 			twitter.setOAuthAccessToken(accessToken);
 			twitter.createFavorite(tweetId);
+			JOptionPane.showMessageDialog(null, "Tweet favorited.");
 		} catch (TwitterException e) {
 			checkConnection();
-			if(connected) 
-				JOptionPane.showMessageDialog(null, "You have already favorited this tweet!");
+			if (connected)
+				JOptionPane.showMessageDialog(null, "You have already favorited this tweet.");
 		}
 
 	}
 
 	/**
-	 * Replies to the specified Status in its first parameter with the text specified as second parameter.
+	 * Replies to the specified Status in its first parameter with the text
+	 * specified as second parameter.
 	 * 
-	 * @param tweetId number of the tweet to reply
-	 * @param reply actual text to create a reply
+	 * @param tweetId
+	 *            number of the tweet to reply
+	 * @param reply
+	 *            actual text to create a reply
 	 */
 	public void reply(long tweetId, String reply) {
 		try {
@@ -225,31 +235,32 @@ public class TwitterHandler {
 			AccessToken accessToken = new AccessToken(authAccessToken, authAccessTokenSecret);
 			twitter.setOAuthAccessToken(accessToken);
 			Status s = twitter.showStatus(tweetId);
-			StatusUpdate statusUpdate = new StatusUpdate("@"+s.getUser().getScreenName()+" "+reply);
+			StatusUpdate statusUpdate = new StatusUpdate("@" + s.getUser().getScreenName() + " " + reply);
 			statusUpdate.setInReplyToStatusId(tweetId);
 			twitter.updateStatus(statusUpdate);
+			JOptionPane.showMessageDialog(null, "Reply sent successfully.");
 		} catch (TwitterException e) {
 			checkConnection();
 		}
 
 	}
-	
+
 	/**
 	 * Checks if there is internet connection using google.com
 	 */
 	public void checkConnection() {
-		  try {
-		        final URL url = new URL("http://www.google.com");
-		        final URLConnection connection = url.openConnection();
-		        connection.connect();
-		        connection.getInputStream().close();
-		        if(!connected)
-		        	connected = true;
-		    } catch (MalformedURLException e) {
-		    } catch (IOException e) {
-		    	JOptionPane.showMessageDialog(null, "No internet connection.");
-		    	connected = false; 
-		    }
+		try {
+			final URL url = new URL("http://www.google.com");
+			final URLConnection connection = url.openConnection();
+			connection.connect();
+			connection.getInputStream().close();
+			if (!connected)
+				connected = true;
+		} catch (MalformedURLException e) {
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "No internet connection.");
+			connected = false;
+		}
 	}
 
 	/**
@@ -270,7 +281,7 @@ public class TwitterHandler {
 	public void setLoginTwitter(String loginTwitter) {
 		this.loginTwitterURL = loginTwitter;
 	}
-	
+
 	/**
 	 * Returns the Auth Access Token
 	 * 

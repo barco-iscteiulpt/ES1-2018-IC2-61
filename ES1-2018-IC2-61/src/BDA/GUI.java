@@ -129,6 +129,7 @@ public class GUI extends Thread {
 		file.add(lastSearch);
 		file.add(close);
 		JMenuItem configurations = new JMenuItem("Configurations");
+		configurations.setFont(new Font("Arial", Font.PLAIN, 14));
 		edit.add(configurations);
 		menuBar.add(file);
 		menuBar.add(edit);
@@ -344,7 +345,7 @@ public class GUI extends Thread {
 
 					article.setText(text);
 
-					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Status) {
+					if (timeline.getModel().getValueAt(modelRow, 3) instanceof Status) {
 						emailReply.setVisible(false);
 						sendEmailButton.setVisible(false);
 						emailSubject.setVisible(false);
@@ -355,12 +356,12 @@ public class GUI extends Thread {
 						replyButton.setVisible(true);
 						retweetButton.setVisible(true);
 						favoriteButton.setVisible(true);
-						Status tweet = (Status) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
+						Status tweet = (Status) (timeline.getModel().getValueAt(modelRow, 3));
 						tweetId = tweet.getId();
-						System.out.println("twitter: "+tweetId);
+						System.out.println("twitter: " + tweetId);
 					}
 
-					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Post) {
+					if (timeline.getModel().getValueAt(modelRow, 3) instanceof Post) {
 						emailReply.setVisible(false);
 						sendEmailButton.setVisible(false);
 						emailSubject.setVisible(false);
@@ -371,11 +372,11 @@ public class GUI extends Thread {
 						comment.setVisible(true);
 						likeButton.setVisible(true);
 						commentButton.setVisible(true);
-						Post post = (Post) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
+						Post post = (Post) (timeline.getModel().getValueAt(modelRow, 3));
 						postId = post.getId();
 					}
 
-					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Message) {
+					if (timeline.getModel().getValueAt(modelRow, 3) instanceof Message) {
 						retweetButton.setVisible(false);
 						favoriteButton.setVisible(false);
 						reply.setVisible(false);
@@ -386,7 +387,7 @@ public class GUI extends Thread {
 						emailReply.setVisible(true);
 						sendEmailButton.setVisible(true);
 						emailSubject.setVisible(true);
-						currentEmail = (Message) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
+						currentEmail = (Message) (timeline.getModel().getValueAt(modelRow, 3));
 
 						try {
 							String aux = InternetAddress.toString(currentEmail.getFrom());
@@ -489,7 +490,7 @@ public class GUI extends Thread {
 						|| configAccounts.isLoggedFacebook() || configAccounts.isLoggedEmail())) {
 					JOptionPane.showMessageDialog(null, "No search results!");
 				}
-				 tableToXML();
+				tableToXML();
 			}
 		});
 
@@ -582,7 +583,6 @@ public class GUI extends Thread {
 			panelFb.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelFb = new JLabel("Facebook");
 			labelFb.setHorizontalAlignment(JLabel.CENTER);
-			fbAccount = new JLabel("Token: " + configAccounts.getFacebookToken());
 			actionFb = new JButton("Logout");
 			actionFb.addActionListener(new ActionListener() {
 
@@ -590,7 +590,6 @@ public class GUI extends Thread {
 				public void actionPerformed(ActionEvent arg0) {
 					configAccounts.delete("Facebook");
 					configAccounts.read("Facebook");
-					// System.out.println(configAccounts.getFacebookAccount());
 					config.dispose();
 					configFrame();
 					configAccounts.setLoggedFacebook(false);
@@ -645,7 +644,6 @@ public class GUI extends Thread {
 			panelTw.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelTw = new JLabel("Twitter");
 			labelTw.setHorizontalAlignment(JLabel.CENTER);
-			twAccount = new JLabel(configAccounts.getTwitterToken());
 			actionTw = new JButton("Logout");
 			actionTw.addActionListener(new ActionListener() {
 
@@ -711,7 +709,6 @@ public class GUI extends Thread {
 			panelEmail.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelEmail = new JLabel("Email");
 			labelEmail.setHorizontalAlignment(JLabel.CENTER);
-			emailAccount = new JLabel(configAccounts.getEmailAccount());
 			actionEmail = new JButton("Logout");
 			actionEmail.addActionListener(new ActionListener() {
 
@@ -751,8 +748,8 @@ public class GUI extends Thread {
 	}
 
 	/**
-	 * Gets contents from all services lists, adds them to the
-	 * table and sorts everything chronologically.
+	 * Gets contents from all services lists, adds them to the table and sorts
+	 * everything chronologically.
 	 */
 	public void manageTimeline() {
 
@@ -787,9 +784,10 @@ public class GUI extends Thread {
 		sortTable();
 
 	}
+
 	/**
-	 * Gets contents from all services lists using the configuration file, adds them to the
-	 * table and sorts everything chronologically.
+	 * Gets contents from all services lists using the configuration file, adds
+	 * them to the table and sorts everything chronologically.
 	 */
 	public void manageLastTimeline() {
 
@@ -807,10 +805,10 @@ public class GUI extends Thread {
 				tableModel.addRow(new Object[] { "Facebook", p.getUpdatedTime(), p.getMessage(), p });
 			}
 		}
-		
+
 		if (tweetsList != null) {
 			for (Status t : tweetsList) {
-				System.out.println("conteudo do tweet: "+t.getText());
+				System.out.println("conteudo do tweet: " + t.getText());
 				tableModel.addRow(new Object[] { "Twitter", t.getCreatedAt(), t.getText(), t });
 			}
 		}
@@ -900,7 +898,5 @@ public class GUI extends Thread {
 	public Config getConfigAccounts() {
 		return configAccounts;
 	}
-	
-	
 
 }

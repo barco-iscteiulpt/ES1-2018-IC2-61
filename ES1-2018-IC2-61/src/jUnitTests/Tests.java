@@ -1,4 +1,5 @@
 package jUnitTests;
+
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -16,36 +17,39 @@ import twitter4j.Status;
 public class Tests {
 
 	@Test
-	public void facebookSearchShouldReturnOnePost() {
-		//When "Maltinha" is searched only on facebook, it should return only one post
+	public void facebookSearchShouldReturnNoPosts() {
+		// When "Maltinha" is searched only on facebook, it should not return
+		// any post
 		GUI gui = new GUI();
 		gui.facebook.searchFacebook("Maltinha", "Anytime");
 		ArrayList<Post> list = gui.facebook.getFinalPostsList();
-		assertEquals(0,list.size());
+		assertEquals(0, list.size());
 	}
-	
+
 	@Test
-	public void twitterSearchShouldReturnThreePost() {
-		//When searching twitter for "last week" tweets, should return 10 tweets
+	public void twitterSearchShouldReturnTwoPost() {
+		// When searching twitter for "last week" tweets, should return 2 tweets
 		GUI gui = new GUI();
 		gui.twitter.searchTwitter("", "Last week");
 		ArrayList<Status> list = gui.twitter.getFinalTweetsList();
-		assertEquals(2,list.size());
+		assertEquals(2, list.size());
 	}
-	
+
 	@Test
 	public void facebookSelectionIdShouldEqualExpandedId() {
-		//When "Maltinha" is searched only on facebook, the expanded post ID should be 903964286283340_698505523592834
+		// When "Teste1" is searched only on facebook, the expanded post ID
+		// should be 903964286283340_698505523592834
 		GUI gui = new GUI();
 		gui.facebook.searchFacebook("Teste 1", "Anytime");
 		Post post = (Post) (gui.facebook.getFinalPostsList().get(0));
 		String id = post.getId();
 		assertEquals("494271834397031_494276877729860", id);
 	}
-	
+
 	@Test
 	public void twitterSelectionIdShouldEqualExpandedId() {
-		//When "Teste 1" is searched only on twitter, the expanded post ID should be 1065189887576547330
+		// When "Teste 2" is searched only on twitter, the expanded post ID
+		// should be 1065189887576547330
 		GUI gui = new GUI();
 		gui.twitter.open();
 		gui.twitter.searchTwitter("Teste 2", "Anytime");
@@ -53,11 +57,12 @@ public class Tests {
 		long id = tweet.getId();
 		assertEquals(1069625307659939841L, id);
 	}
-	
+
 	@Test
 	public void twitterTest() {
 		GUI gui = new GUI();
-		gui.getConfigAccounts().write(new TwitterLoginRequest(gui.getConfigAccounts().getTwitterToken(), gui.getConfigAccounts().getTwitterTokenSecret()));
+		gui.getConfigAccounts().write(new TwitterLoginRequest(gui.getConfigAccounts().getTwitterToken(),
+				gui.getConfigAccounts().getTwitterTokenSecret()));
 		gui.twitter.searchTwitter("Teste 2", "Anytime");
 		Status tweet = (Status) (gui.twitter.getFinalTweetsList().get(0));
 		long id = tweet.getId();
@@ -70,9 +75,9 @@ public class Tests {
 		gui.twitter.searchTwitter("Teste 2", "Last month");
 		gui.twitter.checkConnection();
 	}
-	
+
 	@Test
-	public void facebookTest()	{
+	public void facebookTest() {
 		GUI gui = new GUI();
 		gui.getConfigAccounts().write(new FacebookLoginRequest(gui.getConfigAccounts().getFacebookToken()));
 		gui.facebook.searchFacebook("Teste 1", "Anytime");
@@ -85,9 +90,9 @@ public class Tests {
 		gui.facebook.searchFacebook("Teste 1", "Last week");
 		gui.facebook.searchFacebook("Teste 1", "Last month");
 	}
-	
+
 	@Test
-	public void emailTest()	{
+	public void emailTest() {
 		GUI gui = new GUI();
 		gui.email.login("projetoes61@gmail.com", "rumoao20");
 		gui.getConfigAccounts().write(new EmailLoginRequest("projetoes61@gmail.com", "rumoao20"));
@@ -102,7 +107,7 @@ public class Tests {
 		gui.email.sendEmail("projetoes61@gmail.com", "projetoes61@gmail.com", "subject", "body");
 		gui.email.checkConnection();
 	}
-	
+
 	@Test
 	public void configTest() {
 		GUI gui = new GUI();
@@ -120,13 +125,13 @@ public class Tests {
 		gui.getConfigAccounts().write(gui.email.getFinalEmailsList().get(0));
 		gui.manageLastTimeline();
 	}
-	
+
 	@Test
 	public void guiTestElse() {
 		GUI gui = new GUI();
 		gui.configFrame();
 	}
-	
+
 	@Test
 	public void guiTestIf() {
 		GUI gui = new GUI();
