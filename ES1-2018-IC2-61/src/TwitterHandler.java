@@ -53,10 +53,6 @@ public class TwitterHandler {
 			requestToken = twitter.getOAuthRequestToken();
 			setLoginTwitter(requestToken.getAuthorizationURL());
 	        Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
-	        
-			setLoginTwitter(requestToken.getAuthorizationURL()); 
-			Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
-
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
 		} catch (MalformedURLException e) {

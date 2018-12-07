@@ -358,6 +358,7 @@ public class GUI extends Thread {
 						favoriteButton.setVisible(true);
 						Status tweet = (Status) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
 						tweetId = tweet.getId();
+						System.out.println("twitter: "+tweetId);
 					}
 
 					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Post) {
@@ -373,6 +374,7 @@ public class GUI extends Thread {
 						commentButton.setVisible(true);
 						Post post = (Post) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
 						postId = post.getId();
+						System.out.println("facebook post: "+postId);
 					}
 
 					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Message) {
@@ -525,7 +527,7 @@ public class GUI extends Thread {
 	 * the XML file.
 	 */
 
-	protected void configFrame() {
+	public void configFrame() {
 		JFrame config = new JFrame();
 		config.getContentPane().setLayout(new GridLayout(5, 1));
 		JLabel fb_icon = new JLabel(new ImageIcon("src/resources/facebook_big.png"));
@@ -755,7 +757,7 @@ public class GUI extends Thread {
 	 * Gets content from both Facebook and Twitter lists and adds them to the
 	 * table.
 	 */
-	private void manageTimeline() {
+	public void manageTimeline() {
 
 		ArrayList<Post> postsList = facebook.getFinalPostsList();
 		ArrayList<Status> tweetsList = twitter.getFinalTweetsList();
@@ -789,7 +791,7 @@ public class GUI extends Thread {
 
 	}
 
-	private void manageLastTimeline() {
+	public void manageLastTimeline() {
 
 		configAccounts.loadLastSearch("Post");
 		ArrayList<Post> postsList = configAccounts.getPostsList();
@@ -889,5 +891,11 @@ public class GUI extends Thread {
 		frame.setBackground(Color.LIGHT_GRAY);
 		frame.setFont(new Font("Arial", Font.PLAIN, 12));
 	}
+
+	public Config getConfigAccounts() {
+		return configAccounts;
+	}
+	
+	
 
 }
