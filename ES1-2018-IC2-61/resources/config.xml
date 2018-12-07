@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Config>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<Facebook Token="EAAEprSZC8PBABAPKqLnHl6pXvx2ZCNuQ8CZCC3USFWARcgY7sBZCE0CHTYHbrgDu52TF4ZAtN9tgD6pn6swFcytERzJik4EcJ2MBzNq2Ey74IEZBnrsTFv17VwG8nv6TMJSr3f1RZBoCf30COt9uZCytaq1JmcV5rn0g1LwUnYZClLEC6WSAojEbG5WEFwzkiNZBoZD"/>
+
+
+
+
+
+
+
+<Twitter Token="325579017-F4NTQoyvPu5tiXhFxHRxDxXhFcc5gHJOQIP4wjSX" TokenSecret="q1fU6OGjh69wt65oPfuDU7whVYW3hhGbMVZExSchQQh3F"/>
+<Email Account="projetoes61@gmail.com" Password="rumoao20"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<Post Content="Teste aplicação" ID="494271834397031_497931640697717" UpdatedTime="Fri Dec 07 21:02:29 WET 2018"/>
+<Post Content="Teste 1" ID="494271834397031_494276877729860" UpdatedTime="Fri Dec 07 20:50:06 WET 2018"/>
+<Status Content="@Andreecarvalh0 teste final" Date="Fri Dec 07 21:02:05 WET 2018" ID="1071147860446638081"/>
+<Status Content="RT @Andreecarvalh0: Teste 2" Date="Fri Dec 07 21:01:56 WET 2018" ID="1071147821829632000"/>
+<Message Content="subject&#10;body" Date="Wed Dec 05 15:58:07 WET 2018" GetFrom="projetoes61@gmail.com"/>
+<Message Content="time&#10;lastHour" Date="Thu Dec 06 16:46:03 WET 2018" GetFrom="ES ES &lt;projetoes61@gmail.com&gt;"/>
+<Message Content="last hour&#10;teste" Date="Fri Dec 07 17:59:17 WET 2018" GetFrom="ES ES &lt;projetoes61@gmail.com&gt;"/>
+<Message Content="assunto&#10;texto do email" Date="Fri Dec 07 18:06:17 WET 2018" GetFrom="projetoes61@gmail.com"/>
+<Message Content="subject&#10;body" Date="Fri Dec 07 20:47:03 WET 2018" GetFrom="projetoes61@gmail.com"/>
+<Message Content="subject&#10;body" Date="Fri Dec 07 20:50:44 WET 2018" GetFrom="projetoes61@gmail.com"/>
+<Message Content="ola&#10;adeus" Date="Fri Dec 07 21:02:14 WET 2018" GetFrom="projetoes61@gmail.com"/>
+</Config>

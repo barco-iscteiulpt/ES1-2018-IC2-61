@@ -112,7 +112,7 @@ public class Config {
 	 */
 	public void read(String s) {
 		try {
-			File inputFile = new File("src/resources/config.xml");
+			File inputFile = new File("./resources/config.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -163,7 +163,7 @@ public class Config {
 	 */
 	public void loadLastSearch(String string) {
 		try {
-			File inputFile = new File("src/resources/config.xml");
+			File inputFile = new File("./resources/config.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -226,7 +226,7 @@ public class Config {
 	 */
 	public void write(Object o) {
 		try {
-			File inputFile = new File("src/resources/config.xml");
+			File inputFile = new File("./resources/config.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -291,7 +291,7 @@ public class Config {
 	 */
 	public void delete(String s) {
 		try {
-			File inputFile = new File("src/resources/config.xml");
+			File inputFile = new File("./resources/config.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -327,7 +327,7 @@ public class Config {
 	 */
 	public void clearResults(String s) {
 		try {
-			File inputFile = new File("src/resources/config.xml");
+			File inputFile = new File("./resources/config.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);

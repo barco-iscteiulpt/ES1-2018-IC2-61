@@ -95,7 +95,7 @@ public class GUI extends Thread {
 		frame = new JFrame();
 		frame.setTitle("Bom Dia Academia!");
 		frame.setBounds(100, 100, 800, 600);
-		ImageIcon appIcon = new ImageIcon("src/resources/app-icon.png");
+		ImageIcon appIcon = new ImageIcon("./resources/app-icon.png");
 		frame.setIconImage(appIcon.getImage());
 
 		frame.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -177,9 +177,9 @@ public class GUI extends Thread {
 		// Get social icons from "resources" folder. Create 3 checkboxes
 		// (selected by
 		// default). Add them to top-left panel.
-		JLabel fb_icon = new JLabel(new ImageIcon("src/resources/facebook.png"));
-		JLabel twitter_icon = new JLabel(new ImageIcon("src/resources/twitter.png"));
-		JLabel email_icon = new JLabel(new ImageIcon("src/resources/gmail.png"));
+		JLabel fb_icon = new JLabel(new ImageIcon("./resources/facebook.png"));
+		JLabel twitter_icon = new JLabel(new ImageIcon("./resources/twitter.png"));
+		JLabel email_icon = new JLabel(new ImageIcon("./resources/gmail.png"));
 
 		JCheckBox fb_checkbox = new JCheckBox();
 		fb_checkbox.setSelected(false);
@@ -270,7 +270,7 @@ public class GUI extends Thread {
 		keywords.setPreferredSize(new Dimension(120, 24));
 		keywords.setToolTipText("Insert keywords");
 		searchButton.setMargin(new Insets(2, 8, 2, 8));
-		searchButton.setIcon(new ImageIcon("src/resources/magnifier-tool.png"));
+		searchButton.setIcon(new ImageIcon("./resources/magnifier-tool.png"));
 
 		keywords.addActionListener(new ActionListener() {
 			@Override
@@ -529,9 +529,9 @@ public class GUI extends Thread {
 	public void configFrame() {
 		JFrame config = new JFrame();
 		config.getContentPane().setLayout(new GridLayout(5, 1));
-		JLabel fb_icon = new JLabel(new ImageIcon("src/resources/facebook_big.png"));
-		JLabel twitter_icon = new JLabel(new ImageIcon("src/resources/twitter_big.png"));
-		JLabel email_icon = new JLabel(new ImageIcon("src/resources/gmail_big.png"));
+		JLabel fb_icon = new JLabel(new ImageIcon("./resources/facebook_big.png"));
+		JLabel twitter_icon = new JLabel(new ImageIcon("./resources/twitter_big.png"));
+		JLabel email_icon = new JLabel(new ImageIcon("./resources/gmail_big.png"));
 
 		// Line 1
 		JPanel panelFb;
