@@ -1,7 +1,6 @@
 package BDA;
 import java.awt.Desktop;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -44,8 +43,7 @@ public class TwitterHandler {
 	RequestToken requestToken;
 
 	public ArrayList<Status> finalTweetsList;
-//	public boolean loggedIn;
-	public String loginTwitter;
+	public String loginTwitterURL;
 
 	/**
 	 * Uses the application request token to generate a URL opened by the browser in which the users can get their pin.
@@ -55,7 +53,7 @@ public class TwitterHandler {
 			
 			requestToken = twitter.getOAuthRequestToken();
 			setLoginTwitter(requestToken.getAuthorizationURL());
-	        Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
+	        Desktop.getDesktop().browse(new URL(loginTwitterURL).toURI());
 		} catch (TwitterException e) {
 			JOptionPane.showMessageDialog(null, "Incorrect PIN.");
 		} catch (MalformedURLException e) {
@@ -68,26 +66,6 @@ public class TwitterHandler {
 
 	}
 	
-
-	/**
-	 * Returns the request token.
-	 * 
-	 * @return requestToken
-	 */
-	public RequestToken getRequestToken() {
-		return requestToken;
-	}
-
-	/**
-	 * Sets the request token.
-	 * 
-	 * @param requestToken
-	 *            request token
-	 */
-	public void setRequestToken(RequestToken requestToken) {
-		this.requestToken = requestToken;
-	}
-
 	/**
 	 * Uses the specified pin to generate an access token used to authenticate every twitter function and sets the login state to true. If the pin is incorrect it displays a dialog.
 	 * @param pin
@@ -246,8 +224,8 @@ public class TwitterHandler {
 			twitter.setOAuthConsumer(authConsumerKey, authConsumerSecret);
 			AccessToken accessToken = new AccessToken(authAccessToken, authAccessTokenSecret);
 			twitter.setOAuthAccessToken(accessToken);
-			Status b = twitter.showStatus(tweetId);
-			StatusUpdate statusUpdate = new StatusUpdate("@"+b.getUser().getScreenName()+" "+reply);
+			Status s = twitter.showStatus(tweetId);
+			StatusUpdate statusUpdate = new StatusUpdate("@"+s.getUser().getScreenName()+" "+reply);
 			statusUpdate.setInReplyToStatusId(tweetId);
 			twitter.updateStatus(statusUpdate);
 		} catch (TwitterException e) {
@@ -290,7 +268,7 @@ public class TwitterHandler {
 	 *            the current login twitter
 	 */
 	public void setLoginTwitter(String loginTwitter) {
-		this.loginTwitter = loginTwitter;
+		this.loginTwitterURL = loginTwitter;
 	}
 	
 	/**
@@ -329,6 +307,25 @@ public class TwitterHandler {
 	 */
 	public void setAuthAccessTokenSecret(String authAccessTokenSecret) {
 		this.authAccessTokenSecret = authAccessTokenSecret;
+	}
+
+	/**
+	 * Returns the request token.
+	 * 
+	 * @return requestToken
+	 */
+	public RequestToken getRequestToken() {
+		return requestToken;
+	}
+
+	/**
+	 * Sets the request token.
+	 * 
+	 * @param requestToken
+	 *            request token
+	 */
+	public void setRequestToken(RequestToken requestToken) {
+		this.requestToken = requestToken;
 	}
 
 }

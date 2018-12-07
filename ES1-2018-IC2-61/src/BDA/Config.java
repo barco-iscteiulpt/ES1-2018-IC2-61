@@ -12,7 +12,6 @@ import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -51,7 +50,6 @@ public class Config {
 	private ArrayList<Message> emailsList = new ArrayList<Message>();
 
 	private String facebookToken;
-	private String facebookUsername;
 	private String twitterToken;
 	private String twitterTokenSecret;
 	private String emailAccount;
@@ -121,30 +119,30 @@ public class Config {
 			XPathFactory xpathFactory = XPathFactory.newInstance();
 			XPath xpath = xpathFactory.newXPath();
 			XPathExpression expr = xpath.compile("/Config/" + s + "/@*");
-			NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-			for (int i = 0; i < nl.getLength(); i++) {
+			NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+			for (int i = 0; i < nodeList.getLength(); i++) {
 				if (s.equals("Facebook")) {
-					facebookToken = nl.item(i).getFirstChild().getNodeValue();
+					facebookToken = nodeList.item(i).getFirstChild().getNodeValue();
 					loggedFacebook = true;
 				}
 				// facebookAccount = nl.item(i).getFirstChild().getNodeValue();
 				if (s.equals("Twitter")) {
-					if (nl.item(i).getNodeName().equals("Token"))
-						twitterToken = nl.item(i).getFirstChild().getNodeValue();
-					if (nl.item(i).getNodeName().equals("TokenSecret"))
-						twitterTokenSecret = nl.item(i).getFirstChild().getNodeValue();
+					if (nodeList.item(i).getNodeName().equals("Token"))
+						twitterToken = nodeList.item(i).getFirstChild().getNodeValue();
+					if (nodeList.item(i).getNodeName().equals("TokenSecret"))
+						twitterTokenSecret = nodeList.item(i).getFirstChild().getNodeValue();
 					loggedTwitter = true;
 				}
 				// twitterAccount = nl.item(i).getFirstChild().getNodeValue();
 				if (s.equals("Email")) {
-					if (nl.item(i).getNodeName().equals("Account"))
-						emailAccount = nl.item(i).getFirstChild().getNodeValue();
-					if (nl.item(i).getNodeName().equals("Password"))
-						emailPassword = nl.item(i).getFirstChild().getNodeValue();
+					if (nodeList.item(i).getNodeName().equals("Account"))
+						emailAccount = nodeList.item(i).getFirstChild().getNodeValue();
+					if (nodeList.item(i).getNodeName().equals("Password"))
+						emailPassword = nodeList.item(i).getFirstChild().getNodeValue();
 					loggedEmail = true;
 				}
 				// twitterAccount = nl.item(i).getFirstChild().getNodeValue();
-				if (nl.item(i).getNodeName().equals("Account"))
+				if (nodeList.item(i).getNodeName().equals("Account"))
 					loggedEmail = true;
 				// emailAccount = nl.item(i).getFirstChild().getNodeValue();
 			}
@@ -170,11 +168,9 @@ public class Config {
 			XPathFactory xpathFactory = XPathFactory.newInstance();
 			XPath xpath = xpathFactory.newXPath();
 			XPathExpression expr = xpath.compile("/Config/" + string);
-			NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-			int count = 0;
-
-			for (int i = 0; i < nl.getLength(); i++) {
-				NamedNodeMap attributes = nl.item(i).getAttributes();
+			NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				NamedNodeMap attributes = nodeList.item(i).getAttributes();
 				if (string.equals("Post")) {
 					Post p = new Post();
 					p.setId(attributes.item(1).getNodeValue());
@@ -195,7 +191,6 @@ public class Config {
 						Status s = twitter.showStatus(Long.parseLong(attributes.item(2).getNodeValue()));
 						tweetsList.add(s);
 					} catch (TwitterException e) {
-						count++;
 					}
 					// System.out.println("conteudo do tweet: "+s.getText());
 
@@ -524,7 +519,6 @@ public class Config {
 	 *            the user name 
 	 */
 	public void setFacebookUsername(String facebookUsername) {
-		this.facebookUsername = facebookUsername;
 	}
 
 }

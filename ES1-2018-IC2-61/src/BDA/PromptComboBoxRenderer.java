@@ -4,7 +4,12 @@ import javax.swing.*;
 
 class MyComboBoxRenderer extends JLabel implements ListCellRenderer
 {
-    private String _title;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private String _title;
 
     public MyComboBoxRenderer(String title)
     {

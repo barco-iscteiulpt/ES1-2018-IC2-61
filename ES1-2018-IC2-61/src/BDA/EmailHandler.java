@@ -22,7 +22,6 @@ import javax.swing.JOptionPane;
 
 public class EmailHandler {
 
-
 	private String sendingHost;
 	private int sendingPort;
 	private String from;
@@ -30,11 +29,11 @@ public class EmailHandler {
 	private String subject;
 	private String text;
 	public String currentBody;
+	
 	private Config configs = Config.getInstance();
 	private String userName = configs.getEmailAccount();
 	private String password = configs.getEmailPassword();
 
-//	public boolean loggedIn;
 	private boolean connected = true;
 
 	public ArrayList<Message> finalEmailsList;
@@ -80,8 +79,8 @@ public class EmailHandler {
 		propertiesSender.put("mail.smtp.password", this.password);
 		propertiesSender.put("mail.smtp.auth", "true");
 
-		Session session1 = Session.getDefaultInstance(propertiesSender);
-		Message replyMessage = new MimeMessage(session1);
+		Session sendingSession = Session.getDefaultInstance(propertiesSender);
+		Message replyMessage = new MimeMessage(sendingSession);
 		InternetAddress fromAddress = null;
 		InternetAddress toAddress = null;
 		try {
@@ -96,7 +95,7 @@ public class EmailHandler {
 			replyMessage.setRecipient(RecipientType.TO, toAddress);
 			replyMessage.setSubject(this.subject);
 			replyMessage.setText(this.text);
-			Transport transport = session1.getTransport("smtps");
+			Transport transport = sendingSession.getTransport("smtps");
 			transport.connect (this.sendingHost,sendingPort, this.userName, this.password);
 			transport.sendMessage(replyMessage, replyMessage.getAllRecipients());
 			transport.close();
@@ -121,9 +120,9 @@ public class EmailHandler {
 		/*this will print subject of all messages in the inbox of sender@gmail.com*/
 		Properties propertiesReceiver = System.getProperties();
 		propertiesReceiver.setProperty("mail.store.protocol", "imaps");
-		Session session2 = Session.getDefaultInstance(propertiesReceiver, null);
+		Session receivingSession = Session.getDefaultInstance(propertiesReceiver, null);
 		try {
-			Store store=session2.getStore("imaps");
+			Store store=receivingSession.getStore("imaps");
 			store.connect("imap.gmail.com",this.userName, this.password);
 			Folder folder=store.getFolder("INBOX");//get inbox
 
@@ -137,23 +136,23 @@ public class EmailHandler {
 				if(message[i].getSubject().contains(info)) {
 					if(period.equals("Anytime")) {
 						getBody(message[i]);
-						Message m = new MimeMessage(session2);
-						m.setSubject(message[i].getSubject()+"\n"+this.currentBody);
-						m.setSentDate(message[i].getReceivedDate());
+						Message msg = new MimeMessage(receivingSession);
+						msg.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+						msg.setSentDate(message[i].getReceivedDate());
 						InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
-						m.setFrom(fromAddress);
-						finalEmailsList.add(m);
+						msg.setFrom(fromAddress);
+						finalEmailsList.add(msg);
 					}
 					if (period.equals("Last hour")) {
 						calendar.add(Calendar.HOUR_OF_DAY, -1);
 						if (message[i].getReceivedDate().after(calendar.getTime())) {
 							getBody(message[i]);
-							Message m = new MimeMessage(session2);
-							m.setSubject(message[i].getSubject()+"\n"+this.currentBody);
-							m.setSentDate(message[i].getReceivedDate());
+							Message msg = new MimeMessage(receivingSession);
+							msg.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+							msg.setSentDate(message[i].getReceivedDate());
 							InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
-							m.setFrom(fromAddress);
-							finalEmailsList.add(m);
+							msg.setFrom(fromAddress);
+							finalEmailsList.add(msg);
 						}
 					}
 
@@ -161,12 +160,12 @@ public class EmailHandler {
 						calendar.add(Calendar.DAY_OF_MONTH, -1);
 						if (message[i].getReceivedDate().after(calendar.getTime())) {
 							getBody(message[i]);
-							Message m = new MimeMessage(session2);
-							m.setSubject(message[i].getSubject()+"\n"+this.currentBody);
-							m.setSentDate(message[i].getReceivedDate());
+							Message msg = new MimeMessage(receivingSession);
+							msg.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+							msg.setSentDate(message[i].getReceivedDate());
 							InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
-							m.setFrom(fromAddress);
-							finalEmailsList.add(m);
+							msg.setFrom(fromAddress);
+							finalEmailsList.add(msg);
 						}
 					}
 
@@ -174,12 +173,12 @@ public class EmailHandler {
 						calendar.add(Calendar.DAY_OF_MONTH, -7);
 						if (message[i].getReceivedDate().after(calendar.getTime())) {
 							getBody(message[i]);
-							Message m = new MimeMessage(session2);
-							m.setSubject(message[i].getSubject()+"\n"+this.currentBody);
-							m.setSentDate(message[i].getReceivedDate());
+							Message msg = new MimeMessage(receivingSession);
+							msg.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+							msg.setSentDate(message[i].getReceivedDate());
 							InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
-							m.setFrom(fromAddress);
-							finalEmailsList.add(m);
+							msg.setFrom(fromAddress);
+							finalEmailsList.add(msg);
 						}
 					}
 
@@ -187,12 +186,12 @@ public class EmailHandler {
 						calendar.add(Calendar.MONTH, -1);
 						if (message[i].getReceivedDate().after(calendar.getTime())) {
 							getBody(message[i]);
-							Message m = new MimeMessage(session2);
-							m.setSubject(message[i].getSubject()+"\n"+this.currentBody);
-							m.setSentDate(message[i].getReceivedDate());
+							Message msg = new MimeMessage(receivingSession);
+							msg.setSubject(message[i].getSubject()+"\n"+this.currentBody);
+							msg.setSentDate(message[i].getReceivedDate());
 							InternetAddress fromAddress = new InternetAddress(InternetAddress.toString(message[i].getFrom()));;
-							m.setFrom(fromAddress);
-							finalEmailsList.add(m);
+							msg.setFrom(fromAddress);
+							finalEmailsList.add(msg);
 						}
 					}
 				}
@@ -201,8 +200,10 @@ public class EmailHandler {
 			store.close();
 		} catch (Exception e) {
 			checkConnection();
-			if(connected) 
+			if(connected) {
 				configs.setLoggedEmail(false);
+				configs.delete("Email");
+			}
 		}
 	}
 

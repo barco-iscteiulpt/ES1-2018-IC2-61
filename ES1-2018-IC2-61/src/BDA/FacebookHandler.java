@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -15,7 +14,6 @@ import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
-import com.restfb.FacebookClient.AccessToken;
 import com.restfb.types.Comment;
 import com.restfb.types.Group;
 import com.restfb.types.Post;
@@ -23,8 +21,6 @@ import com.restfb.types.User;
 
 public class FacebookHandler {
 
-	
-	protected String accessToken2 = "EAAEprSZC8PBABAERNOUaTHT17JMZCnuHwOZBL3EGknDVPGGZAss879cu9c38Of0LFnYZCVZA3iZCcO8KhyQn4J7lsFmsgZArS6TJVGoPOAZBmJMWMH3g3032KV8ajmpdqk5mvlaKBeAZC7ZCkS4N108jMAKkDYvR4DjFdrEq8v5IudGFgZDZD";
 	protected String pageToken = "EAAEprSZC8PBABAIJMzvVkTBeQpVaV2L8rmONckQKZB3dZABDZC94gSiDrbGZCCZCwK5X1hZBya69zpJ0nmyZBpaZBOUDV2NJiYm2PqMnS5fcow43HrOkbJTs2FUTR5eOLJ504RuPuq3hza0WGtIXMJvWcoG5AfgXXfGI2701jaLcmUgZDZD";
 
 	public ArrayList<Post> finalPostsList;
@@ -32,8 +28,7 @@ public class FacebookHandler {
 	private Config configs = Config.getInstance();
 	public String accessToken = configs.getFacebookToken();
 	public boolean loggedIn;
-	private boolean connected = true;
-
+	
 	/**
 	 * Opens the browser on the Facebook developers page which allows them to retrieve their User Access Token.
 	 */

@@ -3,8 +3,6 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import javax.swing.event.ListSelectionListener;
-
 import org.junit.Test;
 
 import com.restfb.types.Post;

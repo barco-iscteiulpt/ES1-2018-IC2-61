@@ -70,7 +70,6 @@ public class GUI extends Thread {
 	private Message currentEmail;
 	private String replyTo;
 	private String replyFrom;
-	public boolean isClicked = false;
 
 	/**
 	 * Create the application.
@@ -102,7 +101,6 @@ public class GUI extends Thread {
 		frame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-//				tableToXML();
 				frame.dispose();
 			}
 		});
@@ -375,7 +373,6 @@ public class GUI extends Thread {
 						commentButton.setVisible(true);
 						Post post = (Post) (tableModel.getValueAt(timeline.getSelectedRow(), 3));
 						postId = post.getId();
-						System.out.println("facebook post: "+postId);
 					}
 
 					if (tableModel.getValueAt(timeline.getSelectedRow(), 3) instanceof Message) {
@@ -536,16 +533,16 @@ public class GUI extends Thread {
 		JLabel email_icon = new JLabel(new ImageIcon("src/resources/gmail_big.png"));
 
 		// Line 1
-		JPanel panel1;
+		JPanel panelFb;
 		JLabel labelFb;
 		JLabel fbAccount = new JLabel();
 		JButton actionFb;
 
 		System.out.println("Facebook: " + configAccounts.isLoggedFacebook());
 		if (!configAccounts.isLoggedFacebook()) {
-			panel1 = new JPanel();
-			panel1.setLayout(new BorderLayout());
-			panel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+			panelFb = new JPanel();
+			panelFb.setLayout(new BorderLayout());
+			panelFb.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelFb = new JLabel("Facebook");
 			labelFb.setHorizontalAlignment(JLabel.CENTER);
 			actionFb = new JButton("Login");
@@ -558,7 +555,6 @@ public class GUI extends Thread {
 					JLabel label = new JLabel("      Get token > Get user token");
 					JPanel dialog = new JPanel();
 					JPanel aux = new JPanel();
-					// aux.add(Box.createVerticalStrut(15));
 					aux.setLayout(new GridLayout(2, 1));
 					dialog.add(Box.createHorizontalStrut(15));
 					dialog.add(new JLabel("Token: "));
@@ -581,9 +577,9 @@ public class GUI extends Thread {
 			});
 
 		} else {
-			panel1 = new JPanel();
-			panel1.setLayout(new BorderLayout());
-			panel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+			panelFb = new JPanel();
+			panelFb.setLayout(new BorderLayout());
+			panelFb.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelFb = new JLabel("Facebook");
 			labelFb.setHorizontalAlignment(JLabel.CENTER);
 			fbAccount = new JLabel("Token: " + configAccounts.getFacebookToken());
@@ -603,15 +599,15 @@ public class GUI extends Thread {
 		}
 
 		// Line 2
-		JPanel panel2;
+		JPanel panelTw;
 		JLabel labelTw;
 		JLabel twAccount = new JLabel();
 		JButton actionTw;
 
 		if (!configAccounts.isLoggedTwitter()) {
-			panel2 = new JPanel();
-			panel2.setLayout(new BorderLayout());
-			panel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+			panelTw = new JPanel();
+			panelTw.setLayout(new BorderLayout());
+			panelTw.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelTw = new JLabel("Twitter");
 			labelTw.setHorizontalAlignment(JLabel.CENTER);
 			actionTw = new JButton("Login");
@@ -644,9 +640,9 @@ public class GUI extends Thread {
 			});
 
 		} else {
-			panel2 = new JPanel();
-			panel2.setLayout(new BorderLayout());
-			panel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+			panelTw = new JPanel();
+			panelTw.setLayout(new BorderLayout());
+			panelTw.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 			labelTw = new JLabel("Twitter");
 			labelTw.setHorizontalAlignment(JLabel.CENTER);
 			twAccount = new JLabel(configAccounts.getTwitterToken());
@@ -669,19 +665,19 @@ public class GUI extends Thread {
 		}
 
 		// Line 3
-		JPanel panel3;
-		JLabel labelEm;
-		JLabel emAccount = new JLabel();
-		JButton actionEm;
+		JPanel panelEmail;
+		JLabel labelEmail;
+		JLabel emailAccount = new JLabel();
+		JButton actionEmail;
 
 		if (!configAccounts.isLoggedEmail()) {
-			panel3 = new JPanel();
-			panel3.setLayout(new BorderLayout());
-			panel3.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-			labelEm = new JLabel("Email");
-			labelEm.setHorizontalAlignment(JLabel.CENTER);
-			actionEm = new JButton("Login");
-			actionEm.addActionListener(new ActionListener() {
+			panelEmail = new JPanel();
+			panelEmail.setLayout(new BorderLayout());
+			panelEmail.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+			labelEmail = new JLabel("Email");
+			labelEmail.setHorizontalAlignment(JLabel.CENTER);
+			actionEmail = new JButton("Login");
+			actionEmail.addActionListener(new ActionListener() {
 
 				@SuppressWarnings({ "deprecation" })
 				@Override
@@ -710,14 +706,14 @@ public class GUI extends Thread {
 			});
 
 		} else {
-			panel3 = new JPanel();
-			panel3.setLayout(new BorderLayout());
-			panel3.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-			labelEm = new JLabel("Email");
-			labelEm.setHorizontalAlignment(JLabel.CENTER);
-			emAccount = new JLabel(configAccounts.getEmailAccount());
-			actionEm = new JButton("Logout");
-			actionEm.addActionListener(new ActionListener() {
+			panelEmail = new JPanel();
+			panelEmail.setLayout(new BorderLayout());
+			panelEmail.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+			labelEmail = new JLabel("Email");
+			labelEmail.setHorizontalAlignment(JLabel.CENTER);
+			emailAccount = new JLabel(configAccounts.getEmailAccount());
+			actionEmail = new JButton("Logout");
+			actionEmail.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -729,24 +725,24 @@ public class GUI extends Thread {
 			});
 		}
 
-		panel1.add(labelFb, BorderLayout.WEST);
-		panel1.add(fbAccount, BorderLayout.CENTER);
-		panel1.add(actionFb, BorderLayout.EAST);
-		panel1.add(fb_icon, BorderLayout.WEST);
-		panel2.add(labelTw, BorderLayout.WEST);
-		panel2.add(twAccount, BorderLayout.CENTER);
-		panel2.add(actionTw, BorderLayout.EAST);
-		panel2.add(twitter_icon, BorderLayout.WEST);
-		panel3.add(labelEm, BorderLayout.WEST);
-		panel3.add(emAccount, BorderLayout.CENTER);
-		panel3.add(actionEm, BorderLayout.EAST);
-		panel3.add(email_icon, BorderLayout.WEST);
+		panelFb.add(labelFb, BorderLayout.WEST);
+		panelFb.add(fbAccount, BorderLayout.CENTER);
+		panelFb.add(actionFb, BorderLayout.EAST);
+		panelFb.add(fb_icon, BorderLayout.WEST);
+		panelTw.add(labelTw, BorderLayout.WEST);
+		panelTw.add(twAccount, BorderLayout.CENTER);
+		panelTw.add(actionTw, BorderLayout.EAST);
+		panelTw.add(twitter_icon, BorderLayout.WEST);
+		panelEmail.add(labelEmail, BorderLayout.WEST);
+		panelEmail.add(emailAccount, BorderLayout.CENTER);
+		panelEmail.add(actionEmail, BorderLayout.EAST);
+		panelEmail.add(email_icon, BorderLayout.WEST);
 
-		config.getContentPane().add(panel1);
+		config.getContentPane().add(panelFb);
 		config.getContentPane().add(new JSeparator(JSeparator.HORIZONTAL));
-		config.getContentPane().add(panel2);
+		config.getContentPane().add(panelTw);
 		config.getContentPane().add(new JSeparator(JSeparator.HORIZONTAL));
-		config.getContentPane().add(panel3);
+		config.getContentPane().add(panelEmail);
 
 		config.setBounds(100, 100, 400, 300);
 		config.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -834,7 +830,7 @@ public class GUI extends Thread {
 	}
 
 	/**
-	 * (unused) Organizes the table chronologically
+	 * Organizes the table chronologically
 	 */
 
 	private void sortTable() {
