@@ -33,6 +33,9 @@ public class FacebookHandler {
 	public boolean loggedIn;
 	private boolean connected = true;
 
+	/**
+	 * Opens the browser on the Facebook developers page which allows them to retrieve their User Access Token.
+	 */
 	public void login() {
 
 		try {
@@ -116,6 +119,13 @@ public class FacebookHandler {
 		}
 	}
 
+	/**
+	 * Publishes the specified comment on the specified post on a page. Only pages are allowed to do this, otherwise it will display a dialog.
+	 * @param postId
+	 * 		the post where the user will comment
+	 * @param comment
+	 * 		the text to be in the comment
+	 */
 	@SuppressWarnings("deprecation")
 	public void comment(String postId, String comment) {
 		try {
@@ -128,6 +138,11 @@ public class FacebookHandler {
 		}
 	}
 
+	/**
+	 * Likes the specified post on a page. Only pages are allowed to do this, otherwise it will display a dialog.
+	 * @param postId
+	 * 		the post the user will like
+	 */
 	@SuppressWarnings("deprecation")
 	public void like(String postId) {
 		try {
@@ -150,6 +165,12 @@ public class FacebookHandler {
 		return finalPostsList;
 	}
 
+	/**
+	 * Sets the specified access token
+	 * 
+	 * @param accessToken
+	 *            the current access token
+	 */
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
 	}

@@ -56,14 +56,29 @@ public class Config {
 	private String emailAccount;
 	private String emailPassword;
 
+	/**
+	 * Returns the current state of Email login
+	 * 
+	 * @return loggedEmail
+	 */
 	public boolean isLoggedFacebook() {
 		return loggedFacebook;
 	}
-
+	
+	/**
+	 * Returns the current state of Twitter login
+	 * 
+	 * @return loggedTwitter
+	 */
 	public boolean isLoggedTwitter() {
 		return loggedTwitter;
 	}
 
+	/**
+	 * Returns the current state of Email login
+	 * 
+	 * @return loggedEmail
+	 */
 	public boolean isLoggedEmail() {
 		return loggedEmail;
 	}
@@ -74,6 +89,12 @@ public class Config {
 		read("Email");
 	}
 
+
+	/**
+	 * Returns the single instance of configurations
+	 * 
+	 * @return configurations
+	 */
 	public static Config getInstance() {
 
 		if (configurations == null)
@@ -132,6 +153,12 @@ public class Config {
 
 	}
 
+	/**
+	 * Reads the XML file and creates objects for each respective element. Adds these objects to lists that are displayed in GUI
+	 *
+	 * @param string
+	 * 		the type of element to load from XML
+	 */
 	public void loadLastSearch(String string) {
 		try {
 			File inputFile = new File("src/resources/config.xml");
@@ -290,6 +317,12 @@ public class Config {
 		}
 	}
 
+
+	/**
+	 * Removes all elements of the specified type in its parameter. Does not work with login requests. 
+	 * @param s
+	 * 		the type of elements to be cleared
+	 */
 	public void clearResults(String s) {
 		try {
 			File inputFile = new File("src/resources/config.xml");
@@ -319,12 +352,24 @@ public class Config {
 
 	}
 
+	/**
+	 * Sets the login state to its parameter and nullifies facebook data.
+	 * 
+	 * @param loggedFacebook
+	 *            the wanted value of login state
+	 */
 	public void setLoggedFacebook(boolean loggedFacebook) {
 		this.loggedFacebook = loggedFacebook;
 		if (!loggedFacebook)
 			setFacebookToken(null);
 	}
 
+	/**
+	 * Sets the login state to its parameter and nullifies twitter data.
+	 * 
+	 * @param loggedTwitter
+	 *            the wanted value of login state
+	 */
 	public void setLoggedTwitter(boolean loggedTwitter) {
 		this.loggedTwitter = loggedTwitter;
 		if (!loggedTwitter) {
@@ -333,6 +378,12 @@ public class Config {
 		}
 	}
 
+	/**
+	 * Sets the login state to its parameter and nullifies email data.
+	 * 
+	 * @param loggedEmail
+	 *            the wanted value of login state
+	 */
 	public void setLoggedEmail(boolean loggedEmail) {
 		this.loggedEmail = loggedEmail;
 		if (!loggedEmail) {
@@ -341,58 +392,136 @@ public class Config {
 		}
 	}
 
+	/**
+	 * Sets the specified String as Facebook token.
+	 * 
+	 * @param facebookToken
+	 *            the current facebook token
+	 */
 	public void setFacebookToken(String facebookToken) {
 		this.facebookToken = facebookToken;
 	}
 
+	/**
+	 * Sets the specified String as Twitter token.
+	 * 
+	 * @param twitterToken
+	 *            the current twitter token
+	 */
 	public void setTwitterToken(String twitterToken) {
 		this.twitterToken = twitterToken;
 	}
 
+	/**
+	 * Sets the specified String as Twitter token secret.
+	 * 
+	 * @param twitterTokenSecret
+	 *            the current twitter token secret 
+	 */
 	public void setTwitterTokenSecret(String twitterTokenSecret) {
 		this.twitterTokenSecret = twitterTokenSecret;
 	}
 
+	/**
+	 * Sets the specified string as email account.
+	 * 
+	 * @param emailAccount
+	 *            the current email Account
+	 */
 	public void setEmailAccount(String emailAccount) {
 		this.emailAccount = emailAccount;
 	}
 
+	/**
+	 * Sets the specified string as email password.
+	 * 
+	 * @param emailPassword
+	 *            the current email password
+	 */
 	public void setEmailPassword(String emailPassword) {
 		this.emailPassword = emailPassword;
 	}
 
+
+	/**
+	 * Returns the current Facebook Token.
+	 * 
+	 * @return facebookToken
+	 */
 	public String getFacebookToken() {
 		return facebookToken;
 	}
 
+	/**
+	 * Returns the current Twitter Token.
+	 * 
+	 * @return twitterToken
+	 */
 	public String getTwitterToken() {
 		return twitterToken;
 	}
 
+	/**
+	 * Returns the current Twitter Token Secret.
+	 * 
+	 * @return twitterTokenSecret
+	 */
 	public String getTwitterTokenSecret() {
 		return twitterTokenSecret;
 	}
 
+	/**
+	 * Returns the current Email account.
+	 * 
+	 * @return emailAccount
+	 */
 	public String getEmailAccount() {
 		return emailAccount;
 	}
 
+
+	/**
+	 * Returns the current Email password.
+	 * 
+	 * @return emailPassword
+	 */
 	public String getEmailPassword() {
 		return emailPassword;
 	}
 
+	/**
+	 * Returns the current Post List
+	 * 
+	 * @return postsList
+	 */
 	public ArrayList<Post> getPostsList() {
 		return postsList;
 	}
 
+	/**
+	 * Returns the current Tweets List
+	 * 
+	 * @return tweetList
+	 */
 	public ArrayList<Status> getTweetsList() {
 		return tweetsList;
 	}
 
+	/**
+	 * Returns the current Emails List
+	 * 
+	 * @return emailsList
+	 */
 	public ArrayList<Message> getEmailsList() {
 		return emailsList;
 	}
 
+	/**
+	 * Sets the specified user name.
+	 * 
+	 * @param facebookUsername
+	 *            the user name 
+	 */
 	public void setFacebookUsername(String facebookUsername) {
 		this.facebookUsername = facebookUsername;
 	}

@@ -38,12 +38,30 @@ public class EmailHandler {
 
 	public ArrayList<Message> finalEmailsList;
 
+	/**
+	 * Stores specified information on their respective fields and sets login state to true.
+	 * @param userName
+	 * 		the username to use for login
+	 * @param password
+	 * 		the password for that user
+	 */
 	public void login(String userName,String password){
 		this.userName=userName; //sender's email can also use as User Name
 		this.password=password;
 		configs.setLoggedEmail(true);
 	}
 
+	/**
+	 * Creates a new session with sender and receiver info. Sends an email, from sender to receiver, with specified subject and text. 
+	 * @param from
+	 * 		the email from which the message is to be sent
+	 * @param to
+	 * 		the email the message will be sent to
+	 * @param subject
+	 * 		the subject of the email
+	 * @param text
+	 * 		the body of the email
+	 */
 	public void sendEmail(String from, String to, String subject, String text){
 		// This will send mail from -->sender@gmail.com to -->receiver@gmail.com
 		this.from=from;
@@ -89,6 +107,14 @@ public class EmailHandler {
 		}
 	}
 
+	/**
+	 * Accesses a specific Email folder, gets all its emails and saves them on a
+	 * list. Organizes the list from the most recent emails to the oldest. Chooses
+	 * which emails are displayed depending on the JComboBox chosen item.
+	 * 
+	 * @param info   The keywords used on the JTextField
+	 * @param period The time period chosen on the JComboBox
+	 */
 	public void searchGmail(String info, String period){
 		finalEmailsList = new ArrayList<>();
 		/*this will print subject of all messages in the inbox of sender@gmail.com*/
@@ -179,6 +205,11 @@ public class EmailHandler {
 		}
 	}
 
+	/**
+	 * Adds to the current body the message of the specified email.
+	 * @param email
+	 * 		the email from which the body will be retrieved
+	 */
 	public void getBody(Message email) {
 		try {
 			Object content = email.getContent();
@@ -204,6 +235,9 @@ public class EmailHandler {
 		}
 	}
 	
+	/**
+	 * Checks if there is internet connection using google.com
+	 */
 	public void checkConnection() {
 		  try {
 		        final URL url = new URL("http://www.google.com");
@@ -219,22 +253,49 @@ public class EmailHandler {
 		    }
 	}
 
+	/**
+	 * Returns the current body of the email.
+	 * 
+	 * @return currentBody
+	 */
 	public String getCurrentBody() {
-		return this.currentBody;
+		return currentBody;
 	}
 
+	/**
+	 * Returns the current list of emails.
+	 * 
+	 * @return finalEmailsList
+	 */
 	public ArrayList<Message> getFinalEmailsList() {
-		return this.finalEmailsList;
+		return finalEmailsList;
 	}
 
+	/**
+	 * Returns the current user name.
+	 * 
+	 * @return userName
+	 */
 	public String getUsername() {
-		return this.userName;
+		return userName;
 	}
 
+	/**
+	 * Sets the specified email user name to the user name field .
+	 * 
+	 * @param email
+	 *            the current email
+	 */
 	public void setUsername(String email) {
-		this.userName = email;
+		userName = email;
 	}
 
+	/**
+	 * Sets the specified password to the password field.
+	 * 
+	 * @param password
+	 *            the current password
+	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}

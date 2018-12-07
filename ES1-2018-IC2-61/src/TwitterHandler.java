@@ -46,10 +46,12 @@ public class TwitterHandler {
 //	public boolean loggedIn;
 	public String loginTwitter;
 
+	/**
+	 * Uses the application request token to generate a URL opened by the browser in which the users can get their pin.
+	 */
 	public void open() {	
 		try {
-			System.out.println("Token no inicio do open(): " + requestToken);
-
+			
 			requestToken = twitter.getOAuthRequestToken();
 			setLoginTwitter(requestToken.getAuthorizationURL());
 	        Desktop.getDesktop().browse(new URL(loginTwitter).toURI());
@@ -65,14 +67,31 @@ public class TwitterHandler {
 
 	}
 	
+
+	/**
+	 * Returns the request token.
+	 * 
+	 * @return requestToken
+	 */
 	public RequestToken getRequestToken() {
 		return requestToken;
 	}
 
+	/**
+	 * Sets the request token.
+	 * 
+	 * @param requestToken
+	 *            request token
+	 */
 	public void setRequestToken(RequestToken requestToken) {
 		this.requestToken = requestToken;
 	}
 
+	/**
+	 * Uses the specified pin to generate an access token used to authenticate every twitter function and sets the login state to true. If the pin is incorrect it displays a dialog.
+	 * @param pin
+	 * 		the code given by Twitter to authorize access
+	 */
 	public void login(String pin) {
 		try {
 			AccessToken accessToken = null;
@@ -236,6 +255,9 @@ public class TwitterHandler {
 
 	}
 	
+	/**
+	 * Checks if there is internet connection using google.com
+	 */
 	public void checkConnection() {
 		  try {
 		        final URL url = new URL("http://www.google.com");
@@ -260,22 +282,50 @@ public class TwitterHandler {
 		return this.finalTweetsList;
 	}
 
-	public void setLoginTwitter(String logginTwitter) {
-		this.loginTwitter = logginTwitter;
+	/**
+	 * Sets the specified login twitter.
+	 * 
+	 * @param loginTwitter
+	 *            the current login twitter
+	 */
+	public void setLoginTwitter(String loginTwitter) {
+		this.loginTwitter = loginTwitter;
 	}
 	
+	/**
+	 * Returns the Auth Access Token
+	 * 
+	 * @return authAccessToken
+	 */
 	public String getAuthAccessToken() {
 		return authAccessToken;
 	}
 
+	/**
+	 * Sets the specified auth access token.
+	 * 
+	 * @param authAccessToken
+	 *            the current auth Access Token
+	 */
 	public void setAuthAccessToken(String authAccessToken) {
 		this.authAccessToken = authAccessToken;
 	}
 
+	/**
+	 * Returns the Auth Access Token Secret
+	 * 
+	 * @return authAccessTokenSecret
+	 */
 	public String getAuthAccessTokenSecret() {
 		return authAccessTokenSecret;
 	}
 
+	/**
+	 * Sets the specified auth access token secret.
+	 * 
+	 * @param authAccessTokenSecret
+	 *            the current auth Access Token Secret
+	 */
 	public void setAuthAccessTokenSecret(String authAccessTokenSecret) {
 		this.authAccessTokenSecret = authAccessTokenSecret;
 	}

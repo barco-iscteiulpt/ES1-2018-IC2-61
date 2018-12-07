@@ -754,8 +754,8 @@ public class GUI extends Thread {
 	}
 
 	/**
-	 * Gets content from both Facebook and Twitter lists and adds them to the
-	 * table.
+	 * Gets contents from all services lists, adds them to the
+	 * table and sorts everything chronologically.
 	 */
 	public void manageTimeline() {
 
@@ -790,7 +790,10 @@ public class GUI extends Thread {
 		sortTable();
 
 	}
-
+	/**
+	 * Gets contents from all services lists using the configuration file, adds them to the
+	 * table and sorts everything chronologically.
+	 */
 	public void manageLastTimeline() {
 
 		configAccounts.loadLastSearch("Post");
@@ -892,6 +895,11 @@ public class GUI extends Thread {
 		frame.setFont(new Font("Arial", Font.PLAIN, 12));
 	}
 
+	/**
+	 * Returns the configurations singleton.
+	 * 
+	 * @return configAccounts
+	 */
 	public Config getConfigAccounts() {
 		return configAccounts;
 	}
