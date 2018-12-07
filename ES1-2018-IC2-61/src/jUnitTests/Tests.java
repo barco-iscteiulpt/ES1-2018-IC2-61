@@ -1,3 +1,4 @@
+package jUnitTests;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -8,6 +9,10 @@ import org.junit.Test;
 
 import com.restfb.types.Post;
 
+import BDA.EmailLoginRequest;
+import BDA.FacebookLoginRequest;
+import BDA.GUI;
+import BDA.TwitterLoginRequest;
 import twitter4j.Status;
 
 public class Tests {

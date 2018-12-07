@@ -1,3 +1,4 @@
+package BDA;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -501,7 +502,7 @@ public class GUI extends Thread {
 	 * Convert all elements on the JTable to the XML file.
 	 */
 
-	protected void tableToXML() {
+	public void tableToXML() {
 		configAccounts.clearResults("Post");
 		configAccounts.clearResults("Status");
 		configAccounts.clearResults("Message");

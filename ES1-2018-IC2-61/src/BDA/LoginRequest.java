@@ -1,3 +1,4 @@
+package BDA;
 
 public abstract class LoginRequest {
 

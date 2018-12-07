@@ -1,3 +1,4 @@
+package BDA;
 
 public class EmailLoginRequest extends LoginRequest {
 
